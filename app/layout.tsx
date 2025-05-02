@@ -15,16 +15,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex flex-col">
-        <main className="flex justify-center items-center"> {children}</main>
-        <footer className="flex p-4 justify-center items-center">
-          <label>
-            by ASP{" "}
-            <Link className="text-primary_color hover:opacity-80" href={"#"}>
-              ASP
-            </Link>
-          </label>
-        </footer>
+      <body>
+        <div className="flex flex-col justify-between bg-blue_light min-h-screen">
+          <main className="flex justify-center items-center flex-1">
+            {" "}
+            {children}
+          </main>
+          <footer className="flex p-4 justify-center items-center">
+            <label>
+              by ASP{" "}
+              <Link className="text-primary_color hover:opacity-80" href={"#"}>
+                ASP
+              </Link>
+            </label>
+          </footer>
+        </div>
       </body>
     </html>
   );

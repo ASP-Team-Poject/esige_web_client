@@ -1,7 +1,5 @@
-import ComingSoon from "@/components/ComingSoon";
+import Login from "@/components/Login";
 
 export default function LoginPage() {
-  return (
-    <ComingSoon pageTitle="Se connecter"/>
-  );
+  return <Login />;
 }

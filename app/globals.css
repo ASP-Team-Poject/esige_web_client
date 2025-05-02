@@ -25,3 +25,7 @@ body {
     text-wrap: balance;
   }
 }
+
+.red-border {
+  border: solid 2px red;
+}
