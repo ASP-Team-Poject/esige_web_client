@@ -8,6 +8,7 @@ import { User, Lock, LogIn } from "lucide-react";
 import H1 from "./basic/H1";
 import Input from "./basic/Input";
 import { useRouter } from "next/navigation";
+import Button from "./basic/Button";
 
 const Login = () => {
   const router = useRouter();
@@ -34,7 +35,7 @@ const Login = () => {
           <ESigeLogo />
           <H1
             title={"Connectez-vous à votre compte"}
-            className="font-bold mx-4"
+            className="mx-4 text-center"
           />
         </div>
 
@@ -51,13 +52,12 @@ const Login = () => {
           />
         </div>
 
-        <button
+        <Button
+          className="w-full"
           type="submit"
-          className="flex gap-2 justify-center items-center bg-primary_color hover:bg-primary_color_hover text-white font-bold p-4 rounded-sm w-full"
-        >
-          <LogIn />
-          <span>Connectez-vous</span>
-        </button>
+          title="Connectez - vous"
+          icon={<LogIn />}
+        />
       </form>
     </div>
   );

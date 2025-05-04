@@ -7,6 +7,11 @@
   --foreground: #171717;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -28,4 +33,14 @@ body {
 
 .red-border {
   border: solid 2px red;
+}
+
+table tr:nth-of-type(even) {
+  background-color: #ecf0f4;
+}
+
+table th,
+td {
+  border: solid 1px #ccc;
+  padding: 8px;
 }

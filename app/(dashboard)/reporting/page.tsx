@@ -1,5 +1,5 @@
-import ComingSoon from "@/components/ComingSoon";
+import Reporting from "@/components/Reporting";
 
 export default function ReportingPage() {
-  return <ComingSoon pageTitle="Reporting" />;
+  return <Reporting />;
 }

@@ -1,5 +1,5 @@
-import ComingSoon from "@/components/ComingSoon";
+import Encodings from "@/components/Encodings";
 
 export default function EncodingsPage() {
-  return <ComingSoon pageTitle="Encodages" />;
+  return <Encodings />;
 }

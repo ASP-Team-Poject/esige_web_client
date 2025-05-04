@@ -17,7 +17,7 @@ const UserZone = () => {
         className="flex justify-evenly items-center gap-2 px-4 py-2"
       >
         <div className="flex justify-center items-center w-10 h-10 rounded-full border-[1px] border-[#eee]">
-          <User />
+          <User color="gray" />
         </div>
         <span>Prince Ilunga</span>
         {dropdownOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
