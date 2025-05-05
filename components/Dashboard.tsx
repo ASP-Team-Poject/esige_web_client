@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import AnimatedDoughnutChart from "./DoughnutChart";
 import { AnimatedBarChart } from "./BarChart";
 import StatisticCard from "./StatisticCard";
 import Select from "./basic/Select";
@@ -17,7 +16,7 @@ const Dashboard = () => {
     <div className="flex flex-col gap-8">
       <div className="flex flex-wrap gap-4">
         <StatisticCard
-          title="Établissements Identifie"
+          title="Établissements Identifié"
           total={statisticData.allSchools}
           value={statisticData.identifiedSchools}
         />
@@ -34,7 +33,7 @@ const Dashboard = () => {
           color="#1578d6"
         />
         <div className="flex flex-col gap-2 justify-center items-center p-4 rounded-md bg-white shadow-lg flex-1">
-          <label className="font-bold text-lg">Annee</label>
+          <label className="font-bold text-lg">{"Année"}</label>
           <Select
             options={[
               "2025-2026",
