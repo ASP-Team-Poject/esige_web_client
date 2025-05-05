@@ -137,7 +137,7 @@ const Encodings = () => {
                       </th>
                       <th>
                         <label className="flex justify-between">
-                          <span>Nom de l'Etablissement</span>
+                          <span>Nom de l'Établissements</span>
                           <span className="flex">
                             <ArrowBigUpIcon
                               className={`h-5 w-5 cursor-pointer ${

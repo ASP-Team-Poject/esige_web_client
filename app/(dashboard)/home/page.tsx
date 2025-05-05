@@ -1,5 +1,5 @@
-import ComingSoon from "@/components/ComingSoon";
+import Dashboard from "@/components/Dashboard";
 
 export default function HomePage() {
-  return <ComingSoon pageTitle="Tableau de bord" />;
+  return <Dashboard />;
 }
