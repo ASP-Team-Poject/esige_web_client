@@ -25,7 +25,7 @@ const AnimatedDoughnutChart = ({
       });
     }, 20);
     return () => clearInterval(interval);
-  }, []);
+  });
 
   const data = [
     { name: "Progress", value: progress },

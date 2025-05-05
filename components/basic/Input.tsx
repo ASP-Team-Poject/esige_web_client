@@ -1,4 +1,3 @@
-import { User } from "lucide-react";
 import React, { ReactNode } from "react";
 
 const Input = ({

@@ -18,15 +18,16 @@ const Navbar = () => {
       <div className="w-full flex justify-center items-center">
         <ESigeLogo className="w-20 h-20" />
       </div>
-      {mainRoutes.map((route: MenuRoute) =>
+      {mainRoutes.map((route: MenuRoute, index) =>
         route.sub_routes ? (
-          <DropdownMenu route={route} routeTo={routeTo} />
+          <DropdownMenu key={index} route={route} routeTo={routeTo} />
         ) : (
           <button
             className={`text-left hover:bg-gray-700 px-4 py-2 rounded ${
               currentPath === route.path ? "bg-primary_color" : ""
             }`}
             onClick={() => routeTo(route.path)}
+            key={index}
           >
             <label className="flex gap-2 items-center">
               <route.icon />

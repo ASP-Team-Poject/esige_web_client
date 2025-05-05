@@ -4,7 +4,7 @@ import { globalImages } from "@/util/images";
 import Image from "next/image";
 import React, { useState } from "react";
 import ESigeLogo from "./basic/ESigeLogo";
-import { User, Lock, LogIn, Facebook, LockOpen } from "lucide-react";
+import { User, Lock, LogIn, LockOpen } from "lucide-react";
 import H1 from "./basic/H1";
 import Input from "./basic/Input";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ import Button from "./basic/Button";
 const Login = () => {
   const [passwordType, setPasswordType] = useState<string>("password");
   const router = useRouter();
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     router.push("/home");
   };

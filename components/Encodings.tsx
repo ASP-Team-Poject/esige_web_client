@@ -44,8 +44,9 @@ const Encodings = () => {
   return (
     <PageContentWrapper pageTitle="Encodages">
       <div className="border-b-[2px] border-[#eee] p-1">
-        {tabsNames.map((tabName) => (
+        {tabsNames.map((tabName, index) => (
           <label
+            key={index}
             onClick={() => setCurrentTabName(tabName)}
             className={`opacity-80 border-b-[2px] cursor-pointer p-2 ${
               tabName === currentTabName
@@ -82,7 +83,7 @@ const Encodings = () => {
                 icon={<School color="gray" />}
               />
               <Select
-                label="Type d'enseignement"
+                label="Type d&apos;enseignement"
                 options={[
                   "ST1(Prescolaire)",
                   "ST2(Primaire)",
@@ -137,7 +138,7 @@ const Encodings = () => {
                       </th>
                       <th>
                         <label className="flex justify-between">
-                          <span>Nom de l'Établissements</span>
+                          <span>Nom de l&apos;Établissements</span>
                           <span className="flex">
                             <ArrowBigUpIcon
                               className={`h-5 w-5 cursor-pointer ${
@@ -159,7 +160,7 @@ const Encodings = () => {
                         </label>
                       </th>
                       <th>Code Administratif</th>
-                      <th>Code de l'Etablissement</th>
+                      <th>Code de l&apos;Etablissement</th>
                       <th>Date</th>
                       <th>Actions</th>
                     </tr>

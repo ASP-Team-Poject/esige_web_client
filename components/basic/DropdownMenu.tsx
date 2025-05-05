@@ -12,7 +12,7 @@ const DropdownMenu = ({
   routeTo,
 }: {
   route: MenuRoute;
-  routeTo: Function;
+  routeTo: (arg: string) => void;
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const currentPath = usePathname();
@@ -38,8 +38,9 @@ const DropdownMenu = ({
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden pl-6 mt-1"
           >
-            {route.sub_routes?.map((sub_route: MenuRoute) => (
+            {route.sub_routes?.map((sub_route: MenuRoute, index) => (
               <button
+                key={index}
                 className={`w-full text-left hover:bg-gray-700 px-4 py-2 rounded ${
                   currentPath === sub_route.path ? "bg-primary_color" : ""
                 }`}
