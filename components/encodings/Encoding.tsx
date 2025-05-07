@@ -60,8 +60,9 @@ const Encoding = () => {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            {sts.map((st) => (
+            {sts.map((st, index) => (
               <div
+                key={index}
                 onClick={() =>
                   router.push(`/encodings/${id}/${st.name.toLowerCase()}`)
                 }
@@ -117,8 +118,9 @@ const Encoding = () => {
         <div className="flex flex-col gap-4">
           <H2 title="Années scolaires disponibles" />
           <div className="flex gap-4 flex-wrap">
-            {schoolYears.map((year) => (
+            {schoolYears.map((year, index) => (
               <div
+                key={index}
                 onClick={() => setChoosedSchoolYear(year)}
                 className="flex flex-col justify-center cursor-pointer gap-4 p-4 rounded-xl bg-primary_color hover:bg-primary_color_hover"
               >

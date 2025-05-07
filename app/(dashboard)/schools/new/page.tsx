@@ -1,5 +1,10 @@
-import ComingSoon from "@/components/ComingSoon";
+import PageContentWrapper from "@/components/layout/PageContentWrapper";
+import CreateSchoolForm from "@/components/schools/CreateSchoolForm";
 
 export default function NewSchoolPage() {
-  return <ComingSoon pageTitle="Nouvel Établissement" />;
+  return (
+    <PageContentWrapper pageTitle="Nouvel Établissement">
+      <CreateSchoolForm />
+    </PageContentWrapper>
+  );
 }

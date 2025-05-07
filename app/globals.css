@@ -33,6 +33,7 @@ body {
 
 .red-border {
   border: solid 2px red;
+  color: #5c9ad4
 }
 
 table tr:nth-of-type(even) {

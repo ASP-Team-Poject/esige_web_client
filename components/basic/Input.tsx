@@ -8,6 +8,8 @@ const Input = ({
   icon,
   className,
   minValue,
+  disabled,
+  title,
 }: {
   type: string;
   label?: string;
@@ -16,6 +18,8 @@ const Input = ({
   icon?: ReactNode;
   className?: string;
   minValue?: string;
+  disabled?: boolean;
+  title?: string;
 }) => {
   return (
     <div className="flex flex-col flex-1 gap-2">
@@ -26,11 +30,13 @@ const Input = ({
         }`}
       >
         <input
+          title={title}
+          disabled={disabled}
           type={type}
           defaultValue={defaultValue}
           min={minValue}
           placeholder={placeholder}
-          className="bg-white w-full border-none focus:outline-none focus:ring-0"
+          className="bg-white w-full border-none focus:outline-none focus:ring-0 text-gray-600"
         />
         {icon}
       </div>

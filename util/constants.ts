@@ -22,3 +22,42 @@ export const schools = [
     createdAt: "01-06-2011",
   },
 ];
+
+export const users = [
+  {
+    id: 1,
+    phone: "08211111111",
+    name: "Blaise Kabasele",
+    province: "Kinshasa",
+    proved: "Lukunga",
+    sous_proved: "Gombe",
+    createdAt: new Date(),
+  },
+  {
+    id: 2,
+    phone: "08211111122",
+    name: "Naomi Kembo",
+    province: "Kinshasa",
+    proved: "Lukunga",
+    sous_proved: "Gombe",
+    createdAt: new Date(),
+  },
+  {
+    id: 3,
+    name: "Grace Lola",
+    phone: "08211111133",
+    province: "Kinshasa",
+    proved: "Tshangu",
+    sous_proved: "Masina",
+    createdAt: new Date(),
+  },
+  {
+    id: 4,
+    name: "David Ilunga",
+    phone: "08211111144",
+    province: "Kinshasa",
+    proved: "Tshangu",
+    sous_proved: "Masina",
+    createdAt: new Date(),
+  },
+];

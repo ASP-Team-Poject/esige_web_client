@@ -1,5 +1,10 @@
-import ComingSoon from "@/components/ComingSoon";
+import PageContentWrapper from "@/components/layout/PageContentWrapper";
+import UserProfileForm from "@/components/users/UserProfileForm";
 
 export default function ProfilePage() {
-  return <ComingSoon pageTitle="Profile" />;
+  return (
+    <PageContentWrapper pageTitle="Mon Profil">
+      <UserProfileForm />
+    </PageContentWrapper>
+  );
 }

@@ -1,5 +1,5 @@
-import ComingSoon from "@/components/ComingSoon";
+import Schools from "@/components/schools/Schools";
 
 export default function SchoolsPage() {
-  return <ComingSoon pageTitle="Établissements" />;
+  return <Schools />;
 }

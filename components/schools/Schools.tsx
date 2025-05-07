@@ -1,59 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import Input from "../basic/Input";
-import { ArrowBigDownIcon, ArrowBigUpIcon, School, Search } from "lucide-react";
-import Select from "../basic/Select";
-import Button from "../basic/Button";
-import H2 from "../basic/H2";
+import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
-import { SchoolType } from "@/util/types";
+import { schools } from "@/util/constants";
+import { ArrowBigDownIcon, ArrowBigUpIcon } from "lucide-react";
+import Input from "../basic/Input";
 
-const EncodingsContent = ({
-  title,
-  schools,
-}: {
-  title: string;
-  schools: SchoolType[];
-}) => {
+const Schools = () => {
   const [noHasAscendingOrder, setNoHasAscendingOrder] = useState<boolean>(true);
   const [nameHasAscendingOrder, setNameHasAscendingOrder] =
     useState<boolean>(true);
-
   return (
-    <div className="flex flex-col gap-4">
-      <H2 title={title} />
-      <form className="flex items-center p-4 gap-4 rounded-lg shadow-xl">
-        <Select
-          label="Année"
-          options={[
-            "2025-2026",
-            "2024-2025",
-            "2023-2024",
-            "2022-2023",
-            "2021-2022",
-            "2020-2021",
-          ]}
-        />
-        <Input
-          label="Établissements"
-          className="h-fit"
-          type="text"
-          placeholder="établissement"
-          icon={<School color="gray" />}
-        />
-        <Select
-          label="Type d'enseignement"
-          options={["ST1(Prescolaire)", "ST2(Primaire)", "ST3(Secondaire)"]}
-        />
-        <Button
-          className="h-fit self-end"
-          type="submit"
-          title="Rechercher"
-          icon={<Search />}
-        />
-      </form>
-
+    <PageContentWrapper pageTitle="Liste des Établissements">
       <div className="flex flex-col p-4 gap-4 rounded-lg shadow-xl">
         <div className="flex justify-between items-center w-full">
           <label className="flex justify-center items-center gap-2">
@@ -135,8 +94,8 @@ const EncodingsContent = ({
           </table>
         </div>
       </div>
-    </div>
+    </PageContentWrapper>
   );
 };
 
-export default EncodingsContent;
+export default Schools;

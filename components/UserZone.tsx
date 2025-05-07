@@ -29,11 +29,11 @@ const UserZone = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden pl-6 mt-1 absolute w-fit right-1 bg-white p-4 flex flex-col gap-2 shadow-md rounded-lg"
+            className="overflow-hidden pl-6 mt-1 absolute w-fit right-1 z-50 bg-white p-4 flex flex-col gap-2 shadow-md rounded-lg"
           >
             {userRoutes.map((route: MenuRoute, index) => (
               <Link
-              key={index}
+                key={index}
                 className="flex gap-2 items-center whitespace-nowrap hover:bg-primary_color hover:text-white p-2 rounded-md"
                 href={route.path}
               >
