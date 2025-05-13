@@ -63,9 +63,4 @@ export const userRoutes: MenuRoute[] = [
     path: "/profile",
     icon: User,
   },
-  {
-    name: "Se Deconnecter",
-    path: "/",
-    icon: LogOut,
-  },
 ];

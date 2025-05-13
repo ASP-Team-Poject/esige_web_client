@@ -9,14 +9,67 @@ import H1 from "./basic/H1";
 import Input from "./basic/Input";
 import { useRouter } from "next/navigation";
 import Button from "./basic/Button";
+import { LoginCredentials, MessageType } from "@/util/types";
+import { login } from "@/services/UserService";
+import { Toast } from "./basic/Toast";
+import Cookies from "js-cookie";
 
 const Login = () => {
+  const [loginForm, setLoginForm] = useState<LoginCredentials>({
+    username: "gombe",
+    password: "sigerdc",
+  });
+  const [isSubmitting, setISubmitting] = useState<boolean>(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
   const [passwordType, setPasswordType] = useState<string>("password");
   const router = useRouter();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/home");
+    if (!loginForm.username || !loginForm.password) {
+      setToast({
+        message: "Le nom d'utilisateur et le mot de passe sont obligatoires.",
+        type: "error",
+      });
+
+      return;
+    }
+    setISubmitting(true);
+    try {
+      const currentUser = await login(loginForm);
+      setToast({
+        message: "Vous êtes connecté avec succès !",
+        type: "success",
+      });
+
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify({
+          ...currentUser,
+          displayName: currentUser.firstName || currentUser.username,
+        })
+      );
+
+      // Put the user id in the Cookies for the middleware
+      Cookies.set("userId", `${currentUser.id}`);
+
+      router.push("/home");
+    } catch (error) {
+      setToast({
+        message:
+          "La connexion a échoué.\n Veuillez vérifier vos informations d'identification et réessayer, ou contactez votre administrateur.",
+        type: "error",
+      });
+    } finally {
+      setISubmitting(false);
+      setTimeout(() => setToast(null), 6000);
+    }
   };
+
   return (
     <div className="flex flex-col justify-center items-center gap-8">
       <form
@@ -36,12 +89,21 @@ const Login = () => {
 
         <div className="flex flex-col gap-4 w-full">
           <Input
+            value={loginForm.username}
+            handleChange={(value: string) =>
+              setLoginForm({ ...loginForm, username: value })
+            }
             type="text"
             placeholder="Nom d'utilisateur"
             icon={<User color="gray" />}
+            required={true}
           />
 
           <Input
+            value={loginForm.password}
+            handleChange={(value: string) =>
+              setLoginForm({ ...loginForm, password: value })
+            }
             type={passwordType}
             placeholder="**********"
             icon={
@@ -59,6 +121,7 @@ const Login = () => {
                 />
               )
             }
+            required={true}
           />
           <label className="text-gray-500 text-sm">
             {"Mot de passe oublié ? Veuillez contacter l'administrateur"}
@@ -66,6 +129,7 @@ const Login = () => {
         </div>
 
         <Button
+          isSubmitting={isSubmitting}
           className="w-full"
           type="submit"
           title="Connectez - vous"
@@ -103,6 +167,14 @@ const Login = () => {
           height={50}
         />
       </div>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };

@@ -10,6 +10,9 @@ const Input = ({
   minValue,
   disabled,
   title,
+  value,
+  required,
+  handleChange,
 }: {
   type: string;
   label?: string;
@@ -19,7 +22,10 @@ const Input = ({
   className?: string;
   minValue?: string;
   disabled?: boolean;
+  required?: boolean;
   title?: string;
+  value: string;
+  handleChange: (value: string) => void;
 }) => {
   return (
     <div className="flex flex-col flex-1 gap-2">
@@ -30,8 +36,11 @@ const Input = ({
         }`}
       >
         <input
+          value={value}
+          onChange={(e) => handleChange(e.target.value)}
           title={title}
           disabled={disabled}
+          required={required}
           type={type}
           defaultValue={defaultValue}
           min={minValue}

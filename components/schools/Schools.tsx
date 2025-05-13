@@ -1,16 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
-import { schools } from "@/util/constants";
 import { ArrowBigDownIcon, ArrowBigUpIcon } from "lucide-react";
 import Input from "../basic/Input";
+import { getSchools } from "@/services/SchoolServise";
+import { SchoolType } from "@/util/types";
 
 const Schools = () => {
+  const [schools, setSchools] = useState<SchoolType[]>([]);
   const [noHasAscendingOrder, setNoHasAscendingOrder] = useState<boolean>(true);
   const [nameHasAscendingOrder, setNameHasAscendingOrder] =
     useState<boolean>(true);
+
+  useEffect(() => {
+    const loadSchools = async () => {
+      const data = await getSchools();
+      setSchools(data);
+    };
+    loadSchools();
+  });
   return (
     <PageContentWrapper pageTitle="Liste des Établissements">
       <div className="flex flex-col p-4 gap-4 rounded-lg shadow-xl">
@@ -30,68 +40,74 @@ const Schools = () => {
           </label>
         </div>
         <div className="overflow-x-scroll w-full">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-[rgb(248,248,248)]">
-                <th>
-                  <label className="flex justify-between">
-                    <span>No</span>
-                    <span className="flex">
-                      <ArrowBigUpIcon
-                        className={`h-5 w-5 cursor-pointer ${
-                          noHasAscendingOrder ? "text-primary_color" : ""
-                        }`}
-                        onClick={() => setNoHasAscendingOrder(true)}
-                      />
-                      <ArrowBigDownIcon
-                        className={`h-5 w-5 cursor-pointer ${
-                          !noHasAscendingOrder ? "text-primary_color" : ""
-                        }`}
-                        onClick={() => setNoHasAscendingOrder(false)}
-                      />
-                    </span>
-                  </label>
-                </th>
-                <th>
-                  <label className="flex justify-between">
-                    <span>{"Nom de l'Établissements"}</span>
-                    <span className="flex">
-                      <ArrowBigUpIcon
-                        className={`h-5 w-5 cursor-pointer ${
-                          nameHasAscendingOrder ? "text-primary_color" : ""
-                        }`}
-                        onClick={() => setNameHasAscendingOrder(true)}
-                      />
-                      <ArrowBigDownIcon
-                        className={`h-5 w-5 cursor-pointer ${
-                          !nameHasAscendingOrder ? "text-primary_color" : ""
-                        }`}
-                        onClick={() => setNameHasAscendingOrder(false)}
-                      />
-                    </span>
-                  </label>
-                </th>
-                <th>Code Administratif</th>
-                <th>Code de l&apos;Etablissement</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {schools.map((school, index) => (
-                <tr key={index}>
-                  <td>{index}</td>
-                  <td className="text-primary_color font-bold">
-                    <Link href={`/encodings/${school.id}`}>{school.name}</Link>
-                  </td>
-                  <td>{school.codeAdmin}</td>
-                  <td>{school.code}</td>
-                  <td>{school.createdAt}</td>
-                  <td>...</td>
+          {schools.length > 0 ? (
+            <table className="w-full">
+              <thead>
+                <tr className="bg-[rgb(248,248,248)]">
+                  <th>
+                    <label className="flex justify-between">
+                      <span>No</span>
+                      <span className="flex">
+                        <ArrowBigUpIcon
+                          className={`h-5 w-5 cursor-pointer ${
+                            noHasAscendingOrder ? "text-primary_color" : ""
+                          }`}
+                          onClick={() => setNoHasAscendingOrder(true)}
+                        />
+                        <ArrowBigDownIcon
+                          className={`h-5 w-5 cursor-pointer ${
+                            !noHasAscendingOrder ? "text-primary_color" : ""
+                          }`}
+                          onClick={() => setNoHasAscendingOrder(false)}
+                        />
+                      </span>
+                    </label>
+                  </th>
+                  <th>
+                    <label className="flex justify-between">
+                      <span>{"Nom de l'Établissements"}</span>
+                      <span className="flex">
+                        <ArrowBigUpIcon
+                          className={`h-5 w-5 cursor-pointer ${
+                            nameHasAscendingOrder ? "text-primary_color" : ""
+                          }`}
+                          onClick={() => setNameHasAscendingOrder(true)}
+                        />
+                        <ArrowBigDownIcon
+                          className={`h-5 w-5 cursor-pointer ${
+                            !nameHasAscendingOrder ? "text-primary_color" : ""
+                          }`}
+                          onClick={() => setNameHasAscendingOrder(false)}
+                        />
+                      </span>
+                    </label>
+                  </th>
+                  <th>Code Administratif</th>
+                  <th>Code de l&apos;Etablissement</th>
+                  <th>Date</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {schools.map((school, index) => (
+                  <tr key={index}>
+                    <td>{index}</td>
+                    <td className="text-primary_color font-bold">
+                      <Link href={`/encodings/${school.id}`}>
+                        {school.libelle}
+                      </Link>
+                    </td>
+                    <td>{school.codeAdmin}</td>
+                    <td>{school.codeEtablissement}</td>
+                    <td>{school.createdAt}</td>
+                    <td>...</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <label>No data</label>
+          )}
         </div>
       </div>
     </PageContentWrapper>

@@ -2,13 +2,26 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, User } from "lucide-react";
+import { ChevronDown, ChevronUp, LogOut, User } from "lucide-react";
 import { MenuRoute } from "@/util/types";
 import Link from "next/link";
 import { userRoutes } from "@/util/routes";
+import Loader from "./basic/Loader";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const UserZone = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const currentUser = JSON.parse(localStorage.getItem("currentUser")!);
+  const router = useRouter();
+
+  const handleLogOut = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    localStorage.clear();
+    Cookies.remove("userId");
+
+    router.push("/");
+  };
 
   return (
     <div>
@@ -19,7 +32,11 @@ const UserZone = () => {
         <div className="flex justify-center items-center w-10 h-10 rounded-full border-[1px] border-[#eee]">
           <User color="gray" />
         </div>
-        <span>Prince Ilunga</span>
+        {currentUser ? (
+          <span>{currentUser.displayName}</span>
+        ) : (
+          <Loader colorClass="text-primary_color" />
+        )}
         {dropdownOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
       </button>
 
@@ -41,6 +58,14 @@ const UserZone = () => {
                 <span>{route.name}</span>
               </Link>
             ))}
+            <Link
+              className="flex gap-2 items-center whitespace-nowrap hover:bg-primary_color hover:text-white p-2 rounded-md"
+              href={"#"}
+              onClick={(e) => handleLogOut(e)}
+            >
+              <LogOut />
+              <span>{"Se Deconnecter"}</span>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
