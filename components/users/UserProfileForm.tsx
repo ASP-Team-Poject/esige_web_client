@@ -38,6 +38,10 @@ const UserProfileForm = () => {
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
           <Input
+            value=""
+            handleChange={(value: string) => {
+              console.log(value);
+            }}
             label="Nom d'utilisateur"
             type="text"
             placeholder="Nom d'utilisateur"
@@ -47,6 +51,10 @@ const UserProfileForm = () => {
           />
 
           <Input
+            value=""
+            handleChange={(value: string) => {
+              console.log(value);
+            }}
             label="Mot de passe"
             type={passwordType}
             placeholder="**********"
@@ -67,12 +75,20 @@ const UserProfileForm = () => {
             }
           />
           <Input
+            value=""
+            handleChange={(value: string) => {
+              console.log(value);
+            }}
             label="Nom complet"
             type="text"
             placeholder="Nom"
             icon={<School color="gray" />}
           />
           <Input
+            value=""
+            handleChange={(value: string) => {
+              console.log(value);
+            }}
             label="Téléphone"
             type="tel"
             placeholder="Téléphone"
@@ -80,6 +96,10 @@ const UserProfileForm = () => {
           />
 
           <Input
+            value=""
+            handleChange={(value: string) => {
+              console.log(value);
+            }}
             label="Adresse complet"
             type="text"
             placeholder="Adresse complet"

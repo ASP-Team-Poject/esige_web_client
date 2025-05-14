@@ -7,15 +7,18 @@ const Button = ({
   icon,
   isSubmitting,
   className,
+  onClick,
 }: {
   type: "submit" | "reset" | "button" | undefined;
   title: string;
   icon: ReactNode;
   isSubmitting?: boolean;
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
 }) => {
   return (
     <button
+      onClick={onClick}
       disabled={isSubmitting}
       type={type}
       className={`flex gap-2 justify-center items-center bg-primary_color hover:bg-primary_color_hover text-white font-bold p-2 rounded-sm ${

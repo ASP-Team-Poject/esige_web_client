@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, LogOut, User } from "lucide-react";
-import { MenuRoute } from "@/util/types";
+import { MenuRoute, UserType } from "@/util/types";
 import Link from "next/link";
 import { userRoutes } from "@/util/routes";
 import Loader from "./basic/Loader";
@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 const UserZone = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const currentUser = JSON.parse(localStorage.getItem("currentUser")!);
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   const router = useRouter();
 
   const handleLogOut = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -22,6 +22,11 @@ const UserZone = () => {
 
     router.push("/");
   };
+
+  useEffect(() => {
+    const foundCurrentUser = JSON.parse(localStorage.getItem("currentUser")!);
+    setCurrentUser(foundCurrentUser);
+  }, []);
 
   return (
     <div>

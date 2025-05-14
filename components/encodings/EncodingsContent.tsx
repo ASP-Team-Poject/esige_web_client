@@ -36,6 +36,10 @@ const EncodingsContent = ({
           ]}
         />
         <Input
+          value=""
+          handleChange={(value: string) => {
+            console.log(value);
+          }}
           label="Établissements"
           className="h-fit"
           type="text"
@@ -59,6 +63,10 @@ const EncodingsContent = ({
           <label className="flex justify-center items-center gap-2">
             Show{" "}
             <Input
+              value=""
+              handleChange={(value: string) => {
+                console.log(value);
+              }}
               type="number"
               defaultValue="10"
               className="w-20 h-fit"
@@ -67,7 +75,15 @@ const EncodingsContent = ({
             entries
           </label>
           <label className="flex justify-center items-center gap-2">
-            Search <Input type="text" placeholder="search" />
+            Search{" "}
+            <Input
+              value=""
+              handleChange={(value: string) => {
+                console.log(value);
+              }}
+              type="text"
+              placeholder="search"
+            />
           </label>
         </div>
         <div className="overflow-x-scroll w-full">
@@ -123,10 +139,10 @@ const EncodingsContent = ({
                 <tr key={index}>
                   <td>{index}</td>
                   <td className="text-primary_color font-bold">
-                    <Link href={`/encodings/${school.id}`}>{school.name}</Link>
+                    <Link href={`/encodings/${school.id}`}>{school.nom}</Link>
                   </td>
                   <td>{school.codeAdmin}</td>
-                  <td>{school.code}</td>
+                  <td>{school.codeEtablissement}</td>
                   <td>{school.createdAt}</td>
                   <td>...</td>
                 </tr>

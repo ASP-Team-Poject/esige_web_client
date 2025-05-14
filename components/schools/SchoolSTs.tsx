@@ -5,23 +5,24 @@ import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
 import { ArrowBigDownIcon, ArrowBigUpIcon, File } from "lucide-react";
 import Input from "../basic/Input";
-import { getSchools } from "@/services/SchoolServise";
-import { SchoolType } from "@/util/types";
+import { getSTs } from "@/services/SchoolServise";
+import { SchoolStType } from "@/util/types";
 import { getFormatedDate } from "@/util/functions";
+import Loader from "../basic/Loader";
 
 // For pdf generation
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import Button from "../basic/Button";
-import Loader from "../basic/Loader";
 
-const Schools = () => {
-  const [schools, setSchools] = useState<SchoolType[]>([]);
+const SchoolSTs = () => {
+  const [schoolSTs, setSchoolSTs] = useState<SchoolStType[]>([]);
   const [noHasAscendingOrder, setNoHasAscendingOrder] = useState<boolean>(true);
   const [nameHasAscendingOrder, setNameHasAscendingOrder] =
     useState<boolean>(true);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [totalPages, setTotalPages] = useState<number>(100); // TODO: change this when the st response is changed to Obj with totalPages
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -57,21 +58,21 @@ const Schools = () => {
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
     pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-    pdf.save("etablissements.pdf");
+    pdf.save("identifications.pdf");
   };
 
   useEffect(() => {
-    const loadSchools = async () => {
+    const loadSchoolSTs = async () => {
       setIsLoading(true);
-
-      const data = await getSchools(page, Number.parseInt(size));
-      setSchools(data);
+      const data = await getSTs(page, Number.parseInt(size));
+      setSchoolSTs(data);
       setIsLoading(false);
     };
-    loadSchools();
+    loadSchoolSTs();
   }, [page, size]);
+
   return (
-    <PageContentWrapper pageTitle="Liste des Établissements" id="pdf-content">
+    <PageContentWrapper pageTitle="Liste des Identifications" id="pdf-content">
       <div className="flex flex-col p-4 gap-4 rounded-lg shadow-xl">
         <div className="flex justify-between items-center w-full">
           <label className="flex justify-center items-center gap-2">
@@ -97,12 +98,12 @@ const Schools = () => {
             />
           </label>
         </div>
-        <div className=" w-full flex justify-center">
+        <div className="w-full flex justify-center">
           {isLoading ? (
             <Loader colorClass="text-primary_color" size={50} />
           ) : (
             <>
-              {schools.length > 0 ? (
+              {schoolSTs.length > 0 ? (
                 <div className="flex flex-col gap-4">
                   <table className="w-full">
                     <thead>
@@ -153,26 +154,33 @@ const Schools = () => {
                             </span>
                           </label>
                         </th>
-                        <th>Code Administratif</th>
-                        <th>Code de l&apos;Etablissement</th>
+                        <th>Nom du Formulaire</th>
+                        <th>{"Chef de l'Etablissement"}</th>
+                        <th>Province</th>
                         <th>Date</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {schools.map((school, index) => (
+                      {schoolSTs.map((schoolSt, index) => (
                         <tr key={index}>
-                          <td>{school.id}</td>
+                          <td>{schoolSt.id}</td>
+                          <td>
+                            {schoolSt.nomEtab ||
+                              schoolSt.formulaire.nomEtablissement ||
+                              schoolSt.formulaire.nom_etablissement}
+                          </td>
+
                           <td className="text-primary_color font-bold">
-                            <Link href={`/encodings/${school.id}`}>
-                              {school.libelle}
+                            <Link href={`/encodings/${schoolSt.id}`}>
+                              {schoolSt.type}
                             </Link>
                           </td>
-                          <td>{school.codeAdmin}</td>
-                          <td>{school.codeEtablissement}</td>
+                          <td>{schoolSt.formulaire.nomChefEtablissement}</td>
+                          <td>{schoolSt.formulaire.province}</td>
                           <td>
                             {getFormatedDate(
-                              new Date(school.createdAt),
+                              new Date(schoolSt.date),
                               true,
                               true
                             )}
@@ -221,4 +229,4 @@ const Schools = () => {
   );
 };
 
-export default Schools;
+export default SchoolSTs;

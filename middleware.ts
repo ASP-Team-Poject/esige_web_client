@@ -10,11 +10,7 @@ export async function middleware(request: NextRequest) {
     currentPath.startsWith("/reporting") ||
     currentPath.startsWith("/profile")
   ) {
-    console.log("currentPath => ", currentPath);
-
     const userId = request.cookies.get("userId")?.value;
-
-    console.log("userId => ", userId);
 
     if (!userId) {
       console.log("Not logged in user");

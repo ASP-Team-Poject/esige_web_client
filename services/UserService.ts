@@ -7,13 +7,13 @@ const API_BASE_URL = "http://45.8.132.145:8080/users";
 export async function getUsers() {
   try {
     console.log("GET Users...");
-    const response = await fetch(`${API_BASE_URL}`, {
+    const response = await fetch(`${API_BASE_URL}?page=0&size=5`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
     const users = await response.json();
-    console.log("users.length => ", users.length);
+    console.log("users.length => ", users.totalElements);
 
     return users;
   } catch (error) {
@@ -42,7 +42,6 @@ export async function login({
 
     if (response.ok) {
       const data: any = await response.json();
-      console.log("User logged in => ", data);
 
       return data;
     } else {

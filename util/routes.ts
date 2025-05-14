@@ -37,9 +37,9 @@ export const mainRoutes: MenuRoute[] = [
     ],
   },
   {
-    name: "Mon Profil",
-    path: "/profile",
-    icon: User,
+    name: "Identifications",
+    path: "/identifications",
+    icon: List,
   },
   {
     name: "Encodages",
@@ -54,6 +54,11 @@ export const mainRoutes: MenuRoute[] = [
       { name: "Liste", path: "/users", icon: List },
       { name: "Creer un Nouveau", path: "/users/new", icon: Plus },
     ],
+  },
+  {
+    name: "Mon Profil",
+    path: "/profile",
+    icon: User,
   },
 ];
 

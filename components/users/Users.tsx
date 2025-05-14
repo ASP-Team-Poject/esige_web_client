@@ -17,6 +17,10 @@ const Users = () => {
         <label className="flex justify-center items-center gap-2">
           Show{" "}
           <Input
+            value=""
+            handleChange={(value: string) => {
+              console.log(value);
+            }}
             type="number"
             defaultValue="10"
             className="w-20 h-fit"
@@ -25,7 +29,15 @@ const Users = () => {
           entries
         </label>
         <label className="flex justify-center items-center gap-2">
-          Search <Input type="text" placeholder="search" />
+          Search{" "}
+          <Input
+            value=""
+            handleChange={(value: string) => {
+              console.log(value);
+            }}
+            type="text"
+            placeholder="search"
+          />
         </label>
       </div>
       <div className="overflow-x-scroll w-full">

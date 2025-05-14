@@ -20,12 +20,20 @@ const CreateSchoolForm = () => {
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
         <Input
+          value=""
+          handleChange={(value: string) => {
+            console.log(value);
+          }}
           label="Nom de l'Établissement"
           type="text"
           placeholder="Nom de l'Établissement"
           icon={<School color="gray" />}
         />
         <Input
+          value=""
+          handleChange={(value: string) => {
+            console.log(value);
+          }}
           label="Nom du Chef de l'Établissement"
           type="text"
           placeholder="Nom du Chef de l'Établissement"
@@ -33,17 +41,29 @@ const CreateSchoolForm = () => {
         />
 
         <Input
+          value=""
+          handleChange={(value: string) => {
+            console.log(value);
+          }}
           label="Code Administratif"
           type="text"
           placeholder="Code Administratif"
         />
         <Input
+          value=""
+          handleChange={(value: string) => {
+            console.log(value);
+          }}
           label="Code de l'Établissement"
           type="text"
           placeholder="Code de l'Établissement"
         />
 
         <Input
+          value=""
+          handleChange={(value: string) => {
+            console.log(value);
+          }}
           label="Adresse complet"
           type="text"
           placeholder="Adresse complet"

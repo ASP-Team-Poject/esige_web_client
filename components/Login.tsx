@@ -9,7 +9,7 @@ import H1 from "./basic/H1";
 import Input from "./basic/Input";
 import { useRouter } from "next/navigation";
 import Button from "./basic/Button";
-import { LoginCredentials, MessageType } from "@/util/types";
+import { LoginCredentials } from "@/util/types";
 import { login } from "@/services/UserService";
 import { Toast } from "./basic/Toast";
 import Cookies from "js-cookie";
@@ -59,6 +59,7 @@ const Login = () => {
 
       router.push("/home");
     } catch (error) {
+      console.log("Error", error);
       setToast({
         message:
           "La connexion a échoué.\n Veuillez vérifier vos informations d'identification et réessayer, ou contactez votre administrateur.",
