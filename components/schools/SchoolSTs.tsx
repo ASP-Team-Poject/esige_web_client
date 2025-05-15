@@ -156,7 +156,7 @@ const SchoolSTs = () => {
                           </td>
 
                           <td className="text-primary_color font-bold">
-                            <Link href={`/encodings/${schoolSt.id}`}>
+                            <Link href={`#`}>
                               {schoolSt.type}
                             </Link>
                           </td>
