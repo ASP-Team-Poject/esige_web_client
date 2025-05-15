@@ -29,7 +29,7 @@ const Navbar = () => {
             onClick={() => routeTo(route.path)}
             key={index}
           >
-            <label className="flex gap-2 items-center">
+            <label className="flex gap-2 items-center cursor-pointer">
               <route.icon />
               <span>{route.name}</span>
             </label>

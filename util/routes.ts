@@ -37,7 +37,7 @@ export const mainRoutes: MenuRoute[] = [
     ],
   },
   {
-    name: "Identifications",
+    name: "Établissements Identifié",
     path: "/identifications",
     icon: List,
   },

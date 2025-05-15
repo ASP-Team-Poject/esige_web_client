@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
-import { ArrowBigDownIcon, ArrowBigUpIcon, File } from "lucide-react";
-import Input from "../basic/Input";
+import { ArrowBigDownIcon, ArrowBigUpIcon } from "lucide-react";
 import { getSchools } from "@/services/SchoolServise";
 import { SchoolType } from "@/util/types";
 import { getFormatedDate } from "@/util/functions";
@@ -12,8 +11,10 @@ import { getFormatedDate } from "@/util/functions";
 // For pdf generation
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import Button from "../basic/Button";
 import Loader from "../basic/Loader";
+import NoData from "../basic/NoData";
+import TableHeader from "../TableHeader";
+import TableFooter from "../TableFooter";
 
 const Schools = () => {
   const [schools, setSchools] = useState<SchoolType[]>([]);
@@ -22,9 +23,9 @@ const Schools = () => {
     useState<boolean>(true);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [totalPages, setTotalPages] = useState<number>(100); // TODO: change this when the st response is changed to Obj with totalPages
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
 
   const handleGoPreviousPage = () => {
     const newPage = page === 0 ? 0 : page - 1;
@@ -37,27 +38,27 @@ const Schools = () => {
   };
 
   const handleDownloadPdf = async () => {
-    const element = document.getElementById("pdf-content");
-    if (!element) return;
+    if (isGeneratingPdf) {
+      const element = document.getElementById("pdf-content");
+      if (!element) return;
 
-    const canvas = await html2canvas(element, { scale: 2 }); // better resolution
-    const imgData = canvas.toDataURL("image/png");
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
 
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const pdfHeight = pdf.internal.pageSize.getHeight();
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-    pdf.save("etablissements.pdf");
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save("etablissements.pdf");
+      setIsGeneratingPdf(false);
+    }
   };
 
   useEffect(() => {
@@ -65,38 +66,21 @@ const Schools = () => {
       setIsLoading(true);
 
       const data = await getSchools(page, Number.parseInt(size));
-      setSchools(data);
+      setSchools(data.content);
+      setTotalPages(data.totalPages);
       setIsLoading(false);
     };
     loadSchools();
   }, [page, size]);
+
+  useEffect(() => {
+    handleDownloadPdf();
+  }, [isGeneratingPdf]);
+
   return (
     <PageContentWrapper pageTitle="Liste des Établissements" id="pdf-content">
       <div className="flex flex-col p-4 gap-4 rounded-lg shadow-xl">
-        <div className="flex justify-between items-center w-full">
-          <label className="flex justify-center items-center gap-2">
-            Show{" "}
-            <Input
-              value={size}
-              handleChange={(value: string) => setSize(value)}
-              type="number"
-              className="w-20 h-fit"
-              minValue="1"
-            />{" "}
-            entries
-          </label>
-          <label className="flex justify-center items-center gap-2">
-            Search{" "}
-            <Input
-              value=""
-              handleChange={(value: string) => {
-                console.log(value);
-              }}
-              type="text"
-              placeholder="search"
-            />
-          </label>
-        </div>
+        {isGeneratingPdf ? "" : <TableHeader size={size} setSize={setSize} />}
         <div className=" w-full flex justify-center">
           {isLoading ? (
             <Loader colorClass="text-primary_color" size={50} />
@@ -183,35 +167,20 @@ const Schools = () => {
                     </tbody>
                   </table>
 
-                  <div className="flex justify-between">
-                    <div className="flex items-center gap-2">
-                      <label
-                        onClick={() => handleGoPreviousPage()}
-                        className="text-primary_color hover:underline cursor-pointer"
-                      >
-                        Previous
-                      </label>
-
-                      <label className="border-[1px] border-[#ccc] p-3 rounded-sm">
-                        Page {page + 1}
-                      </label>
-                      <label
-                        onClick={() => handleGoNextPage()}
-                        className="text-primary_color hover:underline cursor-pointer"
-                      >
-                        Next
-                      </label>
-                    </div>
-                    <Button
-                      title="Genere le Pdf"
-                      icon={<File />}
-                      type="button"
-                      onClick={() => handleDownloadPdf()}
+                  {isGeneratingPdf ? (
+                    ""
+                  ) : (
+                    <TableFooter
+                      page={page}
+                      totalPages={totalPages}
+                      handleGoPreviousPage={handleGoPreviousPage}
+                      handleGoNextPage={handleGoNextPage}
+                      handleDownloadPdf={() => setIsGeneratingPdf(true)}
                     />
-                  </div>
+                  )}
                 </div>
               ) : (
-                <label>No data</label>
+                <NoData />
               )}
             </>
           )}

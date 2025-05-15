@@ -1,24 +1,39 @@
 "use server";
 
+import { requestMessages } from "@/util/constants";
 import { LoginCredentials, UserType } from "@/util/types";
 
 const API_BASE_URL = "http://45.8.132.145:8080/users";
 
-export async function getUsers() {
+type UsersResponse = {
+  size: number;
+  totalPages: number;
+  page: number;
+  content: UserType[];
+  totalElements: number;
+};
+
+export async function getUsers(
+  page: number = 0,
+  size: number = 10
+): Promise<UsersResponse> {
   try {
-    console.log("GET Users...");
-    const response = await fetch(`${API_BASE_URL}?page=0&size=5`, {
+    const response = await fetch(`${API_BASE_URL}?page=${page}&size=${size}`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    const users = await response.json();
-    console.log("users.length => ", users.totalElements);
 
-    return users;
+    if (response.ok) {
+      const users: UsersResponse = await response.json();
+      return users;
+    } else {
+      console.log("Server error => ", response);
+      throw new Error(requestMessages.SERVER_ERROR);
+    }
   } catch (error) {
     console.log("Get users error => ", error);
-    return [];
+    throw new Error(requestMessages.SERVER_UNREACHABLE);
   }
 }
 
@@ -50,6 +65,6 @@ export async function login({
     }
   } catch (error) {
     console.log("Error => ", error);
-    throw new Error("Login failed: server error.");
+    throw new Error(requestMessages.SERVER_UNREACHABLE);
   }
 }

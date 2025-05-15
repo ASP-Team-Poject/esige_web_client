@@ -31,9 +31,9 @@ const SchoolYears = () => {
   }, []);
 
   return (
-    <PageContentWrapper pageTitle={"Selectionner l'Année: "}>
+    <PageContentWrapper pageTitle={"Selectionner l'Année"}>
       <div className="flex flex-col gap-4">
-        <H2 title="Années scolaires disponibles" />
+        <H2 title="Années scolaires disponibles:" />
         <div className="flex gap-4 flex-wrap">
           {schoolYears.map((year, index) => (
             <div

@@ -23,7 +23,7 @@ const DropdownMenu = ({
         onClick={() => setDropdownOpen(!dropdownOpen)}
         className="flex justify-between items-center w-full hover:bg-gray-700 px-4 py-2 rounded"
       >
-        <label className="flex gap-2 items-center">
+        <label className="flex gap-2 items-center cursor-pointer">
           <route.icon />
           <span>{route.name}</span>
           {dropdownOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -46,7 +46,7 @@ const DropdownMenu = ({
                 }`}
                 onClick={() => routeTo(sub_route.path)}
               >
-                <label className="flex gap-2 items-center">
+                <label className="flex gap-2 items-center cursor-pointer">
                   <sub_route.icon />
                   <span>{sub_route.name}</span>
                 </label>

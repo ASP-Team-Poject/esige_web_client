@@ -61,3 +61,9 @@ export const users = [
     createdAt: new Date(),
   },
 ];
+
+export const requestMessages = {
+  SERVER_UNREACHABLE:
+    "The server is unreachable, please try again or contact you admin.",
+  SERVER_ERROR: "There is a problem on the server, please contact your admin.",
+};

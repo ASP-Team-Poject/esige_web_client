@@ -1,10 +1,23 @@
 "use server";
 
+import { requestMessages } from "@/util/constants";
+import { SchoolType } from "@/util/types";
+
 const API_BASE_URL = "http://45.8.132.145:8080";
 
-export async function getSchools(page: number = 0, size: number = 10) {
+type SchoolsResponse = {
+  size: number;
+  totalPages: number;
+  page: number;
+  content: SchoolType[];
+  totalElements: number;
+};
+
+export async function getSchools(
+  page: number = 0,
+  size: number = 10
+): Promise<SchoolsResponse> {
   try {
-    console.log("GET SCHOOLS...");
     const response = await fetch(
       `${API_BASE_URL}/etablissements?page=${page}&size=${size}`,
       {
@@ -13,25 +26,21 @@ export async function getSchools(page: number = 0, size: number = 10) {
         },
       }
     );
-    const schools: {
-      size: number;
-      totalPages: number;
-      page: number;
-      content: any[];
-      totalElements: number;
-    } = await response.json();
-    //  console.log("Schools => ", schools);
-
-    return schools.content;
+    if (response.ok) {
+      const schools: SchoolsResponse = await response.json();
+      return schools;
+    } else {
+      console.log("Server error => ", response)
+      throw new Error(requestMessages.SERVER_ERROR);
+    }
   } catch (error) {
     console.log("Get school error => ", error);
-    return [];
+    throw new Error(requestMessages.SERVER_UNREACHABLE);
   }
 }
 
 export async function getSTs(page: number = 0, size: number = 10) {
   try {
-    console.log("GET STs...");
     const response = await fetch(
       `${API_BASE_URL}/form?anneeId=16&page=${page}&size=${size}`,
       {
@@ -40,13 +49,18 @@ export async function getSTs(page: number = 0, size: number = 10) {
         },
       }
     );
-    const schoolSts = await response.json();
-    //  console.log("schoolSts Ok => ", schoolSts);
 
-    return schoolSts;
+    if (response.ok) {
+      const schoolSts = await response.json();
+
+      return schoolSts;
+    } else {
+      console.log("Server error => ", response)
+      throw new Error(requestMessages.SERVER_ERROR);
+    }
   } catch (error) {
     console.log("Get STs error => ", error);
-    return [];
+    throw new Error(requestMessages.SERVER_UNREACHABLE);
   }
 }
 
@@ -58,12 +72,17 @@ export async function getYearsId() {
         "Content-Type": "application/json",
       },
     });
-    const years = await response.json();
-    console.log("years => ", years);
 
-    return years;
+    if (response.ok) {
+      const years = await response.json();
+
+      return years;
+    } else {
+      console.log("Server error => ", response)
+      throw new Error(requestMessages.SERVER_ERROR);
+    }
   } catch (error) {
     console.log("Get STs error => ", error);
-    return [];
+    throw new Error(requestMessages.SERVER_UNREACHABLE);
   }
 }
