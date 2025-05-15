@@ -8,6 +8,8 @@ import Button from "../basic/Button";
 import H2 from "../basic/H2";
 import Link from "next/link";
 import { SchoolType } from "@/util/types";
+import { localStoragekeys } from "@/util/constants";
+import { useParams, useRouter } from "next/navigation";
 
 const EncodingsContent = ({
   title,
@@ -19,6 +21,20 @@ const EncodingsContent = ({
   const [noHasAscendingOrder, setNoHasAscendingOrder] = useState<boolean>(true);
   const [nameHasAscendingOrder, setNameHasAscendingOrder] =
     useState<boolean>(true);
+  const router = useRouter();
+  const { yearId } = useParams();
+
+  const handleSchoolSelection = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    school: SchoolType
+  ) => {
+    e.preventDefault();
+    localStorage.setItem(
+      localStoragekeys.CURRRENT_SCHOOL,
+      JSON.stringify(school)
+    );
+    router.push(`/encodings/${yearId}/${school.id}`);
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -92,7 +108,7 @@ const EncodingsContent = ({
               <tr className="bg-[rgb(248,248,248)]">
                 <th>
                   <label className="flex justify-between">
-                    <span>No</span>
+                    <span>Id</span>
                     <span className="flex">
                       <ArrowBigUpIcon
                         className={`h-5 w-5 cursor-pointer ${
@@ -111,7 +127,7 @@ const EncodingsContent = ({
                 </th>
                 <th>
                   <label className="flex justify-between">
-                    <span>{"Nom de l'Établissements"}</span>
+                    <span>{"Nom de l'Établissement"}</span>
                     <span className="flex">
                       <ArrowBigUpIcon
                         className={`h-5 w-5 cursor-pointer ${
@@ -137,9 +153,14 @@ const EncodingsContent = ({
             <tbody>
               {schools.map((school, index) => (
                 <tr key={index}>
-                  <td>{index}</td>
+                  <td>{school.id}</td>
                   <td className="text-primary_color font-bold">
-                    <Link href={`/encodings/${school.id}`}>{school.nom}</Link>
+                    <Link
+                      href="#"
+                      onClick={(e) => handleSchoolSelection(e, school)}
+                    >
+                      {school.nom || school.libelle}
+                    </Link>
                   </td>
                   <td>{school.codeAdmin}</td>
                   <td>{school.codeEtablissement}</td>

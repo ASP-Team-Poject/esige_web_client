@@ -1,5 +1,5 @@
-import Encodings from "@/components/encodings/Encodings";
+import SchoolYears from "@/components/schools/SchoolYears";
 
-export default function EncodingsPage() {
-  return <Encodings />;
+export default function SchoolYearsPage() {
+  return <SchoolYears path="/encodings" />;
 }

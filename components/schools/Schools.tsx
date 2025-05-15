@@ -149,7 +149,7 @@ const Schools = () => {
                           <td>{school.id}</td>
                           <td className="text-primary_color font-bold">
                             <Link href={`/encodings/${school.id}`}>
-                              {school.libelle}
+                              {school.nom || school.libelle}
                             </Link>
                           </td>
                           <td>{school.codeAdmin}</td>

@@ -13,6 +13,7 @@ import { LoginCredentials } from "@/util/types";
 import { login } from "@/services/UserService";
 import { Toast } from "./basic/Toast";
 import Cookies from "js-cookie";
+import { localStoragekeys } from "@/util/constants";
 
 const Login = () => {
   const [loginForm, setLoginForm] = useState<LoginCredentials>({
@@ -47,7 +48,7 @@ const Login = () => {
       });
 
       localStorage.setItem(
-        "currentUser",
+        localStoragekeys.CURRRENT_USER,
         JSON.stringify({
           ...currentUser,
           displayName: currentUser.firstName || currentUser.username,
@@ -55,7 +56,7 @@ const Login = () => {
       );
 
       // Put the user id in the Cookies for the middleware
-      Cookies.set("userId", `${currentUser.id}`);
+      Cookies.set(localStoragekeys.USER_ID, `${currentUser.id}`);
 
       router.push("/home");
     } catch (error) {

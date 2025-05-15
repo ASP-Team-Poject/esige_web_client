@@ -67,3 +67,9 @@ export const requestMessages = {
     "The server is unreachable, please try again or contact you admin.",
   SERVER_ERROR: "There is a problem on the server, please contact your admin.",
 };
+
+export const localStoragekeys = {
+  CURRRENT_USER: "currentUser",
+  CURRRENT_SCHOOL: "currentUser",
+  USER_ID: "userId",
+};

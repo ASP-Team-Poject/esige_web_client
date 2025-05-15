@@ -9,6 +9,7 @@ import { userRoutes } from "@/util/routes";
 import Loader from "./basic/Loader";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { localStoragekeys } from "@/util/constants";
 
 const UserZone = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -18,13 +19,15 @@ const UserZone = () => {
   const handleLogOut = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     localStorage.clear();
-    Cookies.remove("userId");
+    Cookies.remove(localStoragekeys.USER_ID);
 
     router.push("/");
   };
 
   useEffect(() => {
-    const foundCurrentUser = JSON.parse(localStorage.getItem("currentUser")!);
+    const foundCurrentUser = JSON.parse(
+      localStorage.getItem(localStoragekeys.CURRRENT_USER)!
+    );
     setCurrentUser(foundCurrentUser);
   }, []);
 

@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import EncodingsContent from "./EncodingsContent";
+import { SchoolType } from "@/util/types";
+import { getSchools } from "@/services/SchoolServise";
 
 const tabsNames: string[] = [
   "Non Identifiées",
@@ -12,6 +14,15 @@ const tabsNames: string[] = [
 
 const Encodings = () => {
   const [currentTabName, setCurrentTabName] = useState<string>(tabsNames[0]);
+  const [schools, setSchools] = useState<SchoolType[]>([]);
+
+  useEffect(() => {
+    const loadSchools = async () => {
+      const data = await getSchools(0, 10);
+      setSchools(data.content);
+    };
+    loadSchools();
+  }, []);
 
   return (
     <PageContentWrapper pageTitle="Encodages">
@@ -35,17 +46,17 @@ const Encodings = () => {
         {currentTabName === tabsNames[0] ? (
           <EncodingsContent
             title="Liste des Établissements Non Identifiées"
-            schools={[]}
+            schools={schools}
           />
         ) : currentTabName === tabsNames[1] ? (
           <EncodingsContent
             title="Liste des Établissements En cours d'identification"
-            schools={[]}
+            schools={schools}
           />
         ) : currentTabName === tabsNames[2] ? (
           <EncodingsContent
             title="Liste des Établissements Identifiées"
-            schools={[]}
+            schools={schools}
           />
         ) : (
           ""

@@ -136,7 +136,7 @@ const Users = () => {
                             </span>
                           </label>
                         </th>
-                        <th>Phone</th>
+                        <th>{"Téléphone"}</th>
                         <th>Email</th>
                         <th>Actions</th>
                       </tr>
