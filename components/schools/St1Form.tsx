@@ -2,15 +2,15 @@
 
 import { localStoragekeys } from "@/util/constants";
 import React, { useEffect, useState } from "react";
-import PageContentWrapper from "./layout/PageContentWrapper";
+import PageContentWrapper from "../layout/PageContentWrapper";
 import { SchoolStType, SchoolType, SchoolYearType } from "@/util/types";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import Button from "./basic/Button";
+import Button from "../basic/Button";
 import { Download, Save } from "lucide-react";
-import Loader from "./basic/Loader";
-import Select2 from "./basic/Select2";
-import Input2 from "./basic/Input2";
+import Loader from "../basic/Loader";
+import Select2 from "../basic/Select2";
+import Input2 from "../basic/Input2";
 
 const St1Form = () => {
   const [formData, setFormData] = useState<SchoolStType>({
@@ -368,6 +368,10 @@ const St1Form = () => {
       setIsGeneratingPdf(false);
     }
   };
+
+  const handleGoPreviousPage = () => {};
+
+  const handleGoNextPage = () => {};
 
   useEffect(() => {
     handleDownloadPdf();
@@ -1037,12 +1041,29 @@ const St1Form = () => {
           {isGeneratingPdf ? (
             ""
           ) : (
-            <Button
-              className="bg-primary_color self-end"
-              type="submit"
-              title="Enregistrer"
-              icon={<Save />}
-            />
+            <div className="flex justify-between">
+              <div className="flex items-center gap-2">
+                <label
+                  onClick={() => handleGoPreviousPage()}
+                  className="text-primary_color hover:underline cursor-pointer"
+                >
+                  {"Précédent"}
+                </label>
+                <label className="text-gray-500">{"|"}</label>
+                <label
+                  onClick={() => handleGoNextPage()}
+                  className="text-primary_color hover:underline cursor-pointer"
+                >
+                  Suivant
+                </label>
+              </div>
+              <Button
+                className="bg-primary_color self-end"
+                type="submit"
+                title="Enregistrer"
+                icon={<Save />}
+              />
+            </div>
           )}
         </form>
       </PageContentWrapper>

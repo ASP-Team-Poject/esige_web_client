@@ -1,4 +1,4 @@
-import St1Form from "@/components/St1Form";
+import St1Form from "@/components/schools/St1Form";
 import React from "react";
 
 const page = () => {
