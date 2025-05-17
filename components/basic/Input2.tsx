@@ -11,7 +11,7 @@ const Input2 = ({
   name: string;
   type?: string;
   label: string;
-  value: string;
+  value: string | number;
   placeholder?: string;
   handleChange: (e: any) => void;
 }) => {

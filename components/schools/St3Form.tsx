@@ -13,7 +13,7 @@ import Input2 from "../basic/Input2";
 import Pagination from "../basic/Pagination";
 import InputRadio from "../basic/InputRadio";
 
-const St1Form = () => {
+const St3Form = () => {
   const [formData, setFormData] = useState<SchoolStType>({
     id: 0,
     type: "",
@@ -378,7 +378,7 @@ const St1Form = () => {
 
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save(
-        `st1_${formTitleData.schoolName}_${formTitleData.yearLabel}.pdf`
+        `st3_${formTitleData.schoolName}_${formTitleData.yearLabel}.pdf`
       );
       setIsGeneratingPdf(false);
     }
@@ -1009,7 +1009,7 @@ const FormHeader = () => {
         </div>
 
         <div className="flex flex-col items-center w-full p-2">
-          <label className="font-bold">{"ST1"}</label>
+          <label className="font-bold">{"ST3"}</label>
           <label className="font-bold">{"SIGE - RDC"}</label>
           <label>{"Pour la Gestion et le Pilotage du Système éducatif"}</label>
         </div>
@@ -1018,4 +1018,4 @@ const FormHeader = () => {
   );
 };
 
-export default St1Form;
+export default St3Form;

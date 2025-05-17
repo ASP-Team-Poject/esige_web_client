@@ -40,10 +40,14 @@ export async function getSchools(
   }
 }
 
-export async function getSTs(page: number = 0, size: number = 10) {
+export async function getSTs(
+  anneeId: string,
+  page: number = 0,
+  size: number = 10
+) {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/form?anneeId=16&page=${page}&size=${size}`,
+      `${API_BASE_URL}/form?anneeId=${anneeId}&page=${page}&size=${size}`,
       {
         headers: {
           "Content-Type": "application/json",

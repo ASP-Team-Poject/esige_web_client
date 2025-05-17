@@ -2,19 +2,19 @@ import React from "react";
 
 const Select2 = ({
   name,
-  title,
+  label,
   value,
   handleChange,
 }: {
   name: string;
-  title: string;
+  label: string;
   value: string;
   handleChange: (e: any) => void;
 }) => {
   return (
     <div className="flex gap-2 items-center">
       <label htmlFor={name} className="whitespace-nowrap">
-        {title}
+        {label}
       </label>
       <select
         name={name}

@@ -31,7 +31,7 @@ const SchoolSTs = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
   const router = useRouter();
-  const { yearId } = useParams();
+  const { yearId }: { yearId: string } = useParams();
 
   const handleGoPreviousPage = () => {
     const newPage = page === 0 ? 0 : page - 1;
@@ -86,7 +86,7 @@ const SchoolSTs = () => {
   useEffect(() => {
     const loadSchoolSTs = async () => {
       setIsLoading(true);
-      const data = await getSTs(page, Number.parseInt(size));
+      const data = await getSTs(yearId, page, Number.parseInt(size));
       setSchoolSTs(data);
       setIsLoading(false);
     };

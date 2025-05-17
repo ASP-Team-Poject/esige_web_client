@@ -340,6 +340,17 @@ export type SchoolStType = {
     nb_salles_organisees_2eme: number;
     nb_salles_autorisees_3eme: number;
     nb_salles_organisees_3eme: number;
-    is_synced: string;
+    // Added ones
+    copa_est_operationnel: string;
+    nb_femme_copa: number;
+    coges_est_operationnel: string;
+    nb_reunion_avec_pv_annee_passee: number;
+    nb_reunion_rapport_g_annee_passee: number;
+    type_point_eau: string;
+    type_sources_energie: string;
+    nb_compartiment_latrines: number;
+    nb_compartiment_latrines_pour_filles: number;
+    prise_encharge_programme_refugie: string;
+    organisment_programme_refugie: string;
   };
 };

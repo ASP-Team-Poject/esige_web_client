@@ -24,7 +24,7 @@ const Navbar = () => {
         ) : (
           <button
             className={`text-left hover:bg-gray-700 px-4 py-2 rounded ${
-              currentPath === route.path ? "bg-primary_color" : ""
+              currentPath.startsWith(route.path) ? "bg-primary_color" : ""
             }`}
             onClick={() => routeTo(route.path)}
             key={index}
