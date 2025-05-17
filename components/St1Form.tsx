@@ -738,7 +738,7 @@ const St1Form = () => {
               </label>
             </div>
 
-            <div className="flex gap-4 items-center">
+            <div className="flex flex-wrap gap-4 items-center">
               <label
                 htmlFor="formulaire.regime_gestion"
                 className="whitespace-nowrap"
@@ -785,6 +785,7 @@ const St1Form = () => {
                 />
                 Kimbanguiste
               </label>
+
               <label className="flex gap-1 items-center cursor-pointer whitespace-nowrap">
                 <input
                   className="h-fit bg-white w-full border-b-[1px] border-[#ccc] focus:outline-none focus:ring-0 text-gray-600"
