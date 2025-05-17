@@ -1,38 +1,56 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Select from "./basic/Select";
 import Button from "./basic/Button";
 import { Download, Search } from "lucide-react";
 import PageContentWrapper from "./layout/PageContentWrapper";
+import { SchoolYearType } from "@/util/types";
+import { getYearsId } from "@/services/SchoolServise";
 
 const Reporting = () => {
+  const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
+  useEffect(() => {
+    const loadSchoolYears = async () => {
+      const years = await getYearsId();
+      setSchoolYears(years);
+    };
+    loadSchoolYears();
+  }, []);
+
   return (
     <div className="flex flex-col gap-8">
       <PageContentWrapper pageTitle={"Générer Annuaire"}>
         <form className="flex gap-4">
           <Select
-            label="Annee"
-            options={[
-              "2025-2026",
-              "2024-2025",
-              "2023-2024",
-              "2022-2023",
-              "2021-2022",
-              "2020-2021",
-            ]}
+            label="Année"
+            options={
+              schoolYears?.map((year) => {
+                return { id: `${year.id}`, value: year.libAnneeScolaire };
+              }) || []
+            }
           />
           <Select
             label="Type de tableau"
             options={[
-              "Tableau 5",
-              "Tableau 4",
-              "Tableau 3",
-              "Tableau 2",
-              "Tableau 1",
+              {
+                id: "Taux de couverture selon les provinces",
+                value: "Taux de couverture selon les provinces",
+              },
+              {
+                id: "Taux de couverture selon les provinces",
+                value:
+                  "Nbr Ecole de préscolaire par regime de gestion selon/province",
+              },
             ]}
           />
           <Select
             label="Type d'enseignement"
-            options={["ST1(Prescolaire)", "ST2(Primaire)", "ST3(Secondaire)"]}
+            options={[
+              { id: "ST1(Prescolaire)", value: "ST1(Prescolaire)" },
+              { id: "ST2(Primaire)", value: "ST2(Primaire)" },
+              { id: "ST3(Secondaire)", value: "ST3(Secondaire)" },
+            ]}
           />
           <Button
             className="h-fit self-end"
@@ -48,12 +66,21 @@ const Reporting = () => {
         }
       >
         <div className="max-w-[990px] flex flex-col gap-2">
-          <Button
-            title="Exporter en Excel"
-            type="button"
-            icon={<Download />}
-            className="w-fit"
-          />
+          <div className="flex gap-2">
+            <Button
+              title="Exporter en Excel"
+              type="button"
+              icon={<Download />}
+              className="w-fit bg-green-500"
+            />
+            <Button
+              title="Exporter en Pdf"
+              type="button"
+              icon={<Download />}
+              className="w-fit bg-red-500"
+            />
+          </div>
+
           <div className=" overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-100">

@@ -8,13 +8,18 @@ import { useRouter } from "next/navigation";
 import { getYearsId } from "@/services/SchoolServise";
 import { SchoolYearType } from "@/util/types";
 import Loader from "../basic/Loader";
+import { localStoragekeys } from "@/util/constants";
 
 const SchoolYears = ({ path }: { path: string }) => {
   const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
   const router = useRouter();
 
-  const handleClick = (yearId: number) => {
-    router.push(`${path}/${yearId}`);
+  const handleClick = (year: SchoolYearType) => {
+    localStorage.setItem(
+      localStoragekeys.CURRENT_SCHOOL_YEAR,
+      JSON.stringify(year)
+    );
+    router.push(`${path}/${year.id}`);
   };
 
   useEffect(() => {
@@ -34,7 +39,7 @@ const SchoolYears = ({ path }: { path: string }) => {
             {schoolYears.map((year, index) => (
               <div
                 key={index}
-                onClick={() => handleClick(year.id)}
+                onClick={() => handleClick(year)}
                 className="flex flex-col justify-center cursor-pointer gap-4 p-4 rounded-xl bg-primary_color hover:bg-primary_color_hover"
               >
                 <label className="text-white font-bold text-center cursor-pointer">

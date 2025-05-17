@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../basic/Input";
 import { ArrowBigDownIcon, ArrowBigUpIcon, School, Search } from "lucide-react";
 import Select from "../basic/Select";
 import Button from "../basic/Button";
 import H2 from "../basic/H2";
 import Link from "next/link";
-import { SchoolType } from "@/util/types";
+import { SchoolType, SchoolYearType } from "@/util/types";
 import { localStoragekeys } from "@/util/constants";
 import { useParams, useRouter } from "next/navigation";
+import { getYearsId } from "@/services/SchoolServise";
 
 const EncodingsContent = ({
   title,
@@ -23,6 +24,7 @@ const EncodingsContent = ({
     useState<boolean>(true);
   const router = useRouter();
   const { yearId } = useParams();
+  const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
 
   const handleSchoolSelection = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -30,11 +32,18 @@ const EncodingsContent = ({
   ) => {
     e.preventDefault();
     localStorage.setItem(
-      localStoragekeys.CURRRENT_SCHOOL,
+      localStoragekeys.CURRENT_SCHOOL,
       JSON.stringify(school)
     );
     router.push(`/encodings/${yearId}/${school.id}`);
   };
+  useEffect(() => {
+    const loadSchoolYears = async () => {
+      const years = await getYearsId();
+      setSchoolYears(years);
+    };
+    loadSchoolYears();
+  }, []);
 
   return (
     <div className="flex flex-col gap-4">
@@ -42,14 +51,11 @@ const EncodingsContent = ({
       <form className="flex items-center p-4 gap-4 rounded-lg shadow-xl">
         <Select
           label="Année"
-          options={[
-            "2025-2026",
-            "2024-2025",
-            "2023-2024",
-            "2022-2023",
-            "2021-2022",
-            "2020-2021",
-          ]}
+          options={
+            schoolYears?.map((year) => {
+              return { id: `${year.id}`, value: year.libAnneeScolaire };
+            }) || []
+          }
         />
         <Input
           value=""
@@ -62,10 +68,7 @@ const EncodingsContent = ({
           placeholder="établissement"
           icon={<School color="gray" />}
         />
-        <Select
-          label="Type d'enseignement"
-          options={["ST1(Prescolaire)", "ST2(Primaire)", "ST3(Secondaire)"]}
-        />
+
         <Button
           className="h-fit self-end"
           type="submit"

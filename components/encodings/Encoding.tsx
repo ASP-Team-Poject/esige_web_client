@@ -43,7 +43,7 @@ const Encoding = () => {
 
   useEffect(() => {
     const school = JSON.parse(
-      localStorage.getItem(localStoragekeys.CURRRENT_SCHOOL)!
+      localStorage.getItem(localStoragekeys.CURRENT_SCHOOL)!
     );
     setCurrentSchool(school);
   }, []);

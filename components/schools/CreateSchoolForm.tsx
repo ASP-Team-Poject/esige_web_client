@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import Input from "../basic/Input";
-import { LocationEditIcon, Save, School, User } from "lucide-react";
+import { LocationEditIcon, Save, School } from "lucide-react";
 import Button from "../basic/Button";
 import Select from "../basic/Select";
 
@@ -28,16 +28,6 @@ const CreateSchoolForm = () => {
           type="text"
           placeholder="Nom de l'Établissement"
           icon={<School color="gray" />}
-        />
-        <Input
-          value=""
-          handleChange={(value: string) => {
-            console.log(value);
-          }}
-          label="Nom du Chef de l'Établissement"
-          type="text"
-          placeholder="Nom du Chef de l'Établissement"
-          icon={<User color="gray" />}
         />
 
         <Input
@@ -71,15 +61,24 @@ const CreateSchoolForm = () => {
         />
         <Select
           label="Province"
-          options={["Kinshasa", "Kasai Central", "Kongo Central", "Lualaba"]}
+          options={[
+            { id: "Kinshasa", value: "Kinshasa" },
+            { id: "Kinshasa", value: "Kasai Central" },
+          ]}
         />
         <Select
           label="Province Educationnelle"
-          options={["Lunkunga", "Tshangu", "Mont Amba", "Galiement"]}
+          options={[
+            { id: "Tshangu", value: "Tshangu" },
+            { id: "Lunkunga", value: "Lunkunga" },
+          ]}
         />
         <Select
           label="Sous Province Educationnelle"
-          options={["Gombe", "Tshangu", "Mont Amba"]}
+          options={[
+            { id: "Mont Amba", value: "Mont Amba" },
+            { id: "Gombe", value: "Gombe" },
+          ]}
         />
       </div>
 

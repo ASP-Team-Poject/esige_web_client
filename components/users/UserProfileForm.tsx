@@ -2,22 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import Input from "../basic/Input";
-import {
-  Edit,
-  LocationEditIcon,
-  Lock,
-  LockOpen,
-  School,
-  User,
-} from "lucide-react";
-import Button from "../basic/Button";
-import Select from "../basic/Select";
+import { LocationEditIcon, School, User } from "lucide-react";
 import { UserType } from "@/util/types";
 import { localStoragekeys } from "@/util/constants";
 import Loader from "../basic/Loader";
 
 const UserProfileForm = () => {
-  const [passwordType, setPasswordType] = useState<string>("password");
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,8 +17,10 @@ const UserProfileForm = () => {
 
   useEffect(() => {
     const user = JSON.parse(
-      localStorage.getItem(localStoragekeys.CURRRENT_USER)!
+      localStorage.getItem(localStoragekeys.CURRENT_USER)!
     );
+
+    console.log("USER => ", user);
     setCurrentUser(user);
   }, []);
 
@@ -63,30 +55,7 @@ const UserProfileForm = () => {
               />
 
               <Input
-                value={currentUser.displayName}
-                handleChange={(value: string) => {
-                  console.log(value);
-                }}
-                label="Mot de passe"
-                type={passwordType}
-                placeholder="**********"
-                icon={
-                  passwordType === "password" ? (
-                    <Lock
-                      color="gray"
-                      onClick={() => setPasswordType("text")}
-                      className="cursor-pointer"
-                    />
-                  ) : (
-                    <LockOpen
-                      color="gray"
-                      onClick={() => setPasswordType("password")}
-                      className="cursor-pointer"
-                    />
-                  )
-                }
-              />
-              <Input
+                disabled={true}
                 value={currentUser.displayName}
                 handleChange={(value: string) => {
                   console.log(value);
@@ -97,6 +66,7 @@ const UserProfileForm = () => {
                 icon={<School color="gray" />}
               />
               <Input
+                disabled={true}
                 value={currentUser.phone}
                 handleChange={(value: string) => {
                   console.log(value);
@@ -108,6 +78,7 @@ const UserProfileForm = () => {
               />
 
               <Input
+                disabled={true}
                 value={currentUser.provinceId + ""}
                 handleChange={(value: string) => {
                   console.log(value);
@@ -118,37 +89,42 @@ const UserProfileForm = () => {
                 icon={<LocationEditIcon color="gray" />}
               />
 
-              <Select
-                title="Vous ne pouvez pas modifier ce champ."
+              <Input
                 disabled={true}
+                value={""}
+                handleChange={(value: string) => {
+                  console.log(value);
+                }}
                 label="Province"
-                options={[
-                  "Kinshasa",
-                  "Kasai Central",
-                  "Kongo Central",
-                  "Lualaba",
-                ]}
+                type="text"
+                placeholder="Province"
+                icon={<LocationEditIcon color="gray" />}
               />
-              <Select
-                title="Vous ne pouvez pas modifier ce champ."
+
+              <Input
                 disabled={true}
+                value={""}
+                handleChange={(value: string) => {
+                  console.log(value);
+                }}
                 label="Province Educationnelle"
-                options={["Lunkunga", "Tshangu", "Mont Amba", "Galiement"]}
+                type="text"
+                placeholder="Province Educationnelle"
+                icon={<LocationEditIcon color="gray" />}
               />
-              <Select
-                title="Vous ne pouvez pas modifier ce champ."
+
+              <Input
                 disabled={true}
+                value={""}
+                handleChange={(value: string) => {
+                  console.log(value);
+                }}
                 label="Sous Province Educationnelle"
-                options={["Gombe", "Tshangu", "Mont Amba"]}
+                type="text"
+                placeholder="Sous Province Educationnelle"
+                icon={<LocationEditIcon color="gray" />}
               />
             </div>
-
-            <Button
-              className="w-full lg:w-fit lg:self-end lg:px-8"
-              type="submit"
-              title="Mettre à jour"
-              icon={<Edit />}
-            />
           </form>
         </>
       ) : (

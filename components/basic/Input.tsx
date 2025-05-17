@@ -36,7 +36,7 @@ const Input = ({
         }`}
       >
         <input
-          value={value}
+          value={value || ""}
           onChange={(e) => handleChange(e.target.value)}
           title={title}
           disabled={disabled}

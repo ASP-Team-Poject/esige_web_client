@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
-import { ArrowBigDownIcon, ArrowBigUpIcon } from "lucide-react";
+import { ArrowBigDownIcon, ArrowBigUpIcon, Edit2, Trash2 } from "lucide-react";
 import { getSchools } from "@/services/SchoolServise";
 import { SchoolType } from "@/util/types";
 import { getFormatedDate } from "@/util/functions";
@@ -161,7 +161,13 @@ const Schools = () => {
                               true
                             )}
                           </td>
-                          <td>...</td>
+                          <td>
+                            <label className="flex gap-2">
+                              <Trash2 color="red" className="cursor-pointer" />
+                              <span className="text-gray-500">{"|"}</span>
+                              <Edit2 color="green" className="cursor-pointer" />
+                            </label>
+                          </td>
                         </tr>
                       ))}
                     </tbody>

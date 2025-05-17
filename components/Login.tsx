@@ -48,7 +48,7 @@ const Login = () => {
       });
 
       localStorage.setItem(
-        localStoragekeys.CURRRENT_USER,
+        localStoragekeys.CURRENT_USER,
         JSON.stringify({
           ...currentUser,
           displayName: currentUser.firstName || currentUser.username,
@@ -132,7 +132,7 @@ const Login = () => {
 
         <Button
           isSubmitting={isSubmitting}
-          className="w-full"
+          className="w-full bg-primary_color"
           type="submit"
           title="Connectez - vous"
           icon={<LogIn />}

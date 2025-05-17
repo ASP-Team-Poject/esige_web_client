@@ -26,7 +26,7 @@ export async function getUsers(
 
     if (response.ok) {
       const users: UsersResponse = await response.json();
-      // console.log("Users => ", users.content[0]);
+       console.log("Users => ", users.content[0]);
       return users;
     } else {
       console.log("Server error => ", response);

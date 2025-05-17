@@ -15,6 +15,8 @@ import html2canvas from "html2canvas";
 import NoData from "../basic/NoData";
 import TableHeader from "../TableHeader";
 import TableFooter from "../TableFooter";
+import { useParams, useRouter } from "next/navigation";
+import { localStoragekeys } from "@/util/constants";
 
 const SchoolSTs = () => {
   const [schoolSTs, setSchoolSTs] = useState<SchoolStType[]>([]);
@@ -28,6 +30,8 @@ const SchoolSTs = () => {
   const [totalPages, setTotalPages] = useState<number>(100); // TODO: change this when the st response is changed to Obj with totalPages
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
+  const router = useRouter();
+  const { yearId } = useParams();
 
   const handleGoPreviousPage = () => {
     const newPage = page === 0 ? 0 : page - 1;
@@ -61,6 +65,22 @@ const SchoolSTs = () => {
       pdf.save("identifications.pdf");
       setIsGeneratingPdf(false);
     }
+  };
+
+  const handleClick = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    currentSchoolSt: SchoolStType
+  ) => {
+    e.preventDefault();
+
+    localStorage.setItem(
+      localStoragekeys.CURRENT_SCHOOL_ST,
+      JSON.stringify(currentSchoolSt)
+    );
+
+    const stTypeLC = currentSchoolSt.type.toLocaleLowerCase();
+    const url = `/encodings/${yearId}/${currentSchoolSt.idetablissement}/${stTypeLC}`;
+    router.push(url);
   };
 
   useEffect(() => {
@@ -149,14 +169,13 @@ const SchoolSTs = () => {
                       {schoolSTs.map((schoolSt, index) => (
                         <tr key={index}>
                           <td>{schoolSt.id}</td>
-                          <td>
-                            {schoolSt.nomEtab ||
-                              schoolSt.formulaire.nomEtablissement ||
-                              schoolSt.formulaire.nom_etablissement}
-                          </td>
+                          <td>{schoolSt.nomEtab}</td>
 
                           <td className="text-primary_color font-bold">
-                            <Link href={`#`}>
+                            <Link
+                              href={`#`}
+                              onClick={(e) => handleClick(e, schoolSt)}
+                            >
                               {schoolSt.type}
                             </Link>
                           </td>

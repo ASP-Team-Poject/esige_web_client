@@ -69,7 +69,9 @@ export const requestMessages = {
 };
 
 export const localStoragekeys = {
-  CURRRENT_USER: "currentUser",
-  CURRRENT_SCHOOL: "currentUser",
+  CURRENT_USER: "currentUser",
+  CURRENT_SCHOOL: "currentSchool",
+  CURRENT_SCHOOL_ST: "currentSchoolSt",
+  CURRENT_SCHOOL_YEAR: "currentSchoolYear",
   USER_ID: "userId",
 };

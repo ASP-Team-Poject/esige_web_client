@@ -1,8 +1,8 @@
-import ComingSoon from "@/components/ComingSoon";
+import St1Form from "@/components/St1Form";
 import React from "react";
 
 const page = () => {
-  return <ComingSoon pageTitle="Formulaire ST1" />;
+  return <St1Form />;
 };
 
 export default page;

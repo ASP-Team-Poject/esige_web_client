@@ -21,8 +21,8 @@ const Button = ({
       onClick={onClick}
       disabled={isSubmitting}
       type={type}
-      className={`flex gap-2 justify-center items-center bg-primary_color hover:bg-primary_color_hover text-white font-bold p-2 rounded-sm ${
-        className && className
+      className={`flex gap-2 justify-center items-center hover:bg-primary_color_hover text-white font-bold p-2 rounded-sm ${
+        className ? className : "bg-primary_color"
       }`}
     >
       {isSubmitting ? <Loader /> : <span>{title}</span>}

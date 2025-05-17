@@ -26,7 +26,7 @@ const UserZone = () => {
 
   useEffect(() => {
     const foundCurrentUser = JSON.parse(
-      localStorage.getItem(localStoragekeys.CURRRENT_USER)!
+      localStorage.getItem(localStoragekeys.CURRENT_USER)!
     );
     setCurrentUser(foundCurrentUser);
   }, []);

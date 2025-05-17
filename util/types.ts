@@ -86,7 +86,6 @@ export type SchoolStType = {
     proved: string | null;
     sousProved: string | null;
     centreRegroupement: string;
-    nomEtablissement: string;
     nomChefEtablissement: string;
     typeEtablissement: string;
     niveauxEnseignement: [];
@@ -100,7 +99,6 @@ export type SchoolStType = {
     infrastructures: [];
     validation: boolean;
     created_at: string;
-    nom_etablissement: string;
     adresse_etablissement: string;
     telephone_etablissement: string;
     annee: string;

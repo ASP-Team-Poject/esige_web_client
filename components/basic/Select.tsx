@@ -5,23 +5,29 @@ const Select = ({
   options,
   disabled,
   title,
+  currentOptionId,
+  handleOnChange,
 }: {
   label?: string;
-  options: string[];
+  options: { id: string; value: string }[];
   disabled?: boolean;
   title?: string;
+  currentOptionId?: string;
+  handleOnChange?: () => void;
 }) => {
   return (
     <div className="flex flex-col gap-2 flex-1 w-full">
       {label && <label className="font-bold opacity-70">{label}</label>}
       <select
+        onChange={handleOnChange}
+        value={currentOptionId}
         title={title}
         disabled={disabled}
         className="bg-white text-gray-600 border-[1px] border-[#ccc] p-3 rounded-sm w-full focus:outline-none focus:ring-0"
       >
         {options.map((option, index) => (
-          <option key={index} className="">
-            {option}
+          <option value={option.id} key={index} className="">
+            {option.value}
           </option>
         ))}
       </select>

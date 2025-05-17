@@ -28,9 +28,10 @@ export async function getSchools(
     );
     if (response.ok) {
       const schools: SchoolsResponse = await response.json();
+      // console.log("SHCOOL now => ", schools.content[0]);
       return schools;
     } else {
-      console.log("Server error => ", response)
+      console.log("Server error => ", response);
       throw new Error(requestMessages.SERVER_ERROR);
     }
   } catch (error) {
@@ -55,7 +56,7 @@ export async function getSTs(page: number = 0, size: number = 10) {
 
       return schoolSts;
     } else {
-      console.log("Server error => ", response)
+      console.log("Server error => ", response);
       throw new Error(requestMessages.SERVER_ERROR);
     }
   } catch (error) {
@@ -78,7 +79,7 @@ export async function getYearsId() {
 
       return years;
     } else {
-      console.log("Server error => ", response)
+      console.log("Server error => ", response);
       throw new Error(requestMessages.SERVER_ERROR);
     }
   } catch (error) {

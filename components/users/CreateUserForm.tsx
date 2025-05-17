@@ -97,15 +97,33 @@ const CreateUserForm = () => {
 
         <Select
           label="Province"
-          options={["Kinshasa", "Kasai Central", "Kongo Central", "Lualaba"]}
+          options={[
+            { id: "1", value: "Kinshasa" },
+            { id: "2", value: "Kasai Central" },
+          ]}
         />
         <Select
           label="Province Educationnelle"
-          options={["Lunkunga", "Tshangu", "Mont Amba", "Galiement"]}
+          options={[
+            { id: "1", value: "Tshangu" },
+            { id: "2", value: "Lunkunga" },
+          ]}
         />
         <Select
           label="Sous Province Educationnelle"
-          options={["Gombe", "Tshangu", "Mont Amba"]}
+          options={[
+            { id: "1", value: "Mont Amba" },
+            { id: "2", value: "Gombe" },
+          ]}
+        />
+        <Select
+          label="Role"
+          options={[
+            { id: "1", value: "Superviseur national" },
+            { id: "2", value: "Superviseur provincial" },
+            { id: "3", value: "Superviseur province educationnelle" },
+            { id: "4", value: "Superviseur sous province educationnelle" },
+          ]}
         />
       </div>
 
