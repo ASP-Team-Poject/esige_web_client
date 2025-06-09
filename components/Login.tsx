@@ -17,7 +17,7 @@ import { localStoragekeys } from "@/util/constants";
 
 const Login = () => {
   const [loginForm, setLoginForm] = useState<LoginCredentials>({
-    username: "gombe",
+    username: "dige",
     password: "sigerdc",
   });
   const [isSubmitting, setISubmitting] = useState<boolean>(false);

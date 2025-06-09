@@ -10,7 +10,7 @@ import Link from "next/link";
 import { SchoolType, SchoolYearType } from "@/util/types";
 import { localStoragekeys } from "@/util/constants";
 import { useParams, useRouter } from "next/navigation";
-import { getYearsId } from "@/services/SchoolServise";
+import { getSchoolYears } from "@/services/SchoolServise";
 
 const EncodingsContent = ({
   title,
@@ -39,7 +39,7 @@ const EncodingsContent = ({
   };
   useEffect(() => {
     const loadSchoolYears = async () => {
-      const years = await getYearsId();
+      const years = await getSchoolYears();
       setSchoolYears(years);
     };
     loadSchoolYears();

@@ -5,7 +5,7 @@ import PageContentWrapper from "../layout/PageContentWrapper";
 import H2 from "../basic/H2";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getYearsId } from "@/services/SchoolServise";
+import { getSchoolYears } from "@/services/SchoolServise";
 import { SchoolYearType } from "@/util/types";
 import Loader from "../basic/Loader";
 import { localStoragekeys } from "@/util/constants";
@@ -24,7 +24,7 @@ const SchoolYears = ({ path }: { path: string }) => {
 
   useEffect(() => {
     const loadSchoolYears = async () => {
-      const years = await getYearsId();
+      const years = await getSchoolYears();
       setSchoolYears(years);
     };
     loadSchoolYears();

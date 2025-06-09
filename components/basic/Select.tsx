@@ -13,7 +13,7 @@ const Select = ({
   disabled?: boolean;
   title?: string;
   currentOptionId?: string;
-  handleOnChange?: () => void;
+  handleOnChange?: (e: any) => void;
 }) => {
   return (
     <div className="flex flex-col gap-2 flex-1 w-full">
@@ -25,6 +25,12 @@ const Select = ({
         disabled={disabled}
         className="bg-white text-gray-600 border-[1px] border-[#ccc] p-3 rounded-sm w-full focus:outline-none focus:ring-0"
       >
+        {title && (
+          <option value="" disabled>
+            {title}
+          </option>
+        )}
+
         {options.map((option, index) => (
           <option value={option.id} key={index} className="">
             {option.value}

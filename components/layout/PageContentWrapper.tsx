@@ -8,7 +8,7 @@ const PageContentWrapper = ({
   children,
 }: Readonly<{
   id?: string;
-  pageTitle: string;
+  pageTitle?: string;
   className?: string;
   children: React.ReactNode;
 }>) => {
@@ -19,7 +19,7 @@ const PageContentWrapper = ({
         className && className
       }`}
     >
-      <H1 title={pageTitle} />
+      <H1 title={pageTitle || ""} />
       {children}
     </div>
   );

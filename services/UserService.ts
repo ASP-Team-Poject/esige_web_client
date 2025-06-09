@@ -3,7 +3,7 @@
 import { requestMessages } from "@/util/constants";
 import { LoginCredentials, UserType } from "@/util/types";
 
-const API_BASE_URL = "http://45.8.132.145:8080/users";
+const API_BASE_URL = "http://157.230.112.193:8081/api/users";
 
 type UsersResponse = {
   size: number;
@@ -26,7 +26,7 @@ export async function getUsers(
 
     if (response.ok) {
       const users: UsersResponse = await response.json();
-       console.log("Users => ", users.content[0]);
+      console.log("Users => ", users.content[0]);
       return users;
     } else {
       console.log("Server error => ", response);
@@ -58,6 +58,7 @@ export async function login({
 
     if (response.ok) {
       const data: any = await response.json();
+      console.log("Login response => ", data);
 
       return data;
     } else {

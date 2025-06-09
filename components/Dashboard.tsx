@@ -6,7 +6,7 @@ import StatisticCard from "./StatisticCard";
 import Select from "./basic/Select";
 import PageContentWrapper from "./layout/PageContentWrapper";
 import { SchoolYearType } from "@/util/types";
-import { getYearsId } from "@/services/SchoolServise";
+import { getSchoolYears } from "@/services/SchoolServise";
 
 const Dashboard = () => {
   const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
@@ -20,7 +20,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const loadSchoolYears = async () => {
-      const years = await getYearsId();
+      const years = await getSchoolYears();
       setSchoolYears(years);
     };
     loadSchoolYears();

@@ -26,7 +26,6 @@ const SchoolSTs = () => {
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [totalPages, setTotalPages] = useState<number>(100); // TODO: change this when the st response is changed to Obj with totalPages
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
@@ -87,7 +86,8 @@ const SchoolSTs = () => {
     const loadSchoolSTs = async () => {
       setIsLoading(true);
       const data = await getSTs(yearId, page, Number.parseInt(size));
-      setSchoolSTs(data);
+      setSchoolSTs(data.content);
+      setTotalPages(data.totalPages);
       setIsLoading(false);
     };
     loadSchoolSTs();

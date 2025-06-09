@@ -297,6 +297,22 @@ const St2Form = () => {
       nb_compartiment_latrines_pour_filles: 0,
       prise_encharge_programme_refugie: "",
       organisment_programme_refugie: "",
+      previsions_budgetaires: "",
+      tableau_bord: "",
+      nb_garcon_violence_intimidation: 0,
+      nb_fille_violence_intimidation: 0,
+      nb_garcon_violence_chatiment: 0,
+      nb_fille_violence_chatiment: 0,
+      nb_garcon_violence_harcelement: 0,
+      nb_fille_violence_harcelement: 0,
+      nb_garcon_violence_discrimination: 0,
+      nb_fille_violence_discrimination: 0,
+      nb_garcon_violence_abus_sexuel: 0,
+      nb_fille_violence_abus_sexuel: 0,
+      nb_garcon_violence_autres: 0,
+      nb_fille_violence_autres: 0,
+      nombre_visites_inspection: 0,
+      nb_reunion_avec_pv_annee_passee2: 0,
     },
   });
   // end model
@@ -310,21 +326,21 @@ const St2Form = () => {
   }>({ schoolName: "", yearLabel: "" });
 
   const handleChange = (e: any) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type } = e.target;
     const keys = name.split(".");
 
     setFormData((prevState: any) => {
       if (keys.length === 1) {
         return {
           ...prevState,
-          [name]: value,
+          [name]: type === "number" ? parseInt(value) : value,
         };
       } else {
         return {
           ...prevState,
           [keys[0]]: {
             ...prevState[keys[0]],
-            [keys[1]]: value,
+            [keys[1]]: type === "number" ? parseInt(value) : value,
           },
         };
       }
@@ -390,7 +406,7 @@ const St2Form = () => {
 
   const totalPages = 6; // update this according to the number of page in the current ST Form
   const handleGoNextPage = () => {
-    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev));
   };
 
   useEffect(() => {
@@ -864,6 +880,7 @@ const St2Form = () => {
 
         <div className="flex justify-between">
           <Input2
+            type="number"
             handleChange={handleChange}
             value={formData.formulaire.nb_compartiment_latrines}
             name="formData.formulaire.nb_compartiment_latrines"
@@ -871,6 +888,7 @@ const St2Form = () => {
           />
 
           <Input2
+            type="number"
             handleChange={handleChange}
             value={formData.formulaire.nb_compartiment_latrines_pour_filles}
             name="formData.formulaire.nb_compartiment_latrines_pour_filles"
@@ -923,7 +941,277 @@ const St2Form = () => {
           handleChange={handleChange}
           value={formData.formulaire.organisment_programme_refugie}
           name="formData.formulaire.organisment_programme_refugie"
-          label="2.22. Si oui, par quel organisment ?"
+          label="2.22. Si oui, par quel organisme ?"
+        />
+
+        <InputRadio
+          label={
+            "2.23. Votre établissement a t'il developé un projet d'établissement avec toutes les parties prenantes ?"
+          }
+          name="formulaire.projet_etablissement"
+          currentValue={formData.formulaire.projet_etablissement}
+          allValues={["Oui", "Non"]}
+          handleChange={handleChange}
+        />
+
+        <InputRadio
+          label={
+            "2.24. Votre établissement dispose t'il des prévisions budgetaires et des documents comptables ?"
+          }
+          name="formulaire.previsions_budgetaires"
+          currentValue={formData.formulaire.previsions_budgetaires}
+          allValues={["Oui", "Non"]}
+          handleChange={handleChange}
+        />
+
+        <InputRadio
+          label={
+            "2.25. Votre établissement dispose t'il d'un plan d'action opérationnel ?"
+          }
+          name="formulaire.plan_action"
+          currentValue={formData.formulaire.plan_action}
+          allValues={["Oui", "Non"]}
+          handleChange={handleChange}
+        />
+
+        <InputRadio
+          label={
+            "2.26. Votre établissement a t'il elaborer un Tableau de Bord ?"
+          }
+          name="formulaire.tableau_bord"
+          currentValue={formData.formulaire.tableau_bord}
+          allValues={["Oui", "Non"]}
+          handleChange={handleChange}
+        />
+
+        <InputRadio
+          label={
+            "2.27. Votre établissement a t'il organise une Revue Annuelle de Performance (RAP) ?"
+          }
+          name="formulaire.tableau_bord"
+          currentValue={formData.formulaire.tableau_bord}
+          allValues={["Oui", "Non"]}
+          handleChange={handleChange}
+        />
+
+        <Input2
+          type="number"
+          handleChange={handleChange}
+          value={formData.formulaire.educateurs_formes}
+          name="formData.formulaire.educateurs_formes"
+          label="2.28. Nombre d'éducateurs de l'établissement qui ont reçu une formation durant les derniers 12 mois "
+        />
+
+        <Input2
+          type="number"
+          handleChange={handleChange}
+          value={formData.formulaire.educateurs_cotes_positifs}
+          name="formData.formulaire.educateurs_cotes_positifs"
+          label="2.29. Nombre d'éducateurs cotés positivement(E, TB, B) "
+        />
+
+        <Input2
+          type="number"
+          handleChange={handleChange}
+          value={formData.formulaire.educateurs_inspectes}
+          name="formData.formulaire.educateurs_inspectes"
+          label="2.30. Nombre d'éducateurs ayant reçu une inspection pedagogique C3"
+        />
+
+        <Input2
+          type="number"
+          handleChange={handleChange}
+          value={formData.formulaire.chef_formation}
+          name="formData.formulaire.chef_formation"
+          label="2.31. Chef d'Etablissement a t'il reçu une formation continue durant 12 derniers mois ?"
+        />
+
+        <Input2
+          type="number"
+          handleChange={handleChange}
+          value={formData.formulaire.chef_cote_positif}
+          name="formData.formulaire.chef_cote_positif"
+          label="2.32. Chef d'Etablissement a t'il été coté positivement(Reserve au S/PROVED) ?"
+        />
+
+        <table className="text-left">
+          <thead>
+            <tr>
+              <th colSpan={4} className="text-left">
+                {"2.33. Enfants victimes de violences"}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Forme de violence</th>
+              <th>G</th>
+              <th>F</th>
+              <th>G + F</th>
+            </tr>
+
+            <tr>
+              <th>Intimidation</th>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_intimidation"
+                  value={formData.formulaire.nb_garcon_violence_intimidation}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_intimidation"
+                  value={formData.formulaire.nb_fille_violence_intimidation}
+                />
+              </td>
+              <td>
+                {(formData.formulaire.nb_garcon_violence_intimidation || 0) +
+                  (formData.formulaire.nb_fille_violence_intimidation || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>Chatiment corporel</th>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_chatiment"
+                  value={formData.formulaire.nb_garcon_violence_chatiment}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_chatiment"
+                  value={formData.formulaire.nb_fille_violence_chatiment}
+                />
+              </td>
+              <td>
+                {(formData.formulaire.nb_garcon_violence_chatiment || 0) +
+                  (formData.formulaire.nb_fille_violence_chatiment || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>Harcelement</th>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_harcelement"
+                  value={formData.formulaire.nb_garcon_violence_harcelement}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_harcelement"
+                  value={formData.formulaire.nb_fille_violence_harcelement}
+                />
+              </td>
+              <td>
+                {(formData.formulaire.nb_garcon_violence_harcelement || 0) +
+                  (formData.formulaire.nb_fille_violence_harcelement || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>Discrimination</th>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_discrimination"
+                  value={formData.formulaire.nb_garcon_violence_discrimination}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_discrimination"
+                  value={formData.formulaire.nb_fille_violence_discrimination}
+                />
+              </td>
+              <td>
+                {(formData.formulaire.nb_garcon_violence_discrimination || 0) +
+                  (formData.formulaire.nb_fille_violence_discrimination || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>Abus sexuel</th>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_abus_sexuel"
+                  value={formData.formulaire.nb_garcon_violence_abus_sexuel}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_abus_sexuel"
+                  value={formData.formulaire.nb_fille_violence_abus_sexuel}
+                />
+              </td>
+              <td>
+                {(formData.formulaire.nb_garcon_violence_abus_sexuel || 0) +
+                  (formData.formulaire.nb_fille_violence_abus_sexuel || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>Autres</th>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_autres"
+                  value={formData.formulaire.nb_garcon_violence_autres}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_autres"
+                  value={formData.formulaire.nb_fille_violence_autres}
+                />
+              </td>
+              <td>
+                {(formData.formulaire.nb_garcon_violence_autres || 0) +
+                  (formData.formulaire.nb_fille_violence_autres || 0)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <Input2
+          type="number"
+          handleChange={handleChange}
+          value={formData.formulaire.nombre_visites_inspection}
+          name="formData.formulaire.nombre_visites_inspection"
+          label="Note: pour le 2ème Etablissement (sous logé à la question 2.13) ne remplira pas le tableau 8-9-10, 
+          sur les locaux Nombre de visites d'inspection de l'année passée "
+          labelShouldwrap={true}
+        />
+
+        <Input2
+          type="number"
+          handleChange={handleChange}
+          value={formData.formulaire.nb_reunion_avec_pv_annee_passee2}
+          name="formData.formulaire.nb_reunion_avec_pv_annee_passee2"
+          label="Nombre de reunion avec PV tenues l'année passée "
         />
       </section>
     </div>,

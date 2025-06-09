@@ -355,7 +355,7 @@ export type SchoolStType = {
     previsions_budgetaires: string;
     tableau_bord: string;
     nb_garcon_violence_intimidation: number;
-    nb_fille_violence_intimidation: number;    
+    nb_fille_violence_intimidation: number;
     nb_garcon_violence_chatiment: number;
     nb_fille_violence_chatiment: number;
     nb_garcon_violence_harcelement: number;
@@ -369,4 +369,294 @@ export type SchoolStType = {
     nombre_visites_inspection: number;
     nb_reunion_avec_pv_annee_passee2: number;
   };
+};
+
+export type AnnuaireType = {
+  annee: {
+    idannee: number;
+    lib_annee: string;
+  };
+  province: {
+    provinceID: number;
+    lib_province: string;
+  };
+  proved: {
+    provedId: number;
+    lib_proved: string;
+  };
+  sousProved: {
+    sousProved: number;
+    lib_sousProved: string;
+  };
+  annuaire: {
+    couverture_du_recensement: {
+      tableau1_taux_couverture_niveau_enseignement_selon_province: {
+        sousProved: string;
+        niveaux: {
+          niveau: string;
+          ecole_existante: number;
+          ecole_ayant_repondu: number;
+          taux_de_reponse: number;
+        }[];
+      }[];
+      tableau2_coefficient_redressement_province_niveau_enseignement: {
+        sousProved: {
+          nom: string;
+          coefficients: {
+            pre_primaire: number;
+            primaire: number;
+            secondaire: number;
+          };
+        };
+      };
+      tableau3_tableau_synoptique_statistiques_scolaires_recoltees: {
+        ecoles: {
+          maternelle: {
+            ENC: number;
+            ECC: number;
+            ECP: number;
+            ECK: number;
+            ECI: number;
+            ECS: number;
+            ECF: number;
+            Autres: number;
+            EPR: number;
+            Total: number;
+          };
+          primaire: {
+            ENC: number;
+            ECC: number;
+            ECP: number;
+            ECK: number;
+            ECI: number;
+            ECS: number;
+            ECF: number;
+            Autres: number;
+            EPR: number;
+            Total: number;
+          };
+          secondaire: {
+            ENC: number;
+            ECC: number;
+            ECP: number;
+            ECK: number;
+            ECI: number;
+            ECS: number;
+            ECF: number;
+            Autres: number;
+            EPR: number;
+            Total: number;
+          };
+        };
+        eleves: {
+          maternelle: {
+            ENC: number;
+            ECC: number;
+            ECP: number;
+            ECK: number;
+            ECI: number;
+            ECS: number;
+            ECF: number;
+            Autres: number;
+            EPR: number;
+            Total: number;
+          };
+          primaire: {
+            ENC: number;
+            ECC: number;
+            ECP: number;
+            ECK: number;
+            ECI: number;
+            ECS: number;
+            ECF: number;
+            Autres: number;
+            EPR: number;
+            Total: number;
+          };
+          secondaire: {
+            ENC: number;
+            ECC: number;
+            ECP: number;
+            ECK: number;
+            ECI: number;
+            ECS: number;
+            ECF: number;
+            Autres: number;
+            EPR: number;
+            Total: number;
+          };
+        };
+        enseignants: {
+          maternelle: {
+            ENC: number;
+            ECC: number;
+            ECP: number;
+            ECK: number;
+            ECI: number;
+            ECS: number;
+            ECF: number;
+            Autres: number;
+            EPR: number;
+            Total: number;
+          };
+          primaire: {
+            ENC: number;
+            ECC: number;
+            ECP: number;
+            ECK: number;
+            ECI: number;
+            ECS: number;
+            ECF: number;
+            Autres: number;
+            EPR: number;
+            Total: number;
+          };
+          secondaire: {
+            ENC: number;
+            ECC: number;
+            ECP: number;
+            ECK: number;
+            ECI: number;
+            ECS: number;
+            ECF: number;
+            Autres: number;
+            EPR: number;
+            Total: number;
+          };
+        };
+      };
+    };
+    enseignement_maternel: {
+      proportion_salles_activites: {
+        bon_etat: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_dur: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_paille: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_semi_dur: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_terre_battue: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+      };
+    };
+    enseignement_primaire: {
+      proportion_salles_activites: {
+        bon_etat: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_dur: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_paille: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_semi_dur: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_terre_battue: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+      };
+    };
+    enseignement_secondaire: {
+      proportion_salles_activites: {
+        bon_etat: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_dur: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_paille: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_semi_dur: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+        en_terre_battue: {
+          nombre_salles: number;
+          nombre_salles_type: number;
+          pourcentage: number;
+        };
+      };
+    };
+  };
+};
+
+export type SousProvedType = {
+  id: number;
+  fkTerritoireId: number;
+  fkProvedId: number;
+  libelle: string;
+  lieuImplantation: string;
+  slug: string;
+  createdAt: string;
+  territoire: {
+    id: number;
+    libelle: string;
+    slug: string;
+  };
+};
+
+export type ProvedType = {
+  proved: {
+    id: number;
+    fkProvinceId: number;
+    libelle: string;
+  };
+  sousProved: SousProvedType[];
+};
+
+export type ProvinceType = {
+  id: number;
+  libelle: string;
+  chefLieu: string;
+  slug: string;
+  createdAt: string;
+  isDeleted: false;
+};
+
+export type SchoolRegion = {
+  province: ProvinceType;
+  proveds: ProvedType[];
+};
+
+export type AnnuaireTableType = {
+  title: string;
+  columns: string[];
+  fields: string[];
+  rows: any[];
 };
