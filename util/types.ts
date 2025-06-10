@@ -614,6 +614,12 @@ export type AnnuaireType = {
       };
     };
   };
+  taux_couverture_resume: {
+    taux_couverture_globale_republic: number;
+    taux_couverture_globale_province: number;
+    taux_couverture_globale_proved: number;
+    taux_couverture_globale_sousProved: number;
+  };
 };
 
 export type SousProvedType = {

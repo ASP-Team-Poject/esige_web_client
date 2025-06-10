@@ -39,28 +39,24 @@ export const getFormatedDate = (
 
 export const getAnnuaireTables = (annuaireData: AnnuaireType) => {
   const couverture_du_recensement_tables = getCouvertureDuRecensementTables(
-    annuaireData.annuaire.couverture_du_recensement
+    annuaireData.annuaire.couverture_du_recensement,
+    annuaireData.taux_couverture_resume
   );
-  const enseignement_maternel_tables = getEnseignementMaternelTables(
-    annuaireData.annuaire.enseignement_maternel
-  );
-  const enseignement_primaire_tables = getEnseignementPrimaireTables(
-    annuaireData.annuaire.enseignement_primaire
-  );
-  const enseignement_secondaire_tables = getEnseignementSecondaireTables(
+  const salles_activites_tables = getSallesActiviteTables(
+    annuaireData.annuaire.enseignement_maternel,
+    annuaireData.annuaire.enseignement_primaire,
     annuaireData.annuaire.enseignement_secondaire
   );
 
   return {
     couverture_du_recensement_tables,
-    enseignement_maternel_tables,
-    enseignement_primaire_tables,
-    enseignement_secondaire_tables,
+    salles_activites_tables,
   };
 };
 
 function getCouvertureDuRecensementTables(
-  couverture_du_recensement: any
+  couverture_du_recensement: any,
+  taux_couverture_resume: any
 ): AnnuaireTableType[] {
   const tables: AnnuaireTableType[] = [];
   const tableau1_taux_couverture_niveau_enseignement: AnnuaireTableType = {
@@ -126,6 +122,35 @@ function getCouvertureDuRecensementTables(
       rows: formatedRows,
     };
 
+  const tableau4_taux_couverture_resume: AnnuaireTableType = {
+    title: "Taux de couverture global",
+    columns: [
+      "Taux de couverture globale de la republique",
+      "Taux couverture globalede la province",
+      "Taux couverture globale du proved",
+      "Taux couverture globale sousProved",
+    ],
+    fields: [
+      "taux_couverture_globale_republic",
+      "taux_couverture_globale_province",
+      "taux_couverture_globale_proved",
+      "taux_couverture_globale_sousProved",
+    ],
+    rows: [
+      {
+        taux_couverture_globale_republic:
+          taux_couverture_resume.taux_couverture_globale_republic,
+        taux_couverture_globale_province:
+          taux_couverture_resume.taux_couverture_globale_province,
+        taux_couverture_globale_proved:
+          taux_couverture_resume.taux_couverture_globale_proved,
+        taux_couverture_globale_sousProved:
+          taux_couverture_resume.taux_couverture_globale_sousProved,
+      },
+    ],
+  };
+
+  tables.push(tableau4_taux_couverture_resume);
   tables.push(tableau1_taux_couverture_niveau_enseignement);
   tables.push(tableau2_coefficient_redressement_province_niveau_enseignement);
   tables.push(tableau3_tableau_synoptique_statistiques_scolaires_recoltees);
@@ -133,14 +158,26 @@ function getCouvertureDuRecensementTables(
   return tables;
 }
 
-function getEnseignementMaternelTables(enseignement_maternel: any) {
+function getSallesActiviteTables(
+  enseignement_maternel: any,
+  enseignement_primaire: any,
+  enseignement_secondaire: any
+) {
   const tables: AnnuaireTableType[] = [];
-  const formatedRows = getSallesActivitesFormatedRows(
+  const marternelFormatedRows = getSallesActivitesFormatedRows(
     enseignement_maternel.proportion_salles_activites
   );
 
-  const proportion_salles_activites: AnnuaireTableType = {
-    title: "Salles activité",
+  const primaireFormatedRows = getSallesActivitesFormatedRows(
+    enseignement_primaire.proportion_salles_activites
+  );
+
+  const secondaireFormatedRows = getSallesActivitesFormatedRows(
+    enseignement_secondaire.proportion_salles_activites
+  );
+
+  const salles_activites_maternel: AnnuaireTableType = {
+    title: "Enseignement maternel",
     columns: [
       "Type salle",
       "Nombre salles",
@@ -153,19 +190,47 @@ function getEnseignementMaternelTables(enseignement_maternel: any) {
       "nombre_salles_type",
       "pourcentage",
     ],
-    rows: formatedRows,
+    rows: marternelFormatedRows,
   };
-  tables.push(proportion_salles_activites);
 
-  return tables;
-}
+  const salles_activites_primaire: AnnuaireTableType = {
+    title: "Enseignement primaire",
+    columns: [
+      "Type salle",
+      "Nombre salles",
+      "Nombre salles type",
+      "Pourcentage %",
+    ],
+    fields: [
+      "type_salle",
+      "nombre_salles",
+      "nombre_salles_type",
+      "pourcentage",
+    ],
+    rows: primaireFormatedRows,
+  };
 
-function getEnseignementPrimaireTables(enseignement_primaire: any) {
-  const tables: AnnuaireTableType[] = [];
-  return tables;
-}
-function getEnseignementSecondaireTables(enseignement_secondaire: any) {
-  const tables: AnnuaireTableType[] = [];
+  const salles_activites_secondaire: AnnuaireTableType = {
+    title: "Enseignement secondaire",
+    columns: [
+      "Type salle",
+      "Nombre salles",
+      "Nombre salles type",
+      "Pourcentage %",
+    ],
+    fields: [
+      "type_salle",
+      "nombre_salles",
+      "nombre_salles_type",
+      "pourcentage",
+    ],
+    rows: secondaireFormatedRows,
+  };
+
+  tables.push(salles_activites_maternel);
+  tables.push(salles_activites_primaire);
+  tables.push(salles_activites_secondaire);
+
   return tables;
 }
 

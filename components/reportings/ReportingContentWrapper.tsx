@@ -3,15 +3,10 @@
 import React, { useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import ReportingContent from "./ReportingContent";
-import { AnnuaireTableType, AnnuaireType } from "@/util/types";
+import { AnnuaireType } from "@/util/types";
 import { getAnnuaireTables } from "@/util/functions";
 
-const tabsNames: string[] = [
-  "Couverture du recensement",
-  "Enseignement maternel",
-  "Enseignement primaire",
-  "Enseignement secondaire",
-];
+const tabsNames: string[] = ["Couverture du recensement", "Salles d'activités"];
 
 const ReportingContentWrapper = ({
   annuaireData,
@@ -19,12 +14,8 @@ const ReportingContentWrapper = ({
   annuaireData: AnnuaireType;
 }) => {
   const [currentTabName, setCurrentTabName] = useState<string>(tabsNames[0]);
-  const {
-    couverture_du_recensement_tables,
-    enseignement_maternel_tables,
-    enseignement_primaire_tables,
-    enseignement_secondaire_tables,
-  } = getAnnuaireTables(annuaireData);
+  const { couverture_du_recensement_tables, salles_activites_tables } =
+    getAnnuaireTables(annuaireData);
 
   return (
     <PageContentWrapper>
@@ -48,11 +39,7 @@ const ReportingContentWrapper = ({
         {currentTabName === tabsNames[0] ? (
           <ReportingContent data={couverture_du_recensement_tables} />
         ) : currentTabName === tabsNames[1] ? (
-          <ReportingContent data={enseignement_maternel_tables} />
-        ) : currentTabName === tabsNames[2] ? (
-          <ReportingContent data={enseignement_primaire_tables} />
-        ) : currentTabName === tabsNames[3] ? (
-          <ReportingContent data={enseignement_secondaire_tables} />
+          <ReportingContent data={salles_activites_tables} />
         ) : (
           ""
         )}
