@@ -1,3 +1,5 @@
+"use server";
+
 import { requestMessages } from "@/util/constants";
 import { AnnuaireType } from "@/util/types";
 
@@ -10,6 +12,7 @@ export async function getAnnuaire(AnnuaireRequestData: {
   selectedSousProved: string;
 }): Promise<AnnuaireType> {
   try {
+
     const response = await fetch(
       `${API_BASE_URL}/annuaire-esige/filtreAnnuaire?anneeId=${AnnuaireRequestData.selectedYear}&sousProvedId=${AnnuaireRequestData.selectedSousProved}&provinceId=${AnnuaireRequestData.selectedProvince}&provedId=${AnnuaireRequestData.selectedProved}`,
       {

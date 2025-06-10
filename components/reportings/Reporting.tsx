@@ -100,6 +100,7 @@ const Reporting = () => {
           selectedProved,
           selectedSousProved,
         });
+        console.log("Annuaire data => ", annuaireData);
         setAnnuaireData(annuaireData);
         setIsLoading(false);
       }
