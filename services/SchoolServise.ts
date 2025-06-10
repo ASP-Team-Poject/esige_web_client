@@ -70,19 +70,8 @@ export async function getSTs(
 
     if (response.ok) {
       const schoolSts = await response.json();
-      const totalElements = await getCountSTs();
-      const totalPages = Math.ceil(totalElements / size);
 
-      const schoolStsResponse: SchoolStsResponse = {
-        size: size,
-        totalPages: totalPages,
-        page: page,
-        content: schoolSts,
-        totalElements: totalElements,
-      };
-      console.log("schoolStsResponse => ", schoolStsResponse);
-
-      return schoolStsResponse;
+      return schoolSts;
     } else {
       console.log("Server error => ", response);
       throw new Error(requestMessages.SERVER_ERROR);
