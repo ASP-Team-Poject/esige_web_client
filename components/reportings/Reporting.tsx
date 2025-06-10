@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Select from "../basic/Select";
-import Button from "../basic/Button";
-import { Download, Info, Search } from "lucide-react";
+import { Info } from "lucide-react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import {
   AnnuaireType,
@@ -100,7 +99,6 @@ const Reporting = () => {
           selectedProved,
           selectedSousProved,
         });
-        console.log("Annuaire data => ", annuaireData);
         setAnnuaireData(annuaireData);
         setIsLoading(false);
       }

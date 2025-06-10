@@ -91,7 +91,7 @@ function getCouvertureDuRecensementTables(
           .sousProved.coefficients,
       ],
     };
-  const formatedRows = getFormatedrows(
+  const formatedRows = getSynoptiqueFormatedrows(
     couverture_du_recensement.tableau3_tableau_synoptique_statistiques_scolaires_recoltees
   );
   const tableau3_tableau_synoptique_statistiques_scolaires_recoltees: AnnuaireTableType =
@@ -133,21 +133,43 @@ function getCouvertureDuRecensementTables(
   return tables;
 }
 
-function getEnseignementMaternelTables(couverture_du_recensement: any) {
+function getEnseignementMaternelTables(enseignement_maternel: any) {
+  const tables: AnnuaireTableType[] = [];
+  const formatedRows = getSallesActivitesFormatedRows(
+    enseignement_maternel.proportion_salles_activites
+  );
+
+  const proportion_salles_activites: AnnuaireTableType = {
+    title: "Salles activité",
+    columns: [
+      "Type salle",
+      "Nombre salles",
+      "Nombre salles type",
+      "Pourcentage %",
+    ],
+    fields: [
+      "type_salle",
+      "nombre_salles",
+      "nombre_salles_type",
+      "pourcentage",
+    ],
+    rows: formatedRows,
+  };
+  tables.push(proportion_salles_activites);
+
+  return tables;
+}
+
+function getEnseignementPrimaireTables(enseignement_primaire: any) {
+  const tables: AnnuaireTableType[] = [];
+  return tables;
+}
+function getEnseignementSecondaireTables(enseignement_secondaire: any) {
   const tables: AnnuaireTableType[] = [];
   return tables;
 }
 
-function getEnseignementPrimaireTables(couverture_du_recensement: any) {
-  const tables: AnnuaireTableType[] = [];
-  return tables;
-}
-function getEnseignementSecondaireTables(couverture_du_recensement: any) {
-  const tables: AnnuaireTableType[] = [];
-  return tables;
-}
-
-type ToFormatType = {
+type ToFormatSynoptiqueType = {
   ecoles: {
     maternelle: {
       ENC: number;
@@ -263,7 +285,8 @@ type ToFormatType = {
     };
   };
 };
-type FormatedRowType = {
+
+type FormatedRowSynoptiqueType = {
   libelle: string;
   ENC: number;
   ECC: number;
@@ -276,8 +299,11 @@ type FormatedRowType = {
   EPR: number;
   Total: number;
 };
-function getFormatedrows(data: ToFormatType): FormatedRowType[] {
-  const formatedRows: FormatedRowType[] = [];
+
+function getSynoptiqueFormatedrows(
+  data: ToFormatSynoptiqueType
+): FormatedRowSynoptiqueType[] {
+  const formatedRows: FormatedRowSynoptiqueType[] = [];
   const { ecoles, eleves, enseignants } = data;
 
   const dataCategory = {
@@ -295,7 +321,7 @@ function getFormatedrows(data: ToFormatType): FormatedRowType[] {
 
   for (const libelle of libelles) {
     for (const type of types) {
-      const row: FormatedRowType = {
+      const row: FormatedRowSynoptiqueType = {
         libelle: `${libelle} ${type}`,
         ENC:
           libelle === dataCategory.ECOLES
@@ -362,5 +388,57 @@ function getFormatedrows(data: ToFormatType): FormatedRowType[] {
     }
   }
 
+  return formatedRows;
+}
+
+type ToFormatSallesActivitesType = {
+  bon_etat: {
+    nombre_salles: number;
+    nombre_salles_type: number;
+    pourcentage: number;
+  };
+  en_dur: {
+    nombre_salles: number;
+    nombre_salles_type: number;
+    pourcentage: number;
+  };
+  en_paille: {
+    nombre_salles: number;
+    nombre_salles_type: number;
+    pourcentage: number;
+  };
+  en_semi_dur: {
+    nombre_salles: number;
+    nombre_salles_type: number;
+    pourcentage: number;
+  };
+  en_terre_battue: {
+    nombre_salles: number;
+    nombre_salles_type: number;
+    pourcentage: number;
+  };
+};
+type FormatedRowSallesActivitesType = {
+  type_salle: string;
+  nombre_salles: number;
+  nombre_salles_type: number;
+  pourcentage: number;
+};
+
+function getSallesActivitesFormatedRows(
+  salles_activites: ToFormatSallesActivitesType
+): FormatedRowSallesActivitesType[] {
+  const formatedRows: FormatedRowSallesActivitesType[] = [];
+  for (const key in salles_activites) {
+    if (salles_activites.hasOwnProperty(key)) {
+      const salle = salles_activites[key as keyof ToFormatSallesActivitesType];
+      formatedRows.push({
+        type_salle: key.replace(/_/g, " "),
+        nombre_salles: salle.nombre_salles,
+        nombre_salles_type: salle.nombre_salles_type,
+        pourcentage: salle.pourcentage,
+      });
+    }
+  }
   return formatedRows;
 }

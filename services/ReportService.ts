@@ -12,15 +12,13 @@ export async function getAnnuaire(AnnuaireRequestData: {
   selectedSousProved: string;
 }): Promise<AnnuaireType> {
   try {
+    const url = `${API_BASE_URL}/annuaire-esige/filtreAnnuaire?anneeId=${AnnuaireRequestData.selectedYear}&sousProvedId=${AnnuaireRequestData.selectedSousProved}&provinceId=${AnnuaireRequestData.selectedProvince}&provedId=${AnnuaireRequestData.selectedProved}`;
 
-    const response = await fetch(
-      `${API_BASE_URL}/annuaire-esige/filtreAnnuaire?anneeId=${AnnuaireRequestData.selectedYear}&sousProvedId=${AnnuaireRequestData.selectedSousProved}&provinceId=${AnnuaireRequestData.selectedProvince}&provedId=${AnnuaireRequestData.selectedProved}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     if (response.ok) {
       const annuaire: AnnuaireType = await response.json();
 
