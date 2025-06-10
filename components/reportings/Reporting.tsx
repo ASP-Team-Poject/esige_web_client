@@ -106,6 +106,14 @@ const Reporting = () => {
     loadAnnuaireData();
   }, [selectedSousProved]);
 
+  useEffect(() => {
+    if (selectedYear) {
+      setSelectedProvince(null);
+      setSelectedProved(null);
+      setSelectedSousProved(null);
+    }
+  }, [selectedYear]);
+
   return (
     <div className="flex flex-col gap-8">
       <PageContentWrapper pageTitle={"Générer Annuaire"}>
