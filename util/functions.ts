@@ -40,7 +40,8 @@ export const getFormatedDate = (
 export const getAnnuaireTables = (annuaireData: AnnuaireType) => {
   const couverture_du_recensement_tables = getCouvertureDuRecensementTables(
     annuaireData.annuaire.couverture_du_recensement,
-    annuaireData.taux_couverture_resume
+    annuaireData.taux_couverture_resume,
+    annuaireData.annee.idannee //TO REMOVE: idannee
   );
   const salles_activites_tables = getSallesActiviteTables(
     annuaireData.annuaire.enseignement_maternel,
@@ -56,7 +57,8 @@ export const getAnnuaireTables = (annuaireData: AnnuaireType) => {
 
 function getCouvertureDuRecensementTables(
   couverture_du_recensement: any,
-  taux_couverture_resume: any
+  taux_couverture_resume: any,
+  idannee: number
 ): AnnuaireTableType[] {
   const tables: AnnuaireTableType[] = [];
   const tableau1_taux_couverture_niveau_enseignement: AnnuaireTableType = {
@@ -125,10 +127,10 @@ function getCouvertureDuRecensementTables(
   const tableau4_taux_couverture_resume: AnnuaireTableType = {
     title: "Taux de couverture global",
     columns: [
-      "Taux de couverture globale de la republique",
-      "Taux couverture globalede la province",
-      "Taux couverture globale du proved",
-      "Taux couverture globale sousProved",
+      "Taux de couverture globale de la republique %",
+      "Taux couverture globalede la province %",
+      "Taux couverture globale du proved %",
+      "Taux couverture globale sousProved %",
     ],
     fields: [
       "taux_couverture_globale_republic",
@@ -138,8 +140,8 @@ function getCouvertureDuRecensementTables(
     ],
     rows: [
       {
-        taux_couverture_globale_republic:
-          taux_couverture_resume.taux_couverture_globale_republic,
+        taux_couverture_globale_republic: idannee === 16 ? 94.07 : 94.87, // TO REMOVE: idannee === 16 ? 94.07 : 94.87,
+        // taux_couverture_resume.taux_couverture_globale_republic,
         taux_couverture_globale_province:
           taux_couverture_resume.taux_couverture_globale_province,
         taux_couverture_globale_proved:
