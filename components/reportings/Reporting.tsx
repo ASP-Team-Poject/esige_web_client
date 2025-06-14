@@ -175,7 +175,28 @@ const Reporting = () => {
           {isLoading ? (
             <Loader colorClass="text-primary_color" size={48} />
           ) : (
-            <ReportingContentWrapper annuaireData={annuaireData!} />
+            <ReportingContentWrapper
+              annuaireData={annuaireData!}
+              selectedSousProved={
+                sousProveds?.find(
+                  (sousProved) => `${sousProved.id}` === selectedSousProved
+                )?.libelle || ""
+              }
+              selectedProved={
+                proveds?.find(
+                  (proved) => `${proved.proved.id}` === selectedProved
+                )?.proved.libelle || ""
+              }
+              selectedProvince={
+                provinces?.find(
+                  (province) => `${province.id}` === selectedProvince
+                )?.libelle || ""
+              }
+              selectedYear={
+                schoolYears?.find((year) => `${year.id}` === selectedYear)
+                  ?.libAnneeScolaire || ""
+              }
+            />
           )}
         </>
       ) : (
