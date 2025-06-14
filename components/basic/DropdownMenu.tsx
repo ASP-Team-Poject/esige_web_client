@@ -21,7 +21,7 @@ const DropdownMenu = ({
     <div>
       <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex justify-between items-center w-full hover:bg-gray-700 px-4 py-2 rounded"
+        className="flex justify-between items-center w-full hover:bg-gray-200 hover:text-gray-600 px-4 py-2 rounded"
       >
         <label className="flex gap-2 items-center cursor-pointer">
           <route.icon />
@@ -41,8 +41,10 @@ const DropdownMenu = ({
             {route.sub_routes?.map((sub_route: MenuRoute, index) => (
               <button
                 key={index}
-                className={`w-full text-left hover:bg-gray-700 px-4 py-2 rounded ${
-                  currentPath === sub_route.path ? "bg-primary_color" : ""
+                className={`w-full text-left hover:bg-gray-200 hover:text-gray-600 px-4 py-2 rounded ${
+                  currentPath === sub_route.path
+                    ? "bg-primary_color text-white"
+                    : ""
                 }`}
                 onClick={() => routeTo(sub_route.path)}
               >

@@ -82,28 +82,6 @@ export async function getSTs(
   }
 }
 
-export async function getCountSTs() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/form/count`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const schoolStsCount = await response.json();
-
-      return schoolStsCount;
-    } else {
-      console.log("Server error => ", response);
-      throw new Error(requestMessages.SERVER_ERROR);
-    }
-  } catch (error) {
-    console.log("Get STs count error => ", error);
-    throw new Error(requestMessages.SERVER_UNREACHABLE);
-  }
-}
-
 export async function getSchoolYears(): Promise<SchoolYearType[]> {
   try {
     console.log("GET School Years...");
