@@ -525,7 +525,9 @@ export function throwRequestError(error: any) {
 
 export function returnDataOrThrowServerError(response: Response) {
   if (response.ok) {
-    return response.json();
+    const data = response.json();
+    console.log("response 2 ", data);
+    return data;
   } else {
     console.log("Server error => ", response);
     throw new Error(requestMessages.SERVER_ERROR);

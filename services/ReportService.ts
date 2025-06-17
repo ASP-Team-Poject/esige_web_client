@@ -1,6 +1,10 @@
 "use server";
 
 import { requestMessages } from "@/util/constants";
+import {
+  returnDataOrThrowServerError,
+  throwRequestError,
+} from "@/util/functions";
 import { AnnuaireType } from "@/util/types";
 
 const API_BASE_URL = "http://157.230.112.193:8081/api";
@@ -10,8 +14,9 @@ export async function getAnnuaire(AnnuaireRequestData: {
   selectedProvince: string;
   selectedProved: string;
   selectedSousProved: string;
-}): Promise<AnnuaireType> {
+}): Promise<AnnuaireType | undefined> {
   try {
+    console.log("AnnuaireRequestData", AnnuaireRequestData);
     const url = `${API_BASE_URL}/annuaire-esige/filtreAnnuaire?anneeId=${AnnuaireRequestData.selectedYear}&sousProvedId=${AnnuaireRequestData.selectedSousProved}&provinceId=${AnnuaireRequestData.selectedProvince}&provedId=${AnnuaireRequestData.selectedProved}`;
 
     const response = await fetch(url, {
@@ -19,16 +24,10 @@ export async function getAnnuaire(AnnuaireRequestData: {
         "Content-Type": "application/json",
       },
     });
-    if (response.ok) {
-      const annuaire: AnnuaireType = await response.json();
-
-      return annuaire;
-    } else {
-      console.log("Server error => ", response);
-      throw new Error(requestMessages.SERVER_ERROR);
-    }
-  } catch (error) {
-    console.log("Get school error => ", error);
-    throw new Error(requestMessages.SERVER_UNREACHABLE);
+    console.log("response 1", response);
+    return returnDataOrThrowServerError(response);
+  } catch (error: any) {
+    console.log("Get Users error => ", error);
+    throwRequestError(error);
   }
 }

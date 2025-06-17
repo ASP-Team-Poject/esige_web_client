@@ -95,8 +95,9 @@ const SchoolSTs = () => {
         }
       } catch (error: any) {
         setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     loadSchoolSTs();
   }, [page, size]);

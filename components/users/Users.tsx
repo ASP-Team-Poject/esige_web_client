@@ -73,9 +73,9 @@ const Users = () => {
         }
       } catch (error: any) {
         setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     };
     loadUsers();
   }, [page, size]);

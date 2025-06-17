@@ -48,8 +48,9 @@ const EncodingSchools = () => {
         }
       } catch (error: any) {
         setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     loadSchools();
   }, [page, size]);

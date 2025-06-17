@@ -17,6 +17,8 @@ import { getAnnuaire } from "@/services/ReportService";
 import ReportingContentWrapper from "./ReportingContentWrapper";
 import Loader from "../basic/Loader";
 import { Toast } from "../basic/Toast";
+import FetchingDataError from "../basic/FetchingDataError";
+import NoData from "../basic/NoData";
 
 const Reporting = () => {
   const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
@@ -37,6 +39,7 @@ const Reporting = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadSchoolYears = async () => {
@@ -102,19 +105,28 @@ const Reporting = () => {
   useEffect(() => {
     setIsLoading(true);
     const loadAnnuaireData = async () => {
-      if (
-        selectedSousProved &&
-        selectedYear &&
-        selectedProvince &&
-        selectedProved
-      ) {
-        const annuaireData = await getAnnuaire({
-          selectedYear,
-          selectedProvince,
-          selectedProved,
-          selectedSousProved,
-        });
-        setAnnuaireData(annuaireData);
+      try {
+        if (
+          selectedSousProved &&
+          selectedYear &&
+          selectedProvince &&
+          selectedProved
+        ) {
+          const annuaireData = await getAnnuaire({
+            selectedYear,
+            selectedProvince,
+            selectedProved,
+            selectedSousProved,
+          });
+
+          if (annuaireData) {
+            console.log("annuaireData 2", annuaireData);
+            setAnnuaireData(annuaireData);
+          }
+        }
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
         setIsLoading(false);
       }
     };
@@ -190,28 +202,42 @@ const Reporting = () => {
           {isLoading ? (
             <Loader colorClass="text-primary_color" size={48} />
           ) : (
-            <ReportingContentWrapper
-              annuaireData={annuaireData!}
-              selectedSousProved={
-                sousProveds?.find(
-                  (sousProved) => `${sousProved.id}` === selectedSousProved
-                )?.libelle || ""
-              }
-              selectedProved={
-                proveds?.find(
-                  (proved) => `${proved.proved.id}` === selectedProved
-                )?.proved.libelle || ""
-              }
-              selectedProvince={
-                provinces?.find(
-                  (province) => `${province.id}` === selectedProvince
-                )?.libelle || ""
-              }
-              selectedYear={
-                schoolYears?.find((year) => `${year.id}` === selectedYear)
-                  ?.libAnneeScolaire || ""
-              }
-            />
+            <>
+              {error ? (
+                <FetchingDataError message={error} />
+              ) : (
+                <>
+                  {annuaireData ? (
+                    <ReportingContentWrapper
+                      annuaireData={annuaireData!}
+                      selectedSousProved={
+                        sousProveds?.find(
+                          (sousProved) =>
+                            `${sousProved.id}` === selectedSousProved
+                        )?.libelle || ""
+                      }
+                      selectedProved={
+                        proveds?.find(
+                          (proved) => `${proved.proved.id}` === selectedProved
+                        )?.proved.libelle || ""
+                      }
+                      selectedProvince={
+                        provinces?.find(
+                          (province) => `${province.id}` === selectedProvince
+                        )?.libelle || ""
+                      }
+                      selectedYear={
+                        schoolYears?.find(
+                          (year) => `${year.id}` === selectedYear
+                        )?.libAnneeScolaire || ""
+                      }
+                    />
+                  ) : (
+                    <NoData />
+                  )}
+                </>
+              )}
+            </>
           )}
         </>
       ) : (
