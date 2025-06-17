@@ -29,15 +29,10 @@ export const mainRoutes: MenuRoute[] = [
     sub_routes: [
       { name: "Liste", path: "/schools", icon: List },
       { name: "Creer un Nouveau", path: "/schools/new", icon: Plus },
-      {
-        name: "Centres de Regroupement",
-        path: "/schools/grouping_centers",
-        icon: List,
-      },
     ],
   },
   {
-    name: "Établissements Identifié",
+    name: "Établissements Identifiés",
     path: "/identifications",
     icon: List,
   },

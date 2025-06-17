@@ -2,6 +2,10 @@
 
 import { requestMessages } from "@/util/constants";
 import {
+  returnDataOrThrowServerError,
+  throwRequestError,
+} from "@/util/functions";
+import {
   SchoolRegion,
   SchoolStType,
   SchoolType,
@@ -29,7 +33,7 @@ type SchoolStsResponse = {
 export async function getSchools(
   page: number = 0,
   size: number = 10
-): Promise<any> {
+): Promise<SchoolsResponse | undefined> {
   try {
     const response = await fetch(
       `${API_BASE_URL}/etablissements?page=${page}&size=${size}`,
@@ -39,17 +43,10 @@ export async function getSchools(
         },
       }
     );
-    if (response.ok) {
-      const schools: SchoolsResponse = await response.json();
-
-      return schools;
-    } else {
-      console.log("Server error => ", response);
-      throw new Error(requestMessages.SERVER_ERROR);
-    }
-  } catch (error) {
-    console.log("Get school error => ", error);
-    throw new Error(requestMessages.SERVER_UNREACHABLE);
+    return returnDataOrThrowServerError(response);
+  } catch (error: any) {
+    console.log("Get Schools error => ", error);
+    throwRequestError(error);
   }
 }
 
@@ -57,7 +54,7 @@ export async function getSTs(
   anneeId: string,
   page: number = 0,
   size: number = 10
-): Promise<SchoolStsResponse> {
+): Promise<SchoolStsResponse | undefined> {
   try {
     const response = await fetch(
       `${API_BASE_URL}/form?anneeId=${anneeId}&page=${page}&size=${size}`,
@@ -67,62 +64,37 @@ export async function getSTs(
         },
       }
     );
-
-    if (response.ok) {
-      const schoolSts = await response.json();
-
-      return schoolSts;
-    } else {
-      console.log("Server error => ", response);
-      throw new Error(requestMessages.SERVER_ERROR);
-    }
-  } catch (error) {
-    console.log("Get STs error => ", error);
-    throw new Error(requestMessages.SERVER_UNREACHABLE);
+    return returnDataOrThrowServerError(response);
+  } catch (error: any) {
+    console.log("Get Schools STs error => ", error);
+    throwRequestError(error);
   }
 }
 
-export async function getSchoolYears(): Promise<SchoolYearType[]> {
+export async function getSchoolYears(): Promise<SchoolYearType[] | undefined> {
   try {
-    console.log("GET School Years...");
     const response = await fetch(`${API_BASE_URL}/annees-scolaires`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-
-    if (response.ok) {
-      const years = await response.json();
-
-      return years;
-    } else {
-      console.log("Server error => ", response);
-      throw new Error(requestMessages.SERVER_ERROR);
-    }
-  } catch (error) {
-    console.log("Get STs error => ", error);
-    throw new Error(requestMessages.SERVER_UNREACHABLE);
+    return returnDataOrThrowServerError(response);
+  } catch (error: any) {
+    console.log("Get Schools Years error => ", error);
+    throwRequestError(error);
   }
 }
 
-export async function getSchoolRegions(): Promise<SchoolRegion[]> {
+export async function getSchoolRegions(): Promise<SchoolRegion[] | undefined> {
   try {
     const response = await fetch(`${API_BASE_URL}/regions/full-hierarchy`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-
-    if (response.ok) {
-      const regions = await response.json();
-
-      return regions;
-    } else {
-      console.log("Server error => ", response);
-      throw new Error(requestMessages.SERVER_ERROR);
-    }
-  } catch (error) {
-    console.log("Get STs error => ", error);
-    throw new Error(requestMessages.SERVER_UNREACHABLE);
+    return returnDataOrThrowServerError(response);
+  } catch (error: any) {
+    console.log("Get Schools Regions error => ", error);
+    throwRequestError(error);
   }
 }

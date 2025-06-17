@@ -17,6 +17,7 @@ import TableHeader from "../TableHeader";
 import TableFooter from "../TableFooter";
 import { useParams, useRouter } from "next/navigation";
 import { localStoragekeys } from "@/util/constants";
+import FetchingDataError from "../basic/FetchingDataError";
 
 const SchoolSTs = () => {
   const [schoolSTs, setSchoolSTs] = useState<SchoolStType[]>([]);
@@ -26,11 +27,12 @@ const SchoolSTs = () => {
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
 
-  const [totalPages, setTotalPages] = useState<number>(100); // TODO: change this when the st response is changed to Obj with totalPages
+  const [totalPages, setTotalPages] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
   const router = useRouter();
   const { yearId }: { yearId: string } = useParams();
+  const [error, setError] = useState<string>("");
 
   const handleGoPreviousPage = () => {
     const newPage = page === 0 ? 0 : page - 1;
@@ -85,9 +87,15 @@ const SchoolSTs = () => {
   useEffect(() => {
     const loadSchoolSTs = async () => {
       setIsLoading(true);
-      const data = await getSTs(yearId, page, Number.parseInt(size));
-      setSchoolSTs(data.content);
-      setTotalPages(data.totalPages);
+      try {
+        const data = await getSTs(yearId, page, Number.parseInt(size));
+        if (data) {
+          setSchoolSTs(data.content);
+          setTotalPages(data.totalPages);
+        }
+      } catch (error: any) {
+        setError(error.message);
+      }
       setIsLoading(false);
     };
     loadSchoolSTs();
@@ -107,107 +115,121 @@ const SchoolSTs = () => {
             <Loader colorClass="text-primary_color" size={50} />
           ) : (
             <>
-              {schoolSTs.length > 0 ? (
-                <div className="flex flex-col gap-4">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="bg-[rgb(248,248,248)]">
-                        <th>
-                          <label className="flex justify-between">
-                            <span>Id</span>
-                            <span className="flex">
-                              <ArrowBigUpIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  noHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNoHasAscendingOrder(true)}
-                              />
-                              <ArrowBigDownIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  !noHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNoHasAscendingOrder(false)}
-                              />
-                            </span>
-                          </label>
-                        </th>
-                        <th>
-                          <label className="flex justify-between">
-                            <span>{"Nom de l'Établissements"}</span>
-                            <span className="flex">
-                              <ArrowBigUpIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  nameHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNameHasAscendingOrder(true)}
-                              />
-                              <ArrowBigDownIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  !nameHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNameHasAscendingOrder(false)}
-                              />
-                            </span>
-                          </label>
-                        </th>
-                        <th>Nom du Formulaire</th>
-                        <th>{"Chef de l'Etablissement"}</th>
-                        <th>Province</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {schoolSTs.map((schoolSt, index) => (
-                        <tr key={index}>
-                          <td>{schoolSt.id}</td>
-                          <td>{schoolSt.nomEtab}</td>
-
-                          <td className="text-primary_color font-bold">
-                            <Link
-                              href={`#`}
-                              onClick={(e) => handleClick(e, schoolSt)}
-                            >
-                              {schoolSt.type}
-                            </Link>
-                          </td>
-                          <td>{schoolSt.formulaire.nomChefEtablissement}</td>
-                          <td>{schoolSt.formulaire.province}</td>
-                          <td>
-                            {getFormatedDate(
-                              new Date(schoolSt.date),
-                              true,
-                              true
-                            )}
-                          </td>
-                          <td>...</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-
-                  {isGeneratingPdf ? (
-                    ""
-                  ) : (
-                    <TableFooter
-                      page={page}
-                      totalPages={totalPages}
-                      handleGoPreviousPage={handleGoPreviousPage}
-                      handleGoNextPage={handleGoNextPage}
-                      handleDownloadPdf={() => setIsGeneratingPdf(true)}
-                    />
-                  )}
-                </div>
+              {error ? (
+                <FetchingDataError message={error} />
               ) : (
-                <NoData />
+                <>
+                  {schoolSTs.length > 0 ? (
+                    <div className="flex flex-col gap-4">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-[rgb(248,248,248)]">
+                            <th>
+                              <label className="flex justify-between">
+                                <span>Id</span>
+                                <span className="flex">
+                                  <ArrowBigUpIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      noHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() => setNoHasAscendingOrder(true)}
+                                  />
+                                  <ArrowBigDownIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      !noHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setNoHasAscendingOrder(false)
+                                    }
+                                  />
+                                </span>
+                              </label>
+                            </th>
+                            <th>
+                              <label className="flex justify-between">
+                                <span>{"Nom de l'Établissements"}</span>
+                                <span className="flex">
+                                  <ArrowBigUpIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      nameHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setNameHasAscendingOrder(true)
+                                    }
+                                  />
+                                  <ArrowBigDownIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      !nameHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setNameHasAscendingOrder(false)
+                                    }
+                                  />
+                                </span>
+                              </label>
+                            </th>
+                            <th>Nom du Formulaire</th>
+                            <th>{"Chef de l'Etablissement"}</th>
+                            <th>Province</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {schoolSTs.map((schoolSt, index) => (
+                            <tr key={index}>
+                              <td>{schoolSt.id}</td>
+                              <td>{schoolSt.nomEtab}</td>
+
+                              <td className="text-primary_color font-bold">
+                                <Link
+                                  href={`#`}
+                                  onClick={(e) => handleClick(e, schoolSt)}
+                                >
+                                  {schoolSt.type}
+                                </Link>
+                              </td>
+                              <td>
+                                {schoolSt.formulaire.nomChefEtablissement}
+                              </td>
+                              <td>{schoolSt.formulaire.province}</td>
+                              <td>
+                                {getFormatedDate(
+                                  new Date(schoolSt.date),
+                                  true,
+                                  true
+                                )}
+                              </td>
+                              <td>...</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+
+                      {isGeneratingPdf ? (
+                        ""
+                      ) : (
+                        <TableFooter
+                          page={page}
+                          totalPages={totalPages}
+                          handleGoPreviousPage={handleGoPreviousPage}
+                          handleGoNextPage={handleGoNextPage}
+                          handleDownloadPdf={() => setIsGeneratingPdf(true)}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <NoData />
+                  )}
+                </>
               )}
             </>
           )}

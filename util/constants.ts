@@ -64,8 +64,9 @@ export const users = [
 
 export const requestMessages = {
   SERVER_UNREACHABLE:
-    "The server is unreachable, please try again or contact you admin.",
-  SERVER_ERROR: "There is a problem on the server, please contact your admin.",
+    "Le serveur est inaccessible, veuillez réessayer ou contacter votre administrateur.",
+  SERVER_ERROR:
+    "Il y a un problème sur le serveur, veuillez réessayer ou contacter votre administrateur.",
 };
 
 export const localStoragekeys = {

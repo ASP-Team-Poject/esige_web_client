@@ -1,5 +1,5 @@
-import Encoding from "@/components/encodings/Encoding";
+import EncodingForms from "@/components/encodings/Encoding";
 
 export default function EncodingPage() {
-  return <Encoding />;
+  return <EncodingForms />;
 }

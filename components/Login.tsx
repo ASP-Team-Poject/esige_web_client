@@ -59,8 +59,8 @@ const Login = () => {
       Cookies.set(localStoragekeys.USER_ID, `${currentUser.id}`);
 
       router.push("/home");
-    } catch (error) {
-      console.log("Error", error);
+    } catch (error: any) {
+      console.log("Error", error.messsage);
       setToast({
         message:
           "La connexion a échoué.\n Veuillez vérifier vos informations d'identification et réessayer, ou contactez votre administrateur.",

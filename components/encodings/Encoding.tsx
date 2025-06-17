@@ -14,7 +14,7 @@ const stStatus = {
   NOT_STARTED: "Non commencé",
 };
 
-const Encoding = () => {
+const EncodingForms = () => {
   const { yearId, schoolId } = useParams();
   const router = useRouter();
 
@@ -116,4 +116,4 @@ const Encoding = () => {
   );
 };
 
-export default Encoding;
+export default EncodingForms;

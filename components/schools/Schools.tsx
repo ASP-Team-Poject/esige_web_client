@@ -15,6 +15,7 @@ import Loader from "../basic/Loader";
 import NoData from "../basic/NoData";
 import TableHeader from "../TableHeader";
 import TableFooter from "../TableFooter";
+import FetchingDataError from "../basic/FetchingDataError";
 
 const Schools = () => {
   const [schools, setSchools] = useState<SchoolType[]>([]);
@@ -23,9 +24,10 @@ const Schools = () => {
     useState<boolean>(true);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
-  const [totalPages, setTotalPages] = useState<number>(100); // TODO: change this when the st response is changed to Obj with totalPages
+  const [totalPages, setTotalPages] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const handleGoPreviousPage = () => {
     const newPage = page === 0 ? 0 : page - 1;
@@ -64,10 +66,15 @@ const Schools = () => {
   useEffect(() => {
     const loadSchools = async () => {
       setIsLoading(true);
-
-      const data = await getSchools(page, Number.parseInt(size));
-      setSchools(data.content);
-      setTotalPages(data.totalPages);
+      try {
+        const data = await getSchools(page, Number.parseInt(size));
+        if (data) {
+          setSchools(data.content);
+          setTotalPages(data.totalPages);
+        }
+      } catch (error: any) {
+        setError(error.message);
+      }
       setIsLoading(false);
     };
     loadSchools();
@@ -86,107 +93,125 @@ const Schools = () => {
             <Loader colorClass="text-primary_color" size={50} />
           ) : (
             <>
-              {schools.length > 0 ? (
-                <div className="flex flex-col gap-4">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="bg-[rgb(248,248,248)]">
-                        <th>
-                          <label className="flex justify-between">
-                            <span>Id</span>
-                            <span className="flex">
-                              <ArrowBigUpIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  noHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNoHasAscendingOrder(true)}
-                              />
-                              <ArrowBigDownIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  !noHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNoHasAscendingOrder(false)}
-                              />
-                            </span>
-                          </label>
-                        </th>
-                        <th>
-                          <label className="flex justify-between">
-                            <span>{"Nom de l'Établissements"}</span>
-                            <span className="flex">
-                              <ArrowBigUpIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  nameHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNameHasAscendingOrder(true)}
-                              />
-                              <ArrowBigDownIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  !nameHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNameHasAscendingOrder(false)}
-                              />
-                            </span>
-                          </label>
-                        </th>
-                        <th>Code Administratif</th>
-                        <th>Code de l&apos;Etablissement</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {schools.map((school, index) => (
-                        <tr key={index}>
-                          <td>{school.id}</td>
-                          <td className="text-primary_color font-bold">
-                            <Link href={`/encodings/${school.id}`}>
-                              {school.nom || school.libelle}
-                            </Link>
-                          </td>
-                          <td>{school.codeAdmin}</td>
-                          <td>{school.codeEtablissement}</td>
-                          <td>
-                            {getFormatedDate(
-                              new Date(school.createdAt),
-                              true,
-                              true
-                            )}
-                          </td>
-                          <td>
-                            <label className="flex gap-2">
-                              <Trash2 color="red" className="cursor-pointer" />
-                              <span className="text-gray-500">{"|"}</span>
-                              <Edit2 color="green" className="cursor-pointer" />
-                            </label>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-
-                  {isGeneratingPdf ? (
-                    ""
-                  ) : (
-                    <TableFooter
-                      page={page}
-                      totalPages={totalPages}
-                      handleGoPreviousPage={handleGoPreviousPage}
-                      handleGoNextPage={handleGoNextPage}
-                      handleDownloadPdf={() => setIsGeneratingPdf(true)}
-                    />
-                  )}
-                </div>
+              {error ? (
+                <FetchingDataError message={error} />
               ) : (
-                <NoData />
+                <>
+                  {schools.length > 0 ? (
+                    <div className="flex flex-col gap-4">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-[rgb(248,248,248)]">
+                            <th>
+                              <label className="flex justify-between">
+                                <span>Id</span>
+                                <span className="flex">
+                                  <ArrowBigUpIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      noHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() => setNoHasAscendingOrder(true)}
+                                  />
+                                  <ArrowBigDownIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      !noHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setNoHasAscendingOrder(false)
+                                    }
+                                  />
+                                </span>
+                              </label>
+                            </th>
+                            <th>
+                              <label className="flex justify-between">
+                                <span>{"Nom de l'Établissements"}</span>
+                                <span className="flex">
+                                  <ArrowBigUpIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      nameHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setNameHasAscendingOrder(true)
+                                    }
+                                  />
+                                  <ArrowBigDownIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      !nameHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setNameHasAscendingOrder(false)
+                                    }
+                                  />
+                                </span>
+                              </label>
+                            </th>
+                            <th>Code Administratif</th>
+                            <th>Code de l&apos;Etablissement</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {schools.map((school, index) => (
+                            <tr key={index}>
+                              <td>{school.id}</td>
+                              <td className="text-primary_color font-bold">
+                                <Link href={`/encodings/${school.id}`}>
+                                  {school.nom || school.libelle}
+                                </Link>
+                              </td>
+                              <td>{school.codeAdmin}</td>
+                              <td>{school.codeEtablissement}</td>
+                              <td>
+                                {getFormatedDate(
+                                  new Date(school.createdAt),
+                                  true,
+                                  true
+                                )}
+                              </td>
+                              <td>
+                                <label className="flex gap-2">
+                                  <Trash2
+                                    color="red"
+                                    className="cursor-pointer"
+                                  />
+                                  <span className="text-gray-500">{"|"}</span>
+                                  <Edit2
+                                    color="green"
+                                    className="cursor-pointer"
+                                  />
+                                </label>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+
+                      {isGeneratingPdf ? (
+                        ""
+                      ) : (
+                        <TableFooter
+                          page={page}
+                          totalPages={totalPages}
+                          handleGoPreviousPage={handleGoPreviousPage}
+                          handleGoNextPage={handleGoNextPage}
+                          handleDownloadPdf={() => setIsGeneratingPdf(true)}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <NoData />
+                  )}
+                </>
               )}
             </>
           )}

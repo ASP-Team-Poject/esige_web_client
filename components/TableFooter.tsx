@@ -14,7 +14,7 @@ const TableFooter = ({
   totalPages: number;
   handleGoPreviousPage: () => void;
   handleGoNextPage: () => void;
-  handleDownloadPdf: () => void;
+  handleDownloadPdf?: () => void;
 }) => {
   return (
     <div className="flex justify-between">
@@ -28,7 +28,7 @@ const TableFooter = ({
         title="Générer le Pdf"
         icon={<File />}
         type="button"
-        onClick={() => handleDownloadPdf()}
+        onClick={() => handleDownloadPdf ? handleDownloadPdf() : undefined}
       />
     </div>
   );

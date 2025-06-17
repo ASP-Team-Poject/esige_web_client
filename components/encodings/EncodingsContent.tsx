@@ -11,6 +11,7 @@ import { SchoolType, SchoolYearType } from "@/util/types";
 import { localStoragekeys } from "@/util/constants";
 import { useParams, useRouter } from "next/navigation";
 import { getSchoolYears } from "@/services/SchoolServise";
+import { Toast } from "../basic/Toast";
 
 const EncodingsContent = ({
   title,
@@ -25,6 +26,10 @@ const EncodingsContent = ({
   const router = useRouter();
   const { yearId } = useParams();
   const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const handleSchoolSelection = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -37,10 +42,20 @@ const EncodingsContent = ({
     );
     router.push(`/encodings/${yearId}/${school.id}`);
   };
+
   useEffect(() => {
     const loadSchoolYears = async () => {
-      const years = await getSchoolYears();
-      setSchoolYears(years);
+      try {
+        const years = await getSchoolYears();
+        if (years) {
+          setSchoolYears(years);
+        }
+      } catch (error: any) {
+        setToast({
+          message: error.message,
+          type: "error",
+        });
+      }
     };
     loadSchoolYears();
   }, []);
@@ -76,7 +91,6 @@ const EncodingsContent = ({
           icon={<Search />}
         />
       </form>
-
       <div className="flex flex-col p-4 gap-4 rounded-lg shadow-xl">
         <div className="flex justify-between items-center w-full">
           <label className="flex justify-center items-center gap-2">
@@ -175,6 +189,13 @@ const EncodingsContent = ({
           </table>
         </div>
       </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };

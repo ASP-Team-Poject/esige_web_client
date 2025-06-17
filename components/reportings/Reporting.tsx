@@ -16,6 +16,7 @@ import { getSchoolRegions, getSchoolYears } from "@/services/SchoolServise";
 import { getAnnuaire } from "@/services/ReportService";
 import ReportingContentWrapper from "./ReportingContentWrapper";
 import Loader from "../basic/Loader";
+import { Toast } from "../basic/Toast";
 
 const Reporting = () => {
   const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
@@ -30,15 +31,27 @@ const Reporting = () => {
   const [selectedSousProved, setSelectedSousProved] = useState<string | null>(
     null
   );
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [annuaireData, setAnnuaireData] = useState<AnnuaireType | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   useEffect(() => {
     const loadSchoolYears = async () => {
-      const years = await getSchoolYears();
-      setSelectedYear(`${years[years.length - 1].id}`); // Set the most recent year as default
-      setSchoolYears(years);
+      try {
+        const years = await getSchoolYears();
+        if (years) {
+          setSelectedYear(`${years[years.length - 1].id}`); // Set the most recent year as default
+          setSchoolYears(years);
+        }
+      } catch (error: any) {
+        setToast({
+          message: error.message,
+          type: "error",
+        });
+      }
     };
     loadSchoolYears();
 
@@ -49,7 +62,9 @@ const Reporting = () => {
         setRegions(parsedRegions);
       } else {
         const loadedRegions = await getSchoolRegions();
-        setRegions(loadedRegions);
+        if (loadedRegions) {
+          setRegions(loadedRegions);
+        }
         localStorage.setItem("regions", JSON.stringify(loadedRegions));
       }
     };
@@ -208,6 +223,13 @@ const Reporting = () => {
             }
           </p>
         </div>
+      )}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
       )}
     </div>
   );

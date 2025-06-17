@@ -12,15 +12,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body>
         <div className="flex flex-col justify-between bg-blue_light min-h-screen">
-          <main className="flex justify-center items-center flex-1">
-            {" "}
-            {children}
-          </main>
+          <main className="flex justify-center flex-1"> {children}</main>
           <footer className="flex p-4 justify-center items-center">
             <label>
               by ASP{" "}

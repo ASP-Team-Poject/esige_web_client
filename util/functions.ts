@@ -1,3 +1,4 @@
+import { requestMessages } from "./constants";
 import { AnnuaireTableType, AnnuaireType } from "./types";
 
 export const getFormatedDate = (
@@ -7,6 +8,10 @@ export const getFormatedDate = (
   displaySecond = false
 ) => {
   date = new Date(date);
+
+  if (isNaN(date.getTime())) {
+    return null;
+  }
 
   function padTo2Digits(num: any) {
     return num.toString().padStart(2, "0");
@@ -508,4 +513,21 @@ function getSallesActivitesFormatedRows(
     }
   }
   return formatedRows;
+}
+
+export function throwRequestError(error: any) {
+  if (error.message === requestMessages.SERVER_ERROR) {
+    throw new Error(requestMessages.SERVER_ERROR);
+  } else {
+    throw new Error(requestMessages.SERVER_UNREACHABLE);
+  }
+}
+
+export function returnDataOrThrowServerError(response: Response) {
+  if (response.ok) {
+    return response.json();
+  } else {
+    console.log("Server error => ", response);
+    throw new Error(requestMessages.SERVER_ERROR);
+  }
 }
