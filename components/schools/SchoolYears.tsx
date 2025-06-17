@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { getSchoolYears } from "@/services/SchoolServise";
 import { SchoolYearType } from "@/util/types";
 import Loader from "../basic/Loader";
-import { localStoragekeys } from "@/util/constants";
+import { localStorageKeys } from "@/util/constants";
 import FetchingDataError from "../basic/FetchingDataError";
 
 const SchoolYears = ({ path }: { path: string }) => {
@@ -18,7 +18,7 @@ const SchoolYears = ({ path }: { path: string }) => {
 
   const handleClick = (year: SchoolYearType) => {
     localStorage.setItem(
-      localStoragekeys.CURRENT_SCHOOL_YEAR,
+      localStorageKeys.CURRENT_SCHOOL_YEAR,
       JSON.stringify(year)
     );
     router.push(`${path}/${year.id}`);

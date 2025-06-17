@@ -12,7 +12,7 @@ import Loader from "../basic/Loader";
 import NoData from "../basic/NoData";
 import TableFooter from "../TableFooter";
 import TableHeader from "../TableHeader";
-import { localStoragekeys } from "@/util/constants";
+import { localStorageKeys } from "@/util/constants";
 import FetchingDataError from "../basic/FetchingDataError";
 
 const EncodingSchools = () => {
@@ -56,7 +56,7 @@ const EncodingSchools = () => {
 
   useEffect(() => {
     const savedSchoolYear = localStorage.getItem(
-      localStoragekeys.CURRENT_SCHOOL_YEAR
+      localStorageKeys.CURRENT_SCHOOL_YEAR
     );
     if (savedSchoolYear) {
       const parsedSchoolYear = JSON.parse(savedSchoolYear);

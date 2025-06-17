@@ -8,7 +8,7 @@ import Button from "../basic/Button";
 import H2 from "../basic/H2";
 import Link from "next/link";
 import { SchoolType, SchoolYearType } from "@/util/types";
-import { localStoragekeys } from "@/util/constants";
+import { localStorageKeys } from "@/util/constants";
 import { useParams, useRouter } from "next/navigation";
 import { getSchoolYears } from "@/services/SchoolServise";
 import { Toast } from "../basic/Toast";
@@ -37,7 +37,7 @@ const EncodingsContent = ({
   ) => {
     e.preventDefault();
     localStorage.setItem(
-      localStoragekeys.CURRENT_SCHOOL,
+      localStorageKeys.CURRENT_SCHOOL,
       JSON.stringify(school)
     );
     router.push(`/encodings/${yearId}/${school.id}`);

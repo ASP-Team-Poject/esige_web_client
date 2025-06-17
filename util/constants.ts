@@ -69,7 +69,7 @@ export const requestMessages = {
     "Il y a un problème sur le serveur, veuillez réessayer ou contacter votre administrateur.",
 };
 
-export const localStoragekeys = {
+export const localStorageKeys = {
   CURRENT_USER: "currentUser",
   CURRENT_SCHOOL: "currentSchool",
   CURRENT_SCHOOL_ST: "currentSchoolSt",

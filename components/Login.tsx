@@ -13,7 +13,8 @@ import { LoginCredentials } from "@/util/types";
 import { login } from "@/services/UserService";
 import { Toast } from "./basic/Toast";
 import Cookies from "js-cookie";
-import { localStoragekeys } from "@/util/constants";
+import { localStorageKeys, requestMessages } from "@/util/constants";
+import { request } from "http";
 
 const Login = () => {
   const [loginForm, setLoginForm] = useState<LoginCredentials>({
@@ -42,30 +43,39 @@ const Login = () => {
     setISubmitting(true);
     try {
       const currentUser = await login(loginForm);
-      setToast({
-        message: "Vous êtes connecté avec succès !",
-        type: "success",
-      });
 
-      localStorage.setItem(
-        localStoragekeys.CURRENT_USER,
-        JSON.stringify({
-          ...currentUser,
-          displayName: currentUser.firstName || currentUser.username,
-        })
-      );
+      if (currentUser) {
+        setToast({
+          message: "Vous êtes connecté avec succès !",
+          type: "success",
+        });
 
-      // Put the user id in the Cookies for the middleware
-      Cookies.set(localStoragekeys.USER_ID, `${currentUser.id}`);
+        localStorage.setItem(
+          localStorageKeys.CURRENT_USER,
+          JSON.stringify({
+            ...currentUser,
+            displayName: currentUser.firstName || currentUser.username,
+          })
+        );
 
-      router.push("/home");
+        // Put the user id in the Cookies for the middleware
+        Cookies.set(localStorageKeys.USER_ID, `${currentUser.id}`);
+
+        router.push("/home");
+      }
     } catch (error: any) {
-      console.log("Error", error.messsage);
-      setToast({
-        message:
-          "La connexion a échoué.\n Veuillez vérifier vos informations d'identification et réessayer, ou contactez votre administrateur.",
-        type: "error",
-      });
+      if (error.message === requestMessages.SERVER_UNREACHABLE) {
+        setToast({
+          message: requestMessages.SERVER_UNREACHABLE,
+          type: "error",
+        });
+      } else {
+        setToast({
+          message:
+            "La connexion a échoué.\n Veuillez vérifier vos informations d'identification et réessayer, ou contactez votre administrateur.",
+          type: "error",
+        });
+      }
     } finally {
       setISubmitting(false);
       setTimeout(() => setToast(null), 6000);

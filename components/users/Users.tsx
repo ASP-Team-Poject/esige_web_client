@@ -14,6 +14,7 @@ import NoData from "../basic/NoData";
 import TableHeader from "../TableHeader";
 import TableFooter from "../TableFooter";
 import { getUsers } from "@/services/UserService";
+import FetchingDataError from "../basic/FetchingDataError";
 
 const Users = () => {
   const [users, setUsers] = useState<UserType[]>([]);
@@ -22,9 +23,10 @@ const Users = () => {
     useState<boolean>(true);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
-  const [totalPages, setTotalPages] = useState<number>(100); // TODO: change this when the st response is changed to Obj with totalPages
+  const [totalPages, setTotalPages] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const handleGoPreviousPage = () => {
     const newPage = page === 0 ? 0 : page - 1;
@@ -63,10 +65,16 @@ const Users = () => {
   useEffect(() => {
     const loadUsers = async () => {
       setIsLoading(true);
+      try {
+        const data = await getUsers(page, Number.parseInt(size));
+        if (data) {
+          setUsers(data.content);
+          setTotalPages(data.totalPages);
+        }
+      } catch (error: any) {
+        setError(error.message);
+      }
 
-      const data = await getUsers(page, Number.parseInt(size));
-      setUsers(data.content);
-      setTotalPages(data.totalPages);
       setIsLoading(false);
     };
     loadUsers();
@@ -85,94 +93,106 @@ const Users = () => {
             <Loader colorClass="text-primary_color" size={50} />
           ) : (
             <>
-              {users.length > 0 ? (
-                <div className="flex flex-col gap-4">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="bg-[rgb(248,248,248)]">
-                        <th>
-                          <label className="flex justify-between">
-                            <span>Id</span>
-                            <span className="flex">
-                              <ArrowBigUpIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  noHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNoHasAscendingOrder(true)}
-                              />
-                              <ArrowBigDownIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  !noHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNoHasAscendingOrder(false)}
-                              />
-                            </span>
-                          </label>
-                        </th>
-                        <th>
-                          <label className="flex justify-between">
-                            <span>{"Nom complet"}</span>
-                            <span className="flex">
-                              <ArrowBigUpIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  nameHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNameHasAscendingOrder(true)}
-                              />
-                              <ArrowBigDownIcon
-                                className={`h-5 w-5 cursor-pointer ${
-                                  !nameHasAscendingOrder
-                                    ? "text-primary_color"
-                                    : ""
-                                }`}
-                                onClick={() => setNameHasAscendingOrder(false)}
-                              />
-                            </span>
-                          </label>
-                        </th>
-                        <th>{"Téléphone"}</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {users.map((user, index) => (
-                        <tr key={index}>
-                          <td>{user.id}</td>
-                          <td className="text-primary_color font-bold">
-                            <Link href={`#`}>
-                              {user.name || user.firstName || user.username}
-                            </Link>
-                          </td>
-                          <td>{user.phone}</td>
-                          <td>{user.email}</td>
-
-                          <td>...</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-
-                  {isGeneratingPdf ? (
-                    ""
-                  ) : (
-                    <TableFooter
-                      page={page}
-                      totalPages={totalPages}
-                      handleGoPreviousPage={handleGoPreviousPage}
-                      handleGoNextPage={handleGoNextPage}
-                      handleDownloadPdf={() => setIsGeneratingPdf(true)}
-                    />
-                  )}
-                </div>
+              {error ? (
+                <FetchingDataError message={error} />
               ) : (
-                <NoData />
+                <>
+                  {users.length > 0 ? (
+                    <div className="flex flex-col gap-4">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-[rgb(248,248,248)]">
+                            <th>
+                              <label className="flex justify-between">
+                                <span>Id</span>
+                                <span className="flex">
+                                  <ArrowBigUpIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      noHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() => setNoHasAscendingOrder(true)}
+                                  />
+                                  <ArrowBigDownIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      !noHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setNoHasAscendingOrder(false)
+                                    }
+                                  />
+                                </span>
+                              </label>
+                            </th>
+                            <th>
+                              <label className="flex justify-between">
+                                <span>{"Nom complet"}</span>
+                                <span className="flex">
+                                  <ArrowBigUpIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      nameHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setNameHasAscendingOrder(true)
+                                    }
+                                  />
+                                  <ArrowBigDownIcon
+                                    className={`h-5 w-5 cursor-pointer ${
+                                      !nameHasAscendingOrder
+                                        ? "text-primary_color"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setNameHasAscendingOrder(false)
+                                    }
+                                  />
+                                </span>
+                              </label>
+                            </th>
+                            <th>{"Téléphone"}</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {users.map((user, index) => (
+                            <tr key={index}>
+                              <td>{user.id}</td>
+                              <td className="text-primary_color font-bold">
+                                <Link href={`#`}>
+                                  {user.name || user.firstName || user.username}
+                                </Link>
+                              </td>
+                              <td>{user.phone}</td>
+                              <td>{user.email}</td>
+
+                              <td>...</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+
+                      {isGeneratingPdf ? (
+                        ""
+                      ) : (
+                        <TableFooter
+                          page={page}
+                          totalPages={totalPages}
+                          handleGoPreviousPage={handleGoPreviousPage}
+                          handleGoNextPage={handleGoNextPage}
+                          handleDownloadPdf={() => setIsGeneratingPdf(true)}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <NoData />
+                  )}
+                </>
               )}
             </>
           )}

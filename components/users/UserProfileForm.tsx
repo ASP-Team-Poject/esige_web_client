@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Input from "../basic/Input";
 import { LocationEditIcon, School, User } from "lucide-react";
 import { UserType } from "@/util/types";
-import { localStoragekeys } from "@/util/constants";
+import { localStorageKeys } from "@/util/constants";
 import Loader from "../basic/Loader";
 
 const UserProfileForm = () => {
@@ -17,7 +17,7 @@ const UserProfileForm = () => {
 
   useEffect(() => {
     const user = JSON.parse(
-      localStorage.getItem(localStoragekeys.CURRENT_USER)!
+      localStorage.getItem(localStorageKeys.CURRENT_USER)!
     );
 
     console.log("USER => ", user);

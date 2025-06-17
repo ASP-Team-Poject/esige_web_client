@@ -1,6 +1,9 @@
 "use server";
 
-import { requestMessages } from "@/util/constants";
+import {
+  returnDataOrThrowServerError,
+  throwRequestError,
+} from "@/util/functions";
 import { LoginCredentials, UserType } from "@/util/types";
 
 const API_BASE_URL = "http://157.230.112.193:8081/api/users";
@@ -16,7 +19,7 @@ type UsersResponse = {
 export async function getUsers(
   page: number = 0,
   size: number = 10
-): Promise<UsersResponse> {
+): Promise<UsersResponse | undefined> {
   try {
     const response = await fetch(`${API_BASE_URL}?page=${page}&size=${size}`, {
       headers: {
@@ -24,24 +27,17 @@ export async function getUsers(
       },
     });
 
-    if (response.ok) {
-      const users: UsersResponse = await response.json();
-      console.log("Users => ", users.content[0]);
-      return users;
-    } else {
-      console.log("Server error => ", response);
-      throw new Error(requestMessages.SERVER_ERROR);
-    }
-  } catch (error) {
-    console.log("Get users error => ", error);
-    throw new Error(requestMessages.SERVER_UNREACHABLE);
+    return returnDataOrThrowServerError(response);
+  } catch (error: any) {
+    console.log("Get Users error => ", error);
+    throwRequestError(error);
   }
 }
 
 export async function login({
   username,
   password,
-}: LoginCredentials): Promise<UserType> {
+}: LoginCredentials): Promise<UserType | undefined> {
   try {
     const url = `${API_BASE_URL}/login`;
 
@@ -56,17 +52,9 @@ export async function login({
       }),
     });
 
-    if (response.ok) {
-      const data: any = await response.json();
-      console.log("Login response => ", data);
-
-      return data;
-    } else {
-      console.log("Login Failed => ", response);
-      throw new Error("Login failed: bad request.");
-    }
-  } catch (error) {
-    console.log("Error => ", error);
-    throw new Error(requestMessages.SERVER_UNREACHABLE);
+    return returnDataOrThrowServerError(response);
+  } catch (error: any) {
+    console.log("Login error => ", error);
+    throwRequestError(error);
   }
 }

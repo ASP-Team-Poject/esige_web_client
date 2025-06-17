@@ -16,7 +16,7 @@ import NoData from "../basic/NoData";
 import TableHeader from "../TableHeader";
 import TableFooter from "../TableFooter";
 import { useParams, useRouter } from "next/navigation";
-import { localStoragekeys } from "@/util/constants";
+import { localStorageKeys } from "@/util/constants";
 import FetchingDataError from "../basic/FetchingDataError";
 
 const SchoolSTs = () => {
@@ -75,7 +75,7 @@ const SchoolSTs = () => {
     e.preventDefault();
 
     localStorage.setItem(
-      localStoragekeys.CURRENT_SCHOOL_ST,
+      localStorageKeys.CURRENT_SCHOOL_ST,
       JSON.stringify(currentSchoolSt)
     );
 

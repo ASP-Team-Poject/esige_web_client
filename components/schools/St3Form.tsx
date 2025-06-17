@@ -1,6 +1,6 @@
 "use client";
 
-import { localStoragekeys } from "@/util/constants";
+import { localStorageKeys } from "@/util/constants";
 import React, { ReactNode, useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import { SchoolStType, SchoolType, SchoolYearType } from "@/util/types";
@@ -355,18 +355,18 @@ const St3Form = () => {
 
   useEffect(() => {
     const currentSchoolYear: SchoolYearType = JSON.parse(
-      localStorage.getItem(localStoragekeys.CURRENT_SCHOOL_YEAR)!
+      localStorage.getItem(localStorageKeys.CURRENT_SCHOOL_YEAR)!
     );
     let schoolName = "";
     const yearLabel = currentSchoolYear.libAnneeScolaire;
-    const schoolSt = localStorage.getItem(localStoragekeys.CURRENT_SCHOOL_ST);
+    const schoolSt = localStorage.getItem(localStorageKeys.CURRENT_SCHOOL_ST);
     if (schoolSt) {
       const currentSchoolSt: SchoolStType = JSON.parse(schoolSt);
       schoolName = currentSchoolSt.nomEtab;
       setFormData(currentSchoolSt);
     } else {
       const currentSchool: SchoolType = JSON.parse(
-        localStorage.getItem(localStoragekeys.CURRENT_SCHOOL)!
+        localStorage.getItem(localStorageKeys.CURRENT_SCHOOL)!
       );
       schoolName = currentSchool.libelle || currentSchool.nom;
     }
@@ -944,7 +944,7 @@ const St3Form = () => {
           label="2.22. Si oui, par quel organisme ?"
         />
 
-         <InputRadio
+        <InputRadio
           label={
             "2.23. Votre établissement a t'il developé un projet d'établissement avec toutes les parties prenantes ?"
           }
@@ -964,7 +964,7 @@ const St3Form = () => {
           handleChange={handleChange}
         />
 
-         <InputRadio
+        <InputRadio
           label={
             "2.25. Votre établissement dispose t'il d'un plan d'action opérationnel ?"
           }
@@ -984,7 +984,7 @@ const St3Form = () => {
           handleChange={handleChange}
         />
 
-         <InputRadio
+        <InputRadio
           label={
             "2.27. Votre établissement a t'il organise une Revue Annuelle de Performance (RAP) ?"
           }
@@ -994,7 +994,7 @@ const St3Form = () => {
           handleChange={handleChange}
         />
 
-         <Input2
+        <Input2
           type="number"
           handleChange={handleChange}
           value={formData.formulaire.educateurs_formes}
@@ -1037,7 +1037,9 @@ const St3Form = () => {
         <table className="text-left">
           <thead>
             <tr>
-              <th colSpan={4} className="text-left">{"2.33. Enfants victimes de violences"}</th>
+              <th colSpan={4} className="text-left">
+                {"2.33. Enfants victimes de violences"}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -1051,123 +1053,146 @@ const St3Form = () => {
             <tr>
               <th>Intimidation</th>
               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_garcon_violence_intimidation"  
-                  value={formData.formulaire.nb_garcon_violence_intimidation}/>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_intimidation"
+                  value={formData.formulaire.nb_garcon_violence_intimidation}
+                />
               </td>
               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_fille_violence_intimidation"  
-                  value={formData.formulaire.nb_fille_violence_intimidation}/>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_intimidation"
+                  value={formData.formulaire.nb_fille_violence_intimidation}
+                />
               </td>
               <td>
                 {(formData.formulaire.nb_garcon_violence_intimidation || 0) +
-                 ( formData.formulaire.nb_fille_violence_intimidation || 0)}
+                  (formData.formulaire.nb_fille_violence_intimidation || 0)}
               </td>
             </tr>
 
             <tr>
               <th>Chatiment corporel</th>
               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_garcon_violence_chatiment"  
-                  value={formData.formulaire.nb_garcon_violence_chatiment}/>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_chatiment"
+                  value={formData.formulaire.nb_garcon_violence_chatiment}
+                />
               </td>
-               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_fille_violence_chatiment"  
-                  value={formData.formulaire.nb_fille_violence_chatiment}/>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_chatiment"
+                  value={formData.formulaire.nb_fille_violence_chatiment}
+                />
               </td>
               <td>
                 {(formData.formulaire.nb_garcon_violence_chatiment || 0) +
-                 ( formData.formulaire.nb_fille_violence_chatiment || 0)}
+                  (formData.formulaire.nb_fille_violence_chatiment || 0)}
               </td>
             </tr>
 
             <tr>
               <th>Harcelement</th>
               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_garcon_violence_harcelement"  
-                  value={formData.formulaire.nb_garcon_violence_harcelement}/>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_harcelement"
+                  value={formData.formulaire.nb_garcon_violence_harcelement}
+                />
               </td>
-               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_fille_violence_harcelement"  
-                  value={formData.formulaire.nb_fille_violence_harcelement}/>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_harcelement"
+                  value={formData.formulaire.nb_fille_violence_harcelement}
+                />
               </td>
               <td>
                 {(formData.formulaire.nb_garcon_violence_harcelement || 0) +
-                 ( formData.formulaire.nb_fille_violence_harcelement || 0)}
+                  (formData.formulaire.nb_fille_violence_harcelement || 0)}
               </td>
             </tr>
 
             <tr>
               <th>Discrimination</th>
               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_garcon_violence_discrimination"  
-                  value={formData.formulaire.nb_garcon_violence_discrimination}/>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_discrimination"
+                  value={formData.formulaire.nb_garcon_violence_discrimination}
+                />
               </td>
-               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_garcon_violence_discrimination"  
-                  value={formData.formulaire.nb_fille_violence_discrimination}/>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_discrimination"
+                  value={formData.formulaire.nb_fille_violence_discrimination}
+                />
               </td>
               <td>
                 {(formData.formulaire.nb_garcon_violence_discrimination || 0) +
-                 ( formData.formulaire.nb_fille_violence_discrimination || 0)}
+                  (formData.formulaire.nb_fille_violence_discrimination || 0)}
               </td>
             </tr>
 
             <tr>
               <th>Abus sexuel</th>
               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_garcon_violence_abus_sexuel"  
-                  value={formData.formulaire.nb_garcon_violence_abus_sexuel}/>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_abus_sexuel"
+                  value={formData.formulaire.nb_garcon_violence_abus_sexuel}
+                />
               </td>
-               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_fille_violence_abus_sexuel"  
-                  value={formData.formulaire.nb_fille_violence_abus_sexuel}/>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_abus_sexuel"
+                  value={formData.formulaire.nb_fille_violence_abus_sexuel}
+                />
               </td>
               <td>
                 {(formData.formulaire.nb_garcon_violence_abus_sexuel || 0) +
-                 ( formData.formulaire.nb_fille_violence_abus_sexuel || 0)}
+                  (formData.formulaire.nb_fille_violence_abus_sexuel || 0)}
               </td>
             </tr>
 
             <tr>
               <th>Autres</th>
               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_garcon_violence_autres"  
-                  value={formData.formulaire.nb_garcon_violence_autres}/>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_garcon_violence_autres"
+                  value={formData.formulaire.nb_garcon_violence_autres}
+                />
               </td>
-               <td>
-                <Input2 
-                  type="number" handleChange={handleChange} 
-                  name="formulaire.nb_fille_violence_autres"  
-                  value={formData.formulaire.nb_fille_violence_autres}/>
+              <td>
+                <Input2
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_fille_violence_autres"
+                  value={formData.formulaire.nb_fille_violence_autres}
+                />
               </td>
               <td>
                 {(formData.formulaire.nb_garcon_violence_autres || 0) +
-                 ( formData.formulaire.nb_fille_violence_autres || 0)}
+                  (formData.formulaire.nb_fille_violence_autres || 0)}
               </td>
             </tr>
-            
           </tbody>
         </table>
 
@@ -1188,7 +1213,6 @@ const St3Form = () => {
           name="formData.formulaire.nb_reunion_avec_pv_annee_passee2"
           label="Nombre de reunion avec PV tenues l'année passée "
         />
-
       </section>
     </div>,
   ];

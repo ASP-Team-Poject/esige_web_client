@@ -1,6 +1,6 @@
 "use client";
 
-import { localStoragekeys } from "@/util/constants";
+import { localStorageKeys } from "@/util/constants";
 import React, { ReactNode, useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import { SchoolStType, SchoolType, SchoolYearType } from "@/util/types";
@@ -355,18 +355,18 @@ const St2Form = () => {
 
   useEffect(() => {
     const currentSchoolYear: SchoolYearType = JSON.parse(
-      localStorage.getItem(localStoragekeys.CURRENT_SCHOOL_YEAR)!
+      localStorage.getItem(localStorageKeys.CURRENT_SCHOOL_YEAR)!
     );
     let schoolName = "";
     const yearLabel = currentSchoolYear.libAnneeScolaire;
-    const schoolSt = localStorage.getItem(localStoragekeys.CURRENT_SCHOOL_ST);
+    const schoolSt = localStorage.getItem(localStorageKeys.CURRENT_SCHOOL_ST);
     if (schoolSt) {
       const currentSchoolSt: SchoolStType = JSON.parse(schoolSt);
       schoolName = currentSchoolSt.nomEtab;
       setFormData(currentSchoolSt);
     } else {
       const currentSchool: SchoolType = JSON.parse(
-        localStorage.getItem(localStoragekeys.CURRENT_SCHOOL)!
+        localStorage.getItem(localStorageKeys.CURRENT_SCHOOL)!
       );
       schoolName = currentSchool.libelle || currentSchool.nom;
     }

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import { ArrowRight } from "lucide-react";
-import { localStoragekeys } from "@/util/constants";
+import { localStorageKeys } from "@/util/constants";
 import { useParams, useRouter } from "next/navigation";
 import { getFormatedDate } from "@/util/functions";
 import { SchoolType } from "@/util/types";
@@ -43,7 +43,7 @@ const EncodingForms = () => {
 
   useEffect(() => {
     const school = JSON.parse(
-      localStorage.getItem(localStoragekeys.CURRENT_SCHOOL)!
+      localStorage.getItem(localStorageKeys.CURRENT_SCHOOL)!
     );
     setCurrentSchool(school);
   }, []);
