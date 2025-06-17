@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
-import { ArrowBigDownIcon, ArrowBigUpIcon } from "lucide-react";
 import { UserType } from "@/util/types";
 
 // For pdf generation
@@ -18,9 +17,6 @@ import FetchingDataError from "../basic/FetchingDataError";
 
 const Users = () => {
   const [users, setUsers] = useState<UserType[]>([]);
-  const [noHasAscendingOrder, setNoHasAscendingOrder] = useState<boolean>(true);
-  const [nameHasAscendingOrder, setNameHasAscendingOrder] =
-    useState<boolean>(true);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
   const [totalPages, setTotalPages] = useState<number>(10);
@@ -102,58 +98,8 @@ const Users = () => {
                       <table className="w-full">
                         <thead>
                           <tr className="bg-[rgb(248,248,248)]">
-                            <th>
-                              <label className="flex justify-between">
-                                <span>Id</span>
-                                <span className="flex">
-                                  <ArrowBigUpIcon
-                                    className={`h-5 w-5 cursor-pointer ${
-                                      noHasAscendingOrder
-                                        ? "text-primary_color"
-                                        : ""
-                                    }`}
-                                    onClick={() => setNoHasAscendingOrder(true)}
-                                  />
-                                  <ArrowBigDownIcon
-                                    className={`h-5 w-5 cursor-pointer ${
-                                      !noHasAscendingOrder
-                                        ? "text-primary_color"
-                                        : ""
-                                    }`}
-                                    onClick={() =>
-                                      setNoHasAscendingOrder(false)
-                                    }
-                                  />
-                                </span>
-                              </label>
-                            </th>
-                            <th>
-                              <label className="flex justify-between">
-                                <span>{"Nom complet"}</span>
-                                <span className="flex">
-                                  <ArrowBigUpIcon
-                                    className={`h-5 w-5 cursor-pointer ${
-                                      nameHasAscendingOrder
-                                        ? "text-primary_color"
-                                        : ""
-                                    }`}
-                                    onClick={() =>
-                                      setNameHasAscendingOrder(true)
-                                    }
-                                  />
-                                  <ArrowBigDownIcon
-                                    className={`h-5 w-5 cursor-pointer ${
-                                      !nameHasAscendingOrder
-                                        ? "text-primary_color"
-                                        : ""
-                                    }`}
-                                    onClick={() =>
-                                      setNameHasAscendingOrder(false)
-                                    }
-                                  />
-                                </span>
-                              </label>
-                            </th>
+                            <th>Id</th>
+                            <th>{"Nom complet"}</th>
                             <th>{"Téléphone"}</th>
                             <th>Email</th>
                             <th>Actions</th>

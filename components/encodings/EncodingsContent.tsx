@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Input from "../basic/Input";
-import { ArrowBigDownIcon, ArrowBigUpIcon, School, Search } from "lucide-react";
+import { School, Search } from "lucide-react";
 import Select from "../basic/Select";
 import Button from "../basic/Button";
 import H2 from "../basic/H2";
@@ -20,9 +20,6 @@ const EncodingsContent = ({
   title: string;
   schools: SchoolType[];
 }) => {
-  const [noHasAscendingOrder, setNoHasAscendingOrder] = useState<boolean>(true);
-  const [nameHasAscendingOrder, setNameHasAscendingOrder] =
-    useState<boolean>(true);
   const router = useRouter();
   const { yearId } = useParams();
   const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
@@ -126,39 +123,13 @@ const EncodingsContent = ({
                 <th>
                   <label className="flex justify-between">
                     <span>Id</span>
-                    <span className="flex">
-                      <ArrowBigUpIcon
-                        className={`h-5 w-5 cursor-pointer ${
-                          noHasAscendingOrder ? "text-primary_color" : ""
-                        }`}
-                        onClick={() => setNoHasAscendingOrder(true)}
-                      />
-                      <ArrowBigDownIcon
-                        className={`h-5 w-5 cursor-pointer ${
-                          !noHasAscendingOrder ? "text-primary_color" : ""
-                        }`}
-                        onClick={() => setNoHasAscendingOrder(false)}
-                      />
-                    </span>
+                
                   </label>
                 </th>
                 <th>
                   <label className="flex justify-between">
                     <span>{"Nom de l'Établissement"}</span>
-                    <span className="flex">
-                      <ArrowBigUpIcon
-                        className={`h-5 w-5 cursor-pointer ${
-                          nameHasAscendingOrder ? "text-primary_color" : ""
-                        }`}
-                        onClick={() => setNameHasAscendingOrder(true)}
-                      />
-                      <ArrowBigDownIcon
-                        className={`h-5 w-5 cursor-pointer ${
-                          !nameHasAscendingOrder ? "text-primary_color" : ""
-                        }`}
-                        onClick={() => setNameHasAscendingOrder(false)}
-                      />
-                    </span>
+                  
                   </label>
                 </th>
                 <th>Code Administratif</th>

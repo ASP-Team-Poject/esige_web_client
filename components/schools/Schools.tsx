@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
-import { ArrowBigDownIcon, ArrowBigUpIcon, Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { getSchools } from "@/services/SchoolServise";
 import { SchoolType } from "@/util/types";
 import { getFormatedDate } from "@/util/functions";
@@ -19,9 +19,6 @@ import FetchingDataError from "../basic/FetchingDataError";
 
 const Schools = () => {
   const [schools, setSchools] = useState<SchoolType[]>([]);
-  const [noHasAscendingOrder, setNoHasAscendingOrder] = useState<boolean>(true);
-  const [nameHasAscendingOrder, setNameHasAscendingOrder] =
-    useState<boolean>(true);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
   const [totalPages, setTotalPages] = useState<number>(10);
@@ -103,58 +100,8 @@ const Schools = () => {
                       <table className="w-full">
                         <thead>
                           <tr className="bg-[rgb(248,248,248)]">
-                            <th>
-                              <label className="flex justify-between">
-                                <span>Id</span>
-                                <span className="flex">
-                                  <ArrowBigUpIcon
-                                    className={`h-5 w-5 cursor-pointer ${
-                                      noHasAscendingOrder
-                                        ? "text-primary_color"
-                                        : ""
-                                    }`}
-                                    onClick={() => setNoHasAscendingOrder(true)}
-                                  />
-                                  <ArrowBigDownIcon
-                                    className={`h-5 w-5 cursor-pointer ${
-                                      !noHasAscendingOrder
-                                        ? "text-primary_color"
-                                        : ""
-                                    }`}
-                                    onClick={() =>
-                                      setNoHasAscendingOrder(false)
-                                    }
-                                  />
-                                </span>
-                              </label>
-                            </th>
-                            <th>
-                              <label className="flex justify-between">
-                                <span>{"Nom de l'Établissements"}</span>
-                                <span className="flex">
-                                  <ArrowBigUpIcon
-                                    className={`h-5 w-5 cursor-pointer ${
-                                      nameHasAscendingOrder
-                                        ? "text-primary_color"
-                                        : ""
-                                    }`}
-                                    onClick={() =>
-                                      setNameHasAscendingOrder(true)
-                                    }
-                                  />
-                                  <ArrowBigDownIcon
-                                    className={`h-5 w-5 cursor-pointer ${
-                                      !nameHasAscendingOrder
-                                        ? "text-primary_color"
-                                        : ""
-                                    }`}
-                                    onClick={() =>
-                                      setNameHasAscendingOrder(false)
-                                    }
-                                  />
-                                </span>
-                              </label>
-                            </th>
+                            <th>Id</th>
+                            <th>{"Nom de l'Établissements"}</th>
                             <th>Code Administratif</th>
                             <th>Code de l&apos;Etablissement</th>
                             <th>Date</th>
