@@ -8,6 +8,7 @@ import PageContentWrapper from "./layout/PageContentWrapper";
 import { SchoolYearType } from "@/util/types";
 import { getSchoolYears } from "@/services/SchoolServise";
 import { Toast } from "./basic/Toast";
+import { localStorageKeys } from "@/util/constants";
 
 const Dashboard = () => {
   const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
@@ -38,6 +39,7 @@ const Dashboard = () => {
       }
     };
     loadSchoolYears();
+    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
   }, []);
 
   return (

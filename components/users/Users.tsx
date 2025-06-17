@@ -14,6 +14,7 @@ import TableHeader from "../TableHeader";
 import TableFooter from "../TableFooter";
 import { getUsers } from "@/services/UserService";
 import FetchingDataError from "../basic/FetchingDataError";
+import { localStorageKeys } from "@/util/constants";
 
 const Users = () => {
   const [users, setUsers] = useState<UserType[]>([]);
@@ -57,6 +58,10 @@ const Users = () => {
       setIsGeneratingPdf(false);
     }
   };
+
+  useEffect(() => {
+    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
+  }, []);
 
   useEffect(() => {
     const loadUsers = async () => {

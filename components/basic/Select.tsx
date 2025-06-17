@@ -6,6 +6,7 @@ const Select = ({
   disabled,
   title,
   currentOptionId,
+  required,
   handleOnChange,
 }: {
   label?: string;
@@ -13,6 +14,7 @@ const Select = ({
   disabled?: boolean;
   title?: string;
   currentOptionId?: string;
+  required?: boolean;
   handleOnChange?: (e: any) => void;
 }) => {
   return (
@@ -24,6 +26,7 @@ const Select = ({
         title={title}
         disabled={disabled}
         className="bg-white text-gray-600 border-[1px] border-[#ccc] p-3 rounded-sm w-full focus:outline-none focus:ring-0"
+        required={required}
       >
         {title && (
           <option value="" disabled>

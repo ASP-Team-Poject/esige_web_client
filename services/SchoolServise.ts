@@ -98,3 +98,26 @@ export async function getSchoolRegions(): Promise<SchoolRegion[] | undefined> {
     throwRequestError(error);
   }
 }
+
+export async function editSchool(school: Partial<SchoolType>) {
+  const OPERATION = school.id ? "UPDATE" : "CREATION";
+  try {
+    const URL = `${API_BASE_URL}/etablissements${
+      school.id ? "/" + school.id : ""
+    }`;
+    const METHOD = school.id ? "PUT" : "POST";
+
+    let response = await fetch(URL, {
+      method: METHOD,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(school),
+    });
+
+    return returnDataOrThrowServerError(response);
+  } catch (error: any) {
+    console.log(`School ${OPERATION} error =>`, error);
+    throwRequestError(error);
+  }
+}

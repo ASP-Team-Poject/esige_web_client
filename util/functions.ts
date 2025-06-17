@@ -1,5 +1,5 @@
-import { requestMessages } from "./constants";
-import { AnnuaireTableType, AnnuaireType } from "./types";
+import { localStorageKeys, requestMessages } from "./constants";
+import { AnnuaireTableType, AnnuaireType, SchoolType } from "./types";
 
 export const getFormatedDate = (
   date: Date,

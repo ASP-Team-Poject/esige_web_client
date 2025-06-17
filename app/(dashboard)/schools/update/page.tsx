@@ -1,13 +1,9 @@
-"use client";
-
 import PageContentWrapper from "@/components/layout/PageContentWrapper";
 import EditSchoolForm from "@/components/schools/EditSchoolForm";
-import { localStorageKeys } from "@/util/constants";
 
 export default function NewSchoolPage() {
-  localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
   return (
-    <PageContentWrapper pageTitle="Créer un Établissement">
+    <PageContentWrapper pageTitle="Modifier l'Établissement">
       <EditSchoolForm />
     </PageContentWrapper>
   );

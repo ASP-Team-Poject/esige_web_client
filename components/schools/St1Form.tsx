@@ -351,6 +351,11 @@ const St1Form = () => {
     e.preventDefault();
     // Logique de soumission du formulaire
     console.log(formData);
+    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
+    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL_ST);
+    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL_YEAR);
+    // redirect to encodings year selection page or to the page after this by using the CURRENT_SCHOOL_YEAR,
+    // in the second case don't remove CURRENT_SCHOOL_YEAR from localStorage
   };
 
   useEffect(() => {

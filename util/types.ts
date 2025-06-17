@@ -6,29 +6,34 @@ export type MenuRoute = {
 };
 
 export type SchoolType = {
+  // Fields coming with data
   id: number;
+  libelle: string;
+  province: string;
+  proved: string;
+  sousproved: string;
+  createdAt: string;
+
+  // Fields Coming without data
+  arreteMinisteriel: string;
+  matriculeCecope: string;
+
+  // Fields Not coming
   codeEtablissement: string;
   isActive: boolean;
   centreRegId: string;
   villeId: string;
   center: string;
   userId: number;
-  libelle: string;
   slug: string;
-  createdAt: string;
   isDeleted: boolean;
   codeAdmin: string;
   prefix: string;
   typeEnseignement: string;
   refEtabMongodb: string;
   refIdenMongodb: string;
-  arreteMinisteriel: string;
-  matriculeCecope: string;
   nom: string;
-  proved: string;
-  province: string;
   citeChefferieVillage: string;
-  sousproved: string;
   territoireCommuneVille: string;
 };
 

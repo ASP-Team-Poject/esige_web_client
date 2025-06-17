@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../basic/Input";
 import {
   LocationEditIcon,
@@ -13,11 +13,17 @@ import {
 } from "lucide-react";
 import Button from "../basic/Button";
 import Select from "../basic/Select";
+import { localStorageKeys } from "@/util/constants";
 
 const CreateUserForm = () => {
   const [passwordType, setPasswordType] = useState<string>("password");
 
   const router = useRouter();
+
+  useEffect(() => {
+    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
+  }, []);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     router.push("/users");

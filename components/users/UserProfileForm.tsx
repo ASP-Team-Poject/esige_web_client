@@ -20,8 +20,8 @@ const UserProfileForm = () => {
       localStorage.getItem(localStorageKeys.CURRENT_USER)!
     );
 
-    console.log("USER => ", user);
     setCurrentUser(user);
+    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
   }, []);
 
   return (

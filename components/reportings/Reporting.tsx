@@ -19,6 +19,7 @@ import Loader from "../basic/Loader";
 import { Toast } from "../basic/Toast";
 import FetchingDataError from "../basic/FetchingDataError";
 import NoData from "../basic/NoData";
+import { localStorageKeys } from "@/util/constants";
 
 const Reporting = () => {
   const [schoolYears, setSchoolYears] = useState<SchoolYearType[] | null>(null);
@@ -72,6 +73,7 @@ const Reporting = () => {
       }
     };
     loadRegions();
+    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
   }, []);
 
   useEffect(() => {

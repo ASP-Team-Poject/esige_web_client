@@ -13,6 +13,7 @@ import TableFooter from "../TableFooter";
 import TableHeader from "../TableHeader";
 import { localStorageKeys } from "@/util/constants";
 import FetchingDataError from "../basic/FetchingDataError";
+import { useRouter } from "next/navigation";
 
 const EncodingSchools = () => {
   const [schools, setSchools] = useState<SchoolType[]>([]);
@@ -22,7 +23,7 @@ const EncodingSchools = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [schoolYear, setSchoolYear] = useState<SchoolYearType | null>(null);
-
+  const router = useRouter();
   const handleGoPreviousPage = () => {
     const newPage = page === 0 ? 0 : page - 1;
     setPage(newPage);
@@ -31,6 +32,18 @@ const EncodingSchools = () => {
   const handleGoNextPage = () => {
     const newPage = page === totalPages - 1 ? totalPages : page + 1;
     setPage(newPage);
+  };
+
+  const handleSchoolSelection = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    school: SchoolType
+  ) => {
+    e.preventDefault();
+    localStorage.setItem(
+      localStorageKeys.CURRENT_SCHOOL,
+      JSON.stringify(school)
+    );
+    router.push(`/encodings/${schoolYear?.id}/${school.id}`);
   };
 
   useEffect(() => {
@@ -84,8 +97,9 @@ const EncodingSchools = () => {
                           <tr className="bg-[rgb(248,248,248)]">
                             <th>Id</th>
                             <th>{"Nom de l'Établissements"}</th>
-                            <th>Code Administratif</th>
-                            <th>Code de l&apos;Etablissement</th>
+                            <th>Province</th>
+                            <th>Proved</th>
+                            <th>Sous Proved</th>
                             <th>Date</th>
                           </tr>
                         </thead>
@@ -94,12 +108,18 @@ const EncodingSchools = () => {
                             <tr key={index}>
                               <td>{school.id}</td>
                               <td className="text-primary_color font-bold">
-                                <Link href={`/encodings/${school.id}`}>
+                                <Link
+                                  href="#"
+                                  onClick={(e) =>
+                                    handleSchoolSelection(e, school)
+                                  }
+                                >
                                   {school.nom || school.libelle}
                                 </Link>
                               </td>
-                              <td>{school.codeAdmin}</td>
-                              <td>{school.codeEtablissement}</td>
+                              <td>{school.province}</td>
+                              <td>{school.proved}</td>
+                              <td>{school.sousproved}</td>
                               <td>
                                 {getFormatedDate(
                                   new Date(school.createdAt),
