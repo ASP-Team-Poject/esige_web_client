@@ -105,7 +105,6 @@ const Schools = () => {
                             <th>Code Administratif</th>
                             <th>Code de l&apos;Etablissement</th>
                             <th>Date</th>
-                            <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -125,19 +124,6 @@ const Schools = () => {
                                   true,
                                   true
                                 )}
-                              </td>
-                              <td>
-                                <label className="flex gap-2">
-                                  <Trash2
-                                    color="red"
-                                    className="cursor-pointer"
-                                  />
-                                  <span className="text-gray-500">{"|"}</span>
-                                  <Edit2
-                                    color="green"
-                                    className="cursor-pointer"
-                                  />
-                                </label>
                               </td>
                             </tr>
                           ))}

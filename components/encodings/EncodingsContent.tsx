@@ -123,19 +123,16 @@ const EncodingsContent = ({
                 <th>
                   <label className="flex justify-between">
                     <span>Id</span>
-                
                   </label>
                 </th>
                 <th>
                   <label className="flex justify-between">
                     <span>{"Nom de l'Établissement"}</span>
-                  
                   </label>
                 </th>
                 <th>Code Administratif</th>
                 <th>Code de l&apos;Etablissement</th>
                 <th>Date</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -153,7 +150,6 @@ const EncodingsContent = ({
                   <td>{school.codeAdmin}</td>
                   <td>{school.codeEtablissement}</td>
                   <td>{school.createdAt}</td>
-                  <td>...</td>
                 </tr>
               ))}
             </tbody>

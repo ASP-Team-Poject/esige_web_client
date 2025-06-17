@@ -127,7 +127,6 @@ const SchoolSTs = () => {
                             <th>{"Chef de l'Etablissement"}</th>
                             <th>Province</th>
                             <th>Date</th>
-                            <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -155,7 +154,6 @@ const SchoolSTs = () => {
                                   true
                                 )}
                               </td>
-                              <td>...</td>
                             </tr>
                           ))}
                         </tbody>

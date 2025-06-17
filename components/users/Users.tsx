@@ -102,7 +102,6 @@ const Users = () => {
                             <th>{"Nom complet"}</th>
                             <th>{"Téléphone"}</th>
                             <th>Email</th>
-                            <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -116,8 +115,6 @@ const Users = () => {
                               </td>
                               <td>{user.phone}</td>
                               <td>{user.email}</td>
-
-                              <td>...</td>
                             </tr>
                           ))}
                         </tbody>
