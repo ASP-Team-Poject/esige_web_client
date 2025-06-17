@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
-import { Edit2, Trash2 } from "lucide-react";
 import { getSchools } from "@/services/SchoolServise";
 import { SchoolType } from "@/util/types";
 import { getFormatedDate } from "@/util/functions";
@@ -76,10 +75,6 @@ const Schools = () => {
 
     router.push("/schools/update");
   };
-
-  useEffect(() => {
-    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
-  }, []);
 
   useEffect(() => {
     const loadSchools = async () => {

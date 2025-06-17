@@ -21,7 +21,6 @@ const UserProfileForm = () => {
     );
 
     setCurrentUser(user);
-    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
   }, []);
 
   return (

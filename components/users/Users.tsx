@@ -60,10 +60,6 @@ const Users = () => {
   };
 
   useEffect(() => {
-    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
-  }, []);
-
-  useEffect(() => {
     const loadUsers = async () => {
       setIsLoading(true);
       try {

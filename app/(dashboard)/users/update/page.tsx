@@ -1,11 +1,7 @@
-"use client";
-
 import PageContentWrapper from "@/components/layout/PageContentWrapper";
 import CreateUserForm from "@/components/users/CreateUserForm";
-import { localStorageKeys } from "@/util/constants";
 
 export default function NewUserPage() {
-  localStorage.removeItem(localStorageKeys.CURRENT_SELECTED_USER);
   return (
     <PageContentWrapper pageTitle="Nouveau Utilisateur">
       <CreateUserForm />

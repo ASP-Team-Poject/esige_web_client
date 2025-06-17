@@ -75,4 +75,5 @@ export const localStorageKeys = {
   CURRENT_SCHOOL_ST: "currentSchoolSt",
   CURRENT_SCHOOL_YEAR: "currentSchoolYear",
   USER_ID: "userId",
+  CURRENT_SELECTED_USER: "currentSelectedUser",
 };

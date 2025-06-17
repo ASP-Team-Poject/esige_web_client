@@ -36,7 +36,6 @@ const SchoolYears = ({ path }: { path: string }) => {
       }
     };
     loadSchoolYears();
-    localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
   }, []);
 
   return (
