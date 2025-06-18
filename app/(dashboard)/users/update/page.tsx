@@ -1,10 +1,10 @@
 import PageContentWrapper from "@/components/layout/PageContentWrapper";
-import CreateUserForm from "@/components/users/CreateUserForm";
+import EditUserForm from "@/components/users/EditUserForm";
 
 export default function NewUserPage() {
   return (
-    <PageContentWrapper pageTitle="Nouveau Utilisateur">
-      <CreateUserForm />
+    <PageContentWrapper pageTitle="Modifier l'Utilisateur">
+      <EditUserForm />
     </PageContentWrapper>
   );
 }

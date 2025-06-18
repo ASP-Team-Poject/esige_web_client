@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Input from "../basic/Input";
 import { Save, School } from "lucide-react";
@@ -25,6 +25,7 @@ const EMPTY_FORM = {
 
 const EditSchoolForm = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [schoolForm, setSchoolForm] = useState<Partial<SchoolType>>(EMPTY_FORM);
   const [regions, setRegions] = useState<SchoolRegion[] | null>(null);
   const [provinces, setProvinces] = useState<ProvinceType[] | null>(null);
@@ -85,12 +86,19 @@ const EditSchoolForm = () => {
       }
     };
     loadRegions();
-
-    const currentScool = localStorage.getItem(localStorageKeys.CURRENT_SCHOOL);
-    if (currentScool) {
-      const parsedCurrentScool: Partial<SchoolType> = JSON.parse(currentScool);
-      setSelectedProvince(parsedCurrentScool.province || "");
-      setSchoolForm(parsedCurrentScool);
+    
+    if (pathname.endsWith("update")) {
+      const currentScool = localStorage.getItem(
+        localStorageKeys.CURRENT_SCHOOL
+      );
+      if (currentScool) {
+        const parsedCurrentScool: Partial<SchoolType> =
+          JSON.parse(currentScool);
+        setSelectedProvince(parsedCurrentScool.province || "");
+        setSchoolForm(parsedCurrentScool);
+      }
+    } else {
+      localStorage.removeItem(localStorageKeys.CURRENT_SCHOOL);
     }
   }, []);
 

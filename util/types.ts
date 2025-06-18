@@ -43,25 +43,32 @@ export type LoginCredentials = {
 };
 
 export type UserType = {
+  // Coming fields with data
   id: number;
-  isDeleted: boolean;
-  updatedAt: string;
-  createdAt: string;
-  slug: string;
-  about: string;
-  firstName: string;
   name: string;
-  active: boolean;
-  phone: string;
   email: string;
-  roles: string; // ex.: '["ROLE_SOUSPROVED"]',
   username: string;
-  territoireId: number;
-  userId: number;
-  pictureId: any;
+  roles: string; // ex.: "[\"ROLE_SOUSPROVED\"]",
+  password: string;
+  mdp: string;
   sousProvedId: number;
   provedId: number;
   provinceId: number;
+  userId: number;
+  slug: string;
+  isDeleted: boolean;
+  active: boolean;
+  createdAt: string;
+
+  // Not coming fields
+  updatedAt: string;
+  about: string;
+  firstName: string;
+  phone: string;
+  territoireId: number;
+  pictureId: any;
+
+  // FrontEnd field
   displayName: string;
 };
 

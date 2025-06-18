@@ -21,7 +21,7 @@ export async function getUsers(
   size: number = 10
 ): Promise<UsersResponse | undefined> {
   try {
-    const response = await fetch(`${API_BASE_URL}?page=${page}&size=${size}`, {
+    const response = await fetch(`${API_BASE_URL}?page=${0}&size=${647}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -55,6 +55,27 @@ export async function login({
     return returnDataOrThrowServerError(response);
   } catch (error: any) {
     console.log("Login error => ", error);
+    throwRequestError(error);
+  }
+}
+
+export async function editUser(user: Partial<UserType>) {
+  const OPERATION = user.id ? "UPDATE" : "CREATION";
+  try {
+    const URL = `${API_BASE_URL}/users${user.id ? "/" + user.id : ""}`;
+    const METHOD = user.id ? "PUT" : "POST";
+
+    let response = await fetch(URL, {
+      method: METHOD,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+
+    return returnDataOrThrowServerError(response);
+  } catch (error: any) {
+    console.log(`User ${OPERATION} error =>`, error);
     throwRequestError(error);
   }
 }

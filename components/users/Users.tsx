@@ -15,6 +15,7 @@ import TableFooter from "../TableFooter";
 import { getUsers } from "@/services/UserService";
 import FetchingDataError from "../basic/FetchingDataError";
 import { localStorageKeys } from "@/util/constants";
+import { useRouter } from "next/navigation";
 
 const Users = () => {
   const [users, setUsers] = useState<UserType[]>([]);
@@ -24,6 +25,7 @@ const Users = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const router = useRouter();
 
   const handleGoPreviousPage = () => {
     const newPage = page === 0 ? 0 : page - 1;
@@ -65,6 +67,14 @@ const Users = () => {
       try {
         const data = await getUsers(page, Number.parseInt(size));
         if (data) {
+          const roles: string[] = [];
+
+          for (let index = 0; index < data.content.length; index++) {
+            if (!roles.includes(data.content[index].roles)) {
+              roles.push(data.content[index].roles);
+            }
+          }
+          console.log("Differents Role >> ", roles);
           setUsers(data.content);
           setTotalPages(data.totalPages);
         }
@@ -80,6 +90,19 @@ const Users = () => {
   useEffect(() => {
     handleDownloadPdf();
   }, [isGeneratingPdf]);
+
+  const handleUserSelection = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    selectedUser: UserType
+  ): void => {
+    e.preventDefault();
+    localStorage.setItem(
+      localStorageKeys.CURRENT_SELECTED_USER,
+      JSON.stringify(selectedUser)
+    );
+
+    router.push("/users/update");
+  };
 
   return (
     <PageContentWrapper pageTitle="Liste des Utilisateurs" id="pdf-content">
@@ -110,7 +133,10 @@ const Users = () => {
                             <tr key={index}>
                               <td>{user.id}</td>
                               <td className="text-primary_color font-bold">
-                                <Link href={`#`}>
+                                <Link
+                                  href={`#`}
+                                  onClick={(e) => handleUserSelection(e, user)}
+                                >
                                   {user.name || user.firstName || user.username}
                                 </Link>
                               </td>
