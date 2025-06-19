@@ -124,8 +124,9 @@ const Users = () => {
                           <tr className="bg-[rgb(248,248,248)]">
                             <th>Id</th>
                             <th>{"Nom complet"}</th>
-                            <th>{"Téléphone"}</th>
-                            <th>Email</th>
+                            <th>{"Email"}</th>
+                            <th>{"Nom d'utilisateur"}</th>
+                            <th>{"Role"}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -140,8 +141,9 @@ const Users = () => {
                                   {user.name || user.firstName || user.username}
                                 </Link>
                               </td>
-                              <td>{user.phone}</td>
                               <td>{user.email}</td>
+                              <td>{user.username}</td>
+                              <td>{user.roles}</td>
                             </tr>
                           ))}
                         </tbody>

@@ -3,14 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Input from "../basic/Input";
-import {
-  Lock,
-  LockOpen,
-  Mail,
-  Save,
-  School,
-  User,
-} from "lucide-react";
+import { Lock, LockOpen, Mail, Save, School, User } from "lucide-react";
 import Button from "../basic/Button";
 import Select from "../basic/Select";
 import {
@@ -34,12 +27,6 @@ const INIT_FORM = {
   sousProvedId: 0,
   provedId: 0,
   provinceId: 0,
-
-  password: "",
-  userId: 1,
-  slug: "",
-  isDeleted: false,
-  active: true,
 };
 const EditUserForm = () => {
   const router = useRouter();
@@ -140,6 +127,11 @@ const EditUserForm = () => {
       provinceId: parseInt(selectedProvince!),
       provedId: parseInt(selectedProved!),
       sousProvedId: parseInt(selectedSousProved!),
+      password: userForm.mdp,
+      userId: 1,
+      slug: userForm.username,
+      isDeleted: false,
+      active: true,
     };
     setIsLoading(true);
     try {
