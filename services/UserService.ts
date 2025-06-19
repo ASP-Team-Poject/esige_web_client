@@ -20,8 +20,9 @@ export async function getUsers(
   page: number = 0,
   size: number = 10
 ): Promise<UsersResponse | undefined> {
+  console.log("REQUEST ", { page, size });
   try {
-    const response = await fetch(`${API_BASE_URL}?page=${0}&size=${647}`, {
+    const response = await fetch(`${API_BASE_URL}?page=${page}&size=${size}`, {
       headers: {
         "Content-Type": "application/json",
       },

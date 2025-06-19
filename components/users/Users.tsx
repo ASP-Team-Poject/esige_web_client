@@ -67,14 +67,6 @@ const Users = () => {
       try {
         const data = await getUsers(page, Number.parseInt(size));
         if (data) {
-          const roles: string[] = [];
-
-          for (let index = 0; index < data.content.length; index++) {
-            if (!roles.includes(data.content[index].roles)) {
-              roles.push(data.content[index].roles);
-            }
-          }
-          console.log("Differents Role >> ", roles);
           setUsers(data.content);
           setTotalPages(data.totalPages);
         }

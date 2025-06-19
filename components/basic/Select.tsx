@@ -7,6 +7,7 @@ const Select = ({
   title,
   currentOptionId,
   required,
+  className,
   handleOnChange,
 }: {
   label?: string;
@@ -15,6 +16,7 @@ const Select = ({
   title?: string;
   currentOptionId?: string;
   required?: boolean;
+  className?: string;
   handleOnChange?: (e: any) => void;
 }) => {
   return (
@@ -25,7 +27,7 @@ const Select = ({
         value={currentOptionId}
         title={title}
         disabled={disabled}
-        className="bg-white text-gray-600 border-[1px] border-[#ccc] p-3 rounded-sm w-full focus:outline-none focus:ring-0"
+        className={`bg-white text-gray-600 border-[1px] border-[#ccc] p-3 rounded-sm w-full focus:outline-none focus:ring-0 ${className}`}
         required={required}
       >
         {title && (
