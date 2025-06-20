@@ -21,6 +21,8 @@ const EMPTY_FORM = {
   libelle: "",
   arreteMinisteriel: "",
   matriculeCecope: "",
+  territoireCommuneVille: "",
+  citeChefferieVillage: "",
 };
 
 const EditSchoolForm = () => {
@@ -86,7 +88,7 @@ const EditSchoolForm = () => {
       }
     };
     loadRegions();
-    
+
     if (pathname.endsWith("update")) {
       const currentScool = localStorage.getItem(
         localStorageKeys.CURRENT_SCHOOL
@@ -227,6 +229,24 @@ const EditSchoolForm = () => {
           label="Matricule Cecope"
           type="text"
           placeholder="Matricule Cecope"
+        />
+        <Input
+          value={schoolForm.territoireCommuneVille || ""}
+          handleChange={(value: string) =>
+            setSchoolForm({ ...schoolForm, territoireCommuneVille: value })
+          }
+          label="Territoire | Commune | Ville"
+          type="text"
+          placeholder="Territoire | Commune | Ville"
+        />
+        <Input
+          value={schoolForm.citeChefferieVillage || ""}
+          handleChange={(value: string) =>
+            setSchoolForm({ ...schoolForm, citeChefferieVillage: value })
+          }
+          label="Cité | Chefferie | Village"
+          type="text"
+          placeholder="Cité | Chefferie | Village"
         />
       </div>
 
