@@ -12,6 +12,18 @@ export type SchoolType = {
   province: string;
   proved: string;
   sousproved: string;
+  provinceId: number;
+  provedId: number;
+  sousProvedId: number;
+  anneeId: number;
+  codeCentreReg: string;
+  nomCentreReg: string;
+  center: string;
+  userId: number;
+  isDeleted: boolean;
+  codeAdmin: string;
+  typeEnseignement: string;
+  refEtabMongodb: string;
   createdAt: string;
 
   // Fields Coming without data
@@ -23,15 +35,9 @@ export type SchoolType = {
   isActive: boolean;
   centreRegId: string;
   villeId: string;
-  center: string;
-  userId: number;
-  slug: string;
-  isDeleted: boolean;
-  codeAdmin: string;
-  prefix: string;
-  typeEnseignement: string;
-  refEtabMongodb: string;
   refIdenMongodb: string;
+  slug: string;
+  prefix: string;
   nom: string;
   citeChefferieVillage: string;
   territoireCommuneVille: string;
