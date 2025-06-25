@@ -14,8 +14,7 @@ import Pagination from "../basic/Pagination";
 import InputRadio from "../basic/InputRadio";
 
 const St3Form = () => {
-  const [formData, setFormData] = useState<SchoolStType>({
-    id: 0,
+  const [formData, setFormData] = useState<Partial<SchoolStType>>({
     type: "",
     date: "",
     ids: "",
@@ -285,33 +284,31 @@ const St3Form = () => {
       nb_salles_organisees_2eme: 0,
       nb_salles_autorisees_3eme: 0,
       nb_salles_organisees_3eme: 0,
-
-      copa_est_operationnel: "",
-      nb_femme_copa: 0,
-      coges_est_operationnel: "",
-      nb_reunion_avec_pv_annee_passee: 0,
-      nb_reunion_rapport_g_annee_passee: 0,
+      nombre_femmes_copa: 0,
+      coges_operationnel: "",
+      reunions_pv: 0,
+      reunions_rapport: 0,
       type_point_eau: "",
       type_sources_energie: "",
-      nb_compartiment_latrines: 0,
-      nb_compartiment_latrines_pour_filles: 0,
-      prise_encharge_programme_refugie: "",
-      organisment_programme_refugie: "",
-      previsions_budgetaires: "",
+      nombre_compartiments: 0,
+      compartiments_filles: 0,
+      etablissement_pris_en_charge_programme_refugies: "",
+      nom_organisme: "",
+      prevision_budgetaire: "",
       tableau_bord: "",
-      nb_garcon_violence_intimidation: 0,
-      nb_fille_violence_intimidation: 0,
-      nb_garcon_violence_chatiment: 0,
-      nb_fille_violence_chatiment: 0,
-      nb_garcon_violence_harcelement: 0,
-      nb_fille_violence_harcelement: 0,
-      nb_garcon_violence_discrimination: 0,
-      nb_fille_violence_discrimination: 0,
-      nb_garcon_violence_abus_sexuel: 0,
-      nb_fille_violence_abus_sexuel: 0,
-      nb_garcon_violence_autres: 0,
-      nb_fille_violence_autres: 0,
-      nombre_visites_inspection: 0,
+      intimidation_g: 0,
+      intimidation_f: 0,
+      chatiment_g: 0,
+      chatiment_f: 0,
+      harcelement_g: 0,
+      harcelement_f: 0,
+      discrimination_g: 0,
+      discrimination_f: 0,
+      abus_sexuels_g: 0,
+      abus_sexuels_f: 0,
+      autres_violences_g: 0,
+      autres_violences_f: 0,
+      nb_reunion_visite_inspection_annee_passee: 0,
       nb_reunion_avec_pv_annee_passee2: 0,
     },
   });
@@ -351,24 +348,48 @@ const St3Form = () => {
     e.preventDefault();
     // Logique de soumission du formulaire
     console.log(formData);
+
+    // redirect to encodings year selection page or to the page after this by using the CURRENT_SCHOOL_YEAR
   };
 
   useEffect(() => {
     const currentSchoolYear: SchoolYearType = JSON.parse(
       localStorage.getItem(localStorageKeys.CURRENT_SCHOOL_YEAR)!
     );
-    let schoolName = "";
+    let schoolName: string | undefined = "";
     const yearLabel = currentSchoolYear.libAnneeScolaire;
     const schoolSt = localStorage.getItem(localStorageKeys.CURRENT_SCHOOL_ST);
     if (schoolSt) {
-      const currentSchoolSt: SchoolStType = JSON.parse(schoolSt);
-      schoolName = currentSchoolSt.nomEtab;
-      setFormData(currentSchoolSt);
+      const currentSchoolSt: Partial<SchoolStType> = JSON.parse(schoolSt);
+      schoolName =
+        currentSchoolSt.formulaire?.nom_etablissement ||
+        currentSchoolSt.nomEtab ||
+        "";
+      if (currentSchoolSt.formulaire?.nom_etablissement) {
+        schoolName = currentSchoolSt.formulaire.nom_etablissement;
+        setFormData(currentSchoolSt);
+      } else {
+        schoolName = currentSchoolSt.nomEtab || "";
+        setFormData({
+          ...currentSchoolSt,
+          formulaire: {
+            ...currentSchoolSt.formulaire,
+            nom_etablissement: schoolName || "",
+          },
+        });
+      }
     } else {
       const currentSchool: SchoolType = JSON.parse(
         localStorage.getItem(localStorageKeys.CURRENT_SCHOOL)!
       );
       schoolName = currentSchool.libelle || currentSchool.nom;
+      setFormData({
+        ...formData,
+        formulaire: {
+          ...formData.formulaire,
+          nom_etablissement: schoolName || "",
+        },
+      });
     }
 
     setFormTitleData({ schoolName, yearLabel });
@@ -414,6 +435,7 @@ const St3Form = () => {
   }, [isGeneratingPdf]);
 
   const FormPages: ReactNode[] = [
+    // Page 1
     <div key={1} className="flex flex-col gap-4">
       <section className="flex flex-col gap-2">
         <label className="font-bold">
@@ -422,7 +444,7 @@ const St3Form = () => {
 
         <Input2
           placeholder="Nom Etablissement"
-          value={formData.nomEtab}
+          value={formData.formulaire?.nom_etablissement || ""}
           handleChange={handleChange}
           label="1.1. Nom de l'établissement "
           name="nomEtab"
@@ -436,7 +458,7 @@ const St3Form = () => {
             type="text"
             id="adresse"
             name="formulaire.adresse"
-            value={formData.formulaire.adresse}
+            value={formData.formulaire?.adresse}
             onChange={handleChange}
             placeholder="Adresse"
           />
@@ -451,8 +473,8 @@ const St3Form = () => {
             id="phone"
             name="formulaire.telephone"
             value={
-              formData.formulaire.telephone ||
-              formData.formulaire.telephone_etablissement ||
+              formData.formulaire?.telephone ||
+              formData.formulaire?.telephone_etablissement ||
               ""
             }
             onChange={handleChange}
@@ -466,7 +488,7 @@ const St3Form = () => {
             type="text"
             id="annee"
             name="formulaire.annee"
-            value={formData.formulaire.annee || formTitleData.yearLabel}
+            value={formData.formulaire?.annee || formTitleData.yearLabel}
             onChange={handleChange}
             placeholder="Année"
           />
@@ -502,7 +524,7 @@ const St3Form = () => {
                 type="text"
                 name="formulaire.ville"
                 id="formulaire.ville"
-                value={formData.formulaire.ville}
+                value={formData.formulaire?.ville}
                 onChange={handleChange}
                 placeholder="Ville"
               />
@@ -520,7 +542,7 @@ const St3Form = () => {
                 type="text"
                 name="formulaire.territoire_commune"
                 id="formulaire.territoire_commune"
-                value={formData.formulaire.territoire_commune}
+                value={formData.formulaire?.territoire_commune}
                 onChange={handleChange}
                 placeholder="Territoire Commune"
               />
@@ -535,7 +557,7 @@ const St3Form = () => {
                 type="text"
                 name="formulaire.village"
                 id="formulaire.village"
-                value={formData.formulaire.village}
+                value={formData.formulaire?.village}
                 onChange={handleChange}
                 placeholder="Village"
               />
@@ -593,7 +615,7 @@ const St3Form = () => {
                     type="text"
                     name="formulaire.latitude"
                     id="formulaire.latitude"
-                    value={formData.formulaire.latitude}
+                    value={formData.formulaire?.latitude}
                     onChange={handleChange}
                     placeholder="latitude"
                   />
@@ -610,7 +632,7 @@ const St3Form = () => {
                     type="text"
                     name="formulaire.longitude"
                     id="formulaire.longitude"
-                    value={formData.formulaire.longitude}
+                    value={formData.formulaire?.longitude}
                     onChange={handleChange}
                     placeholder="longitude"
                   />
@@ -627,7 +649,7 @@ const St3Form = () => {
                     type="text"
                     name="formulaire.altitude"
                     id="formulaire.altitude"
-                    value={formData.formulaire.altitude}
+                    value={formData.formulaire?.altitude}
                     onChange={handleChange}
                     placeholder="altitude"
                   />
@@ -647,7 +669,7 @@ const St3Form = () => {
                 type="text"
                 name="formulaire.centreRegroupement"
                 id="formulaire.centreRegroupement"
-                value={formData.formulaire.centreRegroupement}
+                value={formData.formulaire?.centreRegroupement}
                 onChange={handleChange}
                 placeholder="centreRegroupement"
               />
@@ -656,7 +678,7 @@ const St3Form = () => {
             <InputRadio
               label={"1.15. Milieu"}
               name="formulaire.milieu"
-              currentValue={formData.formulaire.milieu}
+              currentValue={formData.formulaire?.milieu}
               allValues={["Rural", "Urbain"]}
               handleChange={handleChange}
             />
@@ -674,7 +696,7 @@ const St3Form = () => {
             type="text"
             name="formulaire.code_adm_ets"
             id="formulaire.code_adm_ets"
-            value={formData.formulaire.code_adm_ets}
+            value={formData.formulaire?.code_adm_ets}
             onChange={handleChange}
             placeholder="Code ADM ETS"
             disabled={true}
@@ -687,7 +709,7 @@ const St3Form = () => {
         <InputRadio
           label={"1.16. Régime de gestion"}
           name="formulaire.regime_gestion"
-          currentValue={formData.formulaire.regime_gestion}
+          currentValue={formData.formulaire?.regime_gestion}
           allValues={[
             "Non conventionne (ENC)",
             "Catholique",
@@ -715,7 +737,7 @@ const St3Form = () => {
             type="text"
             name="formulaire.reference_juridique"
             id="formulaire.reference_juridique"
-            value={formData.formulaire.reference_juridique}
+            value={formData.formulaire?.reference_juridique}
             onChange={handleChange}
             placeholder="reference juridique"
           />
@@ -733,7 +755,7 @@ const St3Form = () => {
             type="text"
             name="formulaire.matricule_secope"
             id="formulaire.matricule_secope"
-            value={formData.formulaire.matricule_secope}
+            value={formData.formulaire?.matricule_secope}
             onChange={handleChange}
             placeholder="matricule secope"
           />
@@ -742,7 +764,7 @@ const St3Form = () => {
         <InputRadio
           label={"1.19. L'établissement est"}
           name="formulaire.etat_etablissement"
-          currentValue={formData.formulaire.etat_etablissement}
+          currentValue={formData.formulaire?.etat_etablissement}
           allValues={["Mécanisé et payé", "Mécanisé et non payé"]}
           handleChange={handleChange}
         />
@@ -750,7 +772,7 @@ const St3Form = () => {
         <InputRadio
           label={"1.20. Statut d'occupation parcellaire "}
           name="formulaire.statut_occupation"
-          currentValue={formData.formulaire.statut_occupation}
+          currentValue={formData.formulaire?.statut_occupation}
           allValues={["Propriétaire", "Co-Propriétaire", "Locataire"]}
           handleChange={handleChange}
         />
@@ -760,14 +782,18 @@ const St3Form = () => {
         <label className="font-bold">
           {"2. INFORMATIONS GENERALES SUR L'ETABLISSEMENT"}
         </label>
-        <label>
-          {"L'établissement dispose-t-il: (cocher la case correspondante)"}
-        </label>
+        <ul className="list-disc pl-4 ml-8">
+          <li>
+            <label>
+              {"L'établissement dispose-t-il: (cocher la case correspondante)"}
+            </label>
+          </li>
+        </ul>
 
         <InputRadio
           label={"2.1. Des programmes officiels de cours ?"}
           name="formulaire.statut_occupation"
-          currentValue={formData.formulaire.programmes_officiels}
+          currentValue={formData.formulaire?.programmes_officiels}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -775,7 +801,7 @@ const St3Form = () => {
         <InputRadio
           label={"2.2. D'un Copa ?"}
           name="formulaire.copa"
-          currentValue={formData.formulaire.copa}
+          currentValue={formData.formulaire?.copa}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -785,7 +811,7 @@ const St3Form = () => {
             "2.3. Si oui, le COPA est-il opérationnel dans votre établissement ?"
           }
           name="formulaire.copa_est_operationnel"
-          currentValue={formData.formulaire.copa_est_operationnel}
+          currentValue={formData.formulaire?.copa}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -793,31 +819,25 @@ const St3Form = () => {
         <Input2
           type="number"
           handleChange={handleChange}
-          value={formData.formulaire.nb_reunion_avec_pv_annee_passee}
-          name="formData.formulaire.nb_reunion_avec_pv_annee_passee"
+          value={formData.formulaire?.reunions_pv}
+          name="formulaire?.nb_reunion_avec_pv_annee_passee"
           label={
             "2.4. Le nombre de réunions tenues avec les PV l'année passée :"
           }
         />
 
-        <Input2
-          handleChange={handleChange}
-          value={formData.formulaire.nb_femme_copa}
-          name="formData.formulaire.nb_femme_copa"
-          label="2.5. Nombre de femmes dans le COPA?"
-        />
         <InputRadio
-          label={"2.6. D'un Coges ?"}
+          label={"2.5. D'un Coges ?"}
           name="formulaire.coges"
-          currentValue={formData.formulaire.coges}
+          currentValue={formData.formulaire?.coges}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
 
         <InputRadio
-          label={"2.7. Si oui, le COGES est-il opérationnel dans votre école ?"}
+          label={"2.6. Si oui, le COGES est-il opérationnel dans votre école ?"}
           name="formulaire.coges_operationnel"
-          currentValue={formData.formulaire.coges} // TOCHANGE
+          currentValue={formData.formulaire?.coges_operationnel}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -825,47 +845,57 @@ const St3Form = () => {
         <Input2
           handleChange={handleChange}
           placeholder="réunions tenues avec le rapport de gestion"
-          value={formData.formulaire.nombreEleves} // TOCHANGE
-          name="formData.formulaire.nb_reunion_rapport_g_annee_passee"
-          label="2.8. Donner Le nombre de réunions tenues avec le rapport de gestion l'année précédente"
+          value={formData.formulaire?.reunions_rapport}
+          name="formulaire?.reunions_rapport"
+          label="2.7. Donner Le nombre de réunions tenues avec le rapport de gestion l'année précédente"
+        />
+        <InputRadio
+          label={
+            "2.8. Les locaux sont-ils utilisés par un deuxièment établissement ?"
+          }
+          name="formulaire.coges_operationnel"
+          currentValue={formData.formulaire?.projet_etablissement}
+          allValues={["Oui", "Non"]}
+          handleChange={handleChange}
         />
         <Input2
           handleChange={handleChange}
           placeholder=""
-          value={formData.formulaire.nombreEleves} // TOCHANGE
-          name="formData.formulaire.nb_femme_coges"
-          label="2.9. Nombre de femmes dans le COGES ?"
+          value={formData.formulaire?.nom_second_etablissement}
+          name="formulaire?.nom_second_etablissement"
+          label="2.9. Si oui, préciser le nom du deuxième établissement "
         />
       </section>
     </div>,
 
+    // Page 2
     <div key={2} className="flex flex-col gap-4">
       <section className="flex flex-col gap-2">
         <InputRadio
           label={"2.10. D'un point d'eau ?"}
           name="formulaire.point_eau"
-          currentValue={formData.formulaire.point_eau}
+          currentValue={formData.formulaire?.point_eau}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
         <InputRadio
           label={"2.11. Si oui préciser le type en cochant la case appropié ?"}
           name="formulaire.type_point_eau"
-          currentValue={formData.formulaire.type_point_eau}
+          currentValue={formData.formulaire?.type_point_eau}
           allValues={["Robinet", "Forage/Puit", "Sources"]}
           handleChange={handleChange}
         />
         <InputRadio
           label={"2.12. De sources d'energie ?"}
           name="formulaire.sources_energie"
-          currentValue={formData.formulaire.sources_energie}
+          currentValue={formData.formulaire?.sources_energie}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
         <InputRadio
           label={"2.13. Si oui préciser le type sources d'energie ?"}
           name="formulaire.type_sources_energie"
-          currentValue={formData.formulaire.type_sources_energie}
+          currentValue={formData.formulaire?.type_sources_energie}
           allValues={["Electrique", "Solaire", "Groupe électrogene"]}
           handleChange={handleChange}
         />
@@ -873,7 +903,7 @@ const St3Form = () => {
         <InputRadio
           label={"2.14. Des Latrines ?"}
           name="formulaire.latrines"
-          currentValue={formData.formulaire.latrines}
+          currentValue={formData.formulaire?.latrines}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -882,16 +912,16 @@ const St3Form = () => {
           <Input2
             type="number"
             handleChange={handleChange}
-            value={formData.formulaire.nb_compartiment_latrines}
-            name="formData.formulaire.nb_compartiment_latrines"
+            value={formData.formulaire?.nombre_compartiments}
+            name="formulaire?.nb_compartiment_latrines"
             label="2.15. Si oui préciser le nombre de compartiment ?"
           />
 
           <Input2
             type="number"
             handleChange={handleChange}
-            value={formData.formulaire.nb_compartiment_latrines_pour_filles}
-            name="formData.formulaire.nb_compartiment_latrines_pour_filles"
+            value={formData.formulaire?.compartiments_filles}
+            name="formulaire?.nb_compartiment_latrines_pour_filles"
             label="2.16. Nombre de compartiment pour filles ?"
           />
         </div>
@@ -899,7 +929,7 @@ const St3Form = () => {
         <InputRadio
           label={"2.17. Une cours de récréation ?"}
           name="formulaire.cour_recreation"
-          currentValue={formData.formulaire.cour_recreation}
+          currentValue={formData.formulaire?.cour_recreation}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -907,7 +937,7 @@ const St3Form = () => {
         <InputRadio
           label={"2.18. Un terrain de jeux ?"}
           name="formulaire.terrain_jeux"
-          currentValue={formData.formulaire.terrain_jeux}
+          currentValue={formData.formulaire?.terrain_jeux}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -915,15 +945,15 @@ const St3Form = () => {
         <InputRadio
           label={"2.19. Une cloture ?"}
           name="formulaire.cloture"
-          currentValue={formData.formulaire.cloture}
+          currentValue={formData.formulaire?.cloture}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
 
         <InputRadio
           label={"2.20. Si oui, préciser la nature de la cloture ?"}
-          name="formulaire.cloture"
-          currentValue={formData.formulaire.cloture}
+          name="formulaire.nature_cloture"
+          currentValue={formData.formulaire?.nature_cloture}
           allValues={["En dur", "En semi dur", "En haie", "Autres"]}
           handleChange={handleChange}
         />
@@ -932,15 +962,17 @@ const St3Form = () => {
           label={
             "2.21. Votre établissement est-il pris en charge par le programme de refugiés ?"
           }
-          name="formulaire.prise_encharge_programme_refugie"
-          currentValue={formData.formulaire.prise_encharge_programme_refugie}
+          name="formulaire.etablissement_pris_en_charge_programme_refugies"
+          currentValue={
+            formData.formulaire?.etablissement_pris_en_charge_programme_refugies
+          }
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
         <Input2
           handleChange={handleChange}
-          value={formData.formulaire.organisment_programme_refugie}
-          name="formData.formulaire.organisment_programme_refugie"
+          value={formData.formulaire?.nom_organisme}
+          name="formulaire?.nom_organisme"
           label="2.22. Si oui, par quel organisme ?"
         />
 
@@ -949,7 +981,7 @@ const St3Form = () => {
             "2.23. Votre établissement a t'il developé un projet d'établissement avec toutes les parties prenantes ?"
           }
           name="formulaire.projet_etablissement"
-          currentValue={formData.formulaire.projet_etablissement}
+          currentValue={formData.formulaire?.projet_etablissement}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -958,8 +990,8 @@ const St3Form = () => {
           label={
             "2.24. Votre établissement dispose t'il des prévisions budgetaires et des documents comptables ?"
           }
-          name="formulaire.previsions_budgetaires"
-          currentValue={formData.formulaire.previsions_budgetaires}
+          name="formulaire.prevision_budgetaire"
+          currentValue={formData.formulaire?.prevision_budgetaire}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -969,7 +1001,7 @@ const St3Form = () => {
             "2.25. Votre établissement dispose t'il d'un plan d'action opérationnel ?"
           }
           name="formulaire.plan_action"
-          currentValue={formData.formulaire.plan_action}
+          currentValue={formData.formulaire?.plan_action}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -979,7 +1011,7 @@ const St3Form = () => {
             "2.26. Votre établissement a t'il elaborer un Tableau de Bord ?"
           }
           name="formulaire.tableau_bord"
-          currentValue={formData.formulaire.tableau_bord}
+          currentValue={formData.formulaire?.tableau_bord}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -988,8 +1020,8 @@ const St3Form = () => {
           label={
             "2.27. Votre établissement a t'il organise une Revue Annuelle de Performance (RAP) ?"
           }
-          name="formulaire.tableau_bord"
-          currentValue={formData.formulaire.tableau_bord}
+          name="formulaire.rap_organisee"
+          currentValue={formData.formulaire?.rap_organisee}
           allValues={["Oui", "Non"]}
           handleChange={handleChange}
         />
@@ -997,41 +1029,41 @@ const St3Form = () => {
         <Input2
           type="number"
           handleChange={handleChange}
-          value={formData.formulaire.educateurs_formes}
-          name="formData.formulaire.educateurs_formes"
+          value={formData.formulaire?.educateurs_formes}
+          name="formulaire?.educateurs_formes"
           label="2.28. Nombre d'éducateurs de l'établissement qui ont reçu une formation durant les derniers 12 mois "
         />
 
         <Input2
           type="number"
           handleChange={handleChange}
-          value={formData.formulaire.educateurs_cotes_positifs}
-          name="formData.formulaire.educateurs_cotes_positifs"
+          value={formData.formulaire?.educateurs_cotes_positifs}
+          name="formulaire?.educateurs_cotes_positifs"
           label="2.29. Nombre d'éducateurs cotés positivement(E, TB, B) "
         />
 
         <Input2
           type="number"
           handleChange={handleChange}
-          value={formData.formulaire.educateurs_inspectes}
-          name="formData.formulaire.educateurs_inspectes"
+          value={formData.formulaire?.educateurs_inspectes}
+          name="formulaire?.educateurs_inspectes"
           label="2.30. Nombre d'éducateurs ayant reçu une inspection pedagogique C3"
         />
 
-        <Input2
-          type="number"
-          handleChange={handleChange}
-          value={formData.formulaire.chef_formation}
-          name="formData.formulaire.chef_formation"
+        <InputRadio
           label="2.31. Chef d'Etablissement a t'il reçu une formation continue durant 12 derniers mois ?"
+          name="formulaire.chef_formation"
+          currentValue={formData.formulaire?.chef_formation}
+          allValues={["Oui", "Non"]}
+          handleChange={handleChange}
         />
 
-        <Input2
-          type="number"
-          handleChange={handleChange}
-          value={formData.formulaire.chef_cote_positif}
-          name="formData.formulaire.chef_cote_positif"
+        <InputRadio
           label="2.32. Chef d'Etablissement a t'il été coté positivement(Reserve au S/PROVED) ?"
+          name="formulaire?.chef_cote_positif"
+          currentValue={formData.formulaire?.chef_cote_positif}
+          allValues={["Oui", "Non"]}
+          handleChange={handleChange}
         />
 
         <table className="text-left">
@@ -1041,36 +1073,35 @@ const St3Form = () => {
                 {"2.33. Enfants victimes de violences"}
               </th>
             </tr>
-          </thead>
-          <tbody>
             <tr>
               <th>Forme de violence</th>
               <th>G</th>
               <th>F</th>
               <th>G + F</th>
             </tr>
-
+          </thead>
+          <tbody>
             <tr>
               <th>Intimidation</th>
               <td>
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_garcon_violence_intimidation"
-                  value={formData.formulaire.nb_garcon_violence_intimidation}
+                  name="formulaire.intimidation_g"
+                  value={formData.formulaire?.intimidation_g}
                 />
               </td>
               <td>
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_fille_violence_intimidation"
-                  value={formData.formulaire.nb_fille_violence_intimidation}
+                  name="formulaire.intimidation_f"
+                  value={formData.formulaire?.intimidation_f}
                 />
               </td>
               <td>
-                {(formData.formulaire.nb_garcon_violence_intimidation || 0) +
-                  (formData.formulaire.nb_fille_violence_intimidation || 0)}
+                {(formData.formulaire?.intimidation_g || 0) +
+                  (formData.formulaire?.intimidation_f || 0)}
               </td>
             </tr>
 
@@ -1080,21 +1111,21 @@ const St3Form = () => {
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_garcon_violence_chatiment"
-                  value={formData.formulaire.nb_garcon_violence_chatiment}
+                  name="formulaire.chatiment_g"
+                  value={formData.formulaire?.chatiment_g}
                 />
               </td>
               <td>
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_fille_violence_chatiment"
-                  value={formData.formulaire.nb_fille_violence_chatiment}
+                  name="formulaire.chatiment_f"
+                  value={formData.formulaire?.chatiment_f}
                 />
               </td>
               <td>
-                {(formData.formulaire.nb_garcon_violence_chatiment || 0) +
-                  (formData.formulaire.nb_fille_violence_chatiment || 0)}
+                {(formData.formulaire?.chatiment_g || 0) +
+                  (formData.formulaire?.chatiment_f || 0)}
               </td>
             </tr>
 
@@ -1104,21 +1135,21 @@ const St3Form = () => {
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_garcon_violence_harcelement"
-                  value={formData.formulaire.nb_garcon_violence_harcelement}
+                  name="formulaire.harcelement_g"
+                  value={formData.formulaire?.harcelement_g}
                 />
               </td>
               <td>
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_fille_violence_harcelement"
-                  value={formData.formulaire.nb_fille_violence_harcelement}
+                  name="formulaire.harcelement_f"
+                  value={formData.formulaire?.harcelement_f}
                 />
               </td>
               <td>
-                {(formData.formulaire.nb_garcon_violence_harcelement || 0) +
-                  (formData.formulaire.nb_fille_violence_harcelement || 0)}
+                {(formData.formulaire?.harcelement_g || 0) +
+                  (formData.formulaire?.harcelement_f || 0)}
               </td>
             </tr>
 
@@ -1128,21 +1159,21 @@ const St3Form = () => {
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_garcon_violence_discrimination"
-                  value={formData.formulaire.nb_garcon_violence_discrimination}
+                  name="formulaire.discrimination_g"
+                  value={formData.formulaire?.discrimination_g}
                 />
               </td>
               <td>
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_garcon_violence_discrimination"
-                  value={formData.formulaire.nb_fille_violence_discrimination}
+                  name="formulaire.discrimination_f"
+                  value={formData.formulaire?.discrimination_f}
                 />
               </td>
               <td>
-                {(formData.formulaire.nb_garcon_violence_discrimination || 0) +
-                  (formData.formulaire.nb_fille_violence_discrimination || 0)}
+                {(formData.formulaire?.discrimination_g || 0) +
+                  (formData.formulaire?.discrimination_f || 0)}
               </td>
             </tr>
 
@@ -1152,21 +1183,21 @@ const St3Form = () => {
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_garcon_violence_abus_sexuel"
-                  value={formData.formulaire.nb_garcon_violence_abus_sexuel}
+                  name="formulaire.abus_sexuels_g"
+                  value={formData.formulaire?.abus_sexuels_g}
                 />
               </td>
               <td>
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_fille_violence_abus_sexuel"
-                  value={formData.formulaire.nb_fille_violence_abus_sexuel}
+                  name="formulaire.abus_sexuels_f"
+                  value={formData.formulaire?.abus_sexuels_f}
                 />
               </td>
               <td>
-                {(formData.formulaire.nb_garcon_violence_abus_sexuel || 0) +
-                  (formData.formulaire.nb_fille_violence_abus_sexuel || 0)}
+                {(formData.formulaire?.abus_sexuels_g || 0) +
+                  (formData.formulaire?.abus_sexuels_f || 0)}
               </td>
             </tr>
 
@@ -1176,43 +1207,1947 @@ const St3Form = () => {
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_garcon_violence_autres"
-                  value={formData.formulaire.nb_garcon_violence_autres}
+                  name="formulaire.autres_violences_g"
+                  value={formData.formulaire?.autres_violences_g}
                 />
               </td>
               <td>
                 <Input2
                   type="number"
                   handleChange={handleChange}
-                  name="formulaire.nb_fille_violence_autres"
-                  value={formData.formulaire.nb_fille_violence_autres}
+                  name="formulaire.autres_violences_f"
+                  value={formData.formulaire?.autres_violences_f}
                 />
               </td>
               <td>
-                {(formData.formulaire.nb_garcon_violence_autres || 0) +
-                  (formData.formulaire.nb_fille_violence_autres || 0)}
+                {(formData.formulaire?.autres_violences_g || 0) +
+                  (formData.formulaire?.autres_violences_f || 0)}
               </td>
             </tr>
           </tbody>
         </table>
 
-        <Input2
-          type="number"
-          handleChange={handleChange}
-          value={formData.formulaire.nombre_visites_inspection}
-          name="formData.formulaire.nombre_visites_inspection"
-          label="Note: pour le 2ème Etablissement (sous logé à la question 2.13) ne remplira pas le tableau 8-9-10, 
-          sur les locaux Nombre de visites d'inspection de l'année passée "
-          labelShouldwrap={true}
-        />
+        <label>
+          {
+            "Note: pour le 2ème Etablissement (sous logé à la question 2.13) ne remplira pas le tableau 8-9-10, sur les"
+          }
+          <br />
+          <Input2
+            type="number"
+            handleChange={handleChange}
+            value={
+              formData.formulaire?.nb_reunion_visite_inspection_annee_passee
+            }
+            name="formulaire?.nb_reunion_visite_inspection_annee_passee"
+            label="locaux Nombre de visites d'inspection de l'année passée "
+          />
+        </label>
 
         <Input2
           type="number"
           handleChange={handleChange}
-          value={formData.formulaire.nb_reunion_avec_pv_annee_passee2}
-          name="formData.formulaire.nb_reunion_avec_pv_annee_passee2"
+          value={formData.formulaire?.nb_reunion_avec_pv_annee_passee2}
+          name="formulaire?.nb_reunion_avec_pv_annee_passee2"
           label="Nombre de reunion avec PV tenues l'année passée "
         />
+      </section>
+    </div>,
+
+    // Page 3
+    <div key={3} className="flex flex-col gap-4">
+      <label className="font-bold">
+        {"III. DONNES SUR LES DIFFERENTS PARAMETRES SCOLAIRES"}
+      </label>
+
+      <section className="flex flex-col gap-2">
+        <label>
+          {"Tableau 1 : Nombre de salles d'activitées autorises et organisées"}
+        </label>
+
+        <table className="text-left">
+          <thead>
+            <tr>
+              <th>{"Année d'études"}</th>
+              <th>{"Nombre de salles autorisées"}</th>
+              <th>{"Nombre de salles"}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>{"1ère année"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_salles_autorisees_1ere"
+                  value={formData.formulaire?.nb_salles_autorisees_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_salles_organisees_1ere"
+                  value={formData.formulaire?.nb_salles_organisees_1ere}
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"2ème année"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_salles_autorisees_2eme"
+                  value={formData.formulaire?.nb_salles_autorisees_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_salles_organisees_2eme"
+                  value={formData.formulaire?.nb_salles_organisees_2eme}
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"3ème année"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_salles_autorisees_3eme"
+                  value={formData.formulaire?.nb_salles_autorisees_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_salles_organisees_3eme"
+                  value={formData.formulaire?.nb_salles_organisees_3eme}
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <th className="font-bold text-center">Total</th>
+              <td className="text-center">
+                {(formData.formulaire?.nb_salles_autorisees_1ere || 0) +
+                  (formData.formulaire?.nb_salles_autorisees_2eme || 0) +
+                  (formData.formulaire?.nb_salles_autorisees_3eme || 0)}
+              </td>
+              <td className="text-center">
+                {(formData.formulaire?.nb_salles_organisees_1ere || 0) +
+                  (formData.formulaire?.nb_salles_organisees_2eme || 0) +
+                  (formData.formulaire?.nb_salles_organisees_3eme || 0)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <label>
+          {
+            "Tableau 2 : effectif des enfants incrits par sexe et année d'études selon l'age révolu"
+          }
+        </label>
+
+        <table className="text-center">
+          <thead>
+            <tr>
+              <th rowSpan={2}>{"Niveau d'études/Sexe/Age"}</th>
+              <th colSpan={3}>{"1ère"}</th>
+              <th colSpan={3}>{"2ème"}</th>
+              <th colSpan={3}>{"3ème"}</th>
+              <th colSpan={3}>{"Total"}</th>
+            </tr>
+            <tr>
+              <th>G</th>
+              <th>F</th>
+              <th>{"G + F"}</th>
+
+              <th>G</th>
+              <th>F</th>
+              <th>{"G + F"}</th>
+
+              <th>G</th>
+              <th>F</th>
+              <th>{"G + F"}</th>
+
+              <th>G</th>
+              <th>F</th>
+              <th>{"G + F"}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>{"- 3 "}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_-3ans_1ere"
+                  value={formData.formulaire?.["effectif_garcons_-3ans_1ere"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_-3ans_1ere"
+                  value={formData.formulaire?.["effectif_filles_-3ans_1ere"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_1ere"] || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_-3ans_2eme"
+                  value={formData.formulaire?.["effectif_garcons_-3ans_2eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_-3ans_2eme"
+                  value={formData.formulaire?.["effectif_filles_-3ans_2eme"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_2eme"] || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_-3ans_3eme"
+                  value={formData.formulaire?.["effectif_garcons_-3ans_3eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_-3ans_3eme"
+                  value={formData.formulaire?.["effectif_filles_-3ans_3eme"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_3eme"] || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_-3ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_filles_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_3eme"] || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"3 "}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_3ans_1ere"
+                  value={formData.formulaire?.["effectif_garcons_3ans_1ere"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_3ans_1ere"
+                  value={formData.formulaire?.["effectif_filles_3ans_1ere"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_1ere"] || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_3ans_2eme"
+                  value={formData.formulaire?.["effectif_garcons_3ans_2eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_3ans_2eme"
+                  value={formData.formulaire?.["effectif_filles_3ans_2eme"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_2eme"] || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_3ans_3eme"
+                  value={formData.formulaire?.["effectif_garcons_3ans_3eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_3ans_3eme"
+                  value={formData.formulaire?.["effectif_filles_3ans_3eme"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_3eme"] || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["effectif_garcons_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_filles_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_3eme"] || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"4"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_4ans_1ere"
+                  value={formData.formulaire?.["effectif_garcons_4ans_1ere"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_4ans_1ere"
+                  value={formData.formulaire?.["effectif_filles_4ans_1ere"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_1ere"] || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_4ans_2eme"
+                  value={formData.formulaire?.["effectif_garcons_4ans_2eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_4ans_2eme"
+                  value={formData.formulaire?.["effectif_filles_4ans_2eme"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_2eme"] || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_4ans_3eme"
+                  value={formData.formulaire?.["effectif_garcons_4ans_3eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_4ans_3eme"
+                  value={formData.formulaire?.["effectif_filles_4ans_3eme"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_3eme"] || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["effectif_garcons_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_filles_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_3eme"] || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"5"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_5ans_1ere"
+                  value={formData.formulaire?.["effectif_garcons_5ans_1ere"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_5ans_1ere"
+                  value={formData.formulaire?.["effectif_filles_5ans_1ere"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_1ere"] || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_5ans_2eme"
+                  value={formData.formulaire?.["effectif_garcons_5ans_2eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_5ans_2eme"
+                  value={formData.formulaire?.["effectif_filles_5ans_2eme"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_2eme"] || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_garcons_5ans_3eme"
+                  value={formData.formulaire?.["effectif_garcons_5ans_3eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.effectif_filles_5ans_3eme"
+                  value={formData.formulaire?.["effectif_filles_5ans_3eme"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_5ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_3eme"] || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["effectif_garcons_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_filles_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_3eme"] || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Total"}</th>
+
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_1ere"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_filles_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_1ere"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_1ere"] || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_2eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_filles_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_2eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_2eme"] || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_filles_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_3eme"] || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_filles_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_3eme"] || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["effectif_garcons_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_garcons_5ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_1ere"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_2eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_-3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_3ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_4ans_3eme"] || 0) +
+                  (formData.formulaire?.["effectif_filles_5ans_3eme"] || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Dont autochtone"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.autochtones_garcons_1ere"
+                  value={formData.formulaire?.autochtones_garcons_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.autochtones_filles_1ere"
+                  value={formData.formulaire?.autochtones_filles_1ere}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.autochtones_garcons_1ere || 0) +
+                  (formData.formulaire?.autochtones_filles_1ere || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.autochtones_garcons_2eme"
+                  value={formData.formulaire?.autochtones_garcons_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.autochtones_filles_2eme"
+                  value={formData.formulaire?.autochtones_filles_2eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.autochtones_garcons_2eme || 0) +
+                  (formData.formulaire?.autochtones_filles_2eme || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.autochtones_garcons_3eme"
+                  value={formData.formulaire?.autochtones_garcons_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.autochtones_filles_3eme"
+                  value={formData.formulaire?.autochtones_filles_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.autochtones_garcons_3eme || 0) +
+                  (formData.formulaire?.autochtones_filles_3eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.autochtones_garcons_1ere || 0) +
+                  (formData.formulaire?.autochtones_garcons_2eme || 0) +
+                  (formData.formulaire?.autochtones_garcons_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.autochtones_filles_1ere || 0) +
+                  (formData.formulaire?.autochtones_filles_2eme || 0) +
+                  (formData.formulaire?.autochtones_filles_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.autochtones_garcons_1ere || 0) +
+                  (formData.formulaire?.autochtones_garcons_2eme || 0) +
+                  (formData.formulaire?.autochtones_garcons_3eme || 0) +
+                  (formData.formulaire?.autochtones_filles_1ere || 0) +
+                  (formData.formulaire?.autochtones_filles_2eme || 0) +
+                  (formData.formulaire?.autochtones_filles_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Dont étrangers"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.etrangers_garcons_1ere"
+                  value={formData.formulaire?.etrangers_garcons_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.etrangers_filles_1ere"
+                  value={formData.formulaire?.etrangers_filles_1ere}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.etrangers_garcons_1ere || 0) +
+                  (formData.formulaire?.etrangers_filles_1ere || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.etrangers_garcons_2eme"
+                  value={formData.formulaire?.etrangers_garcons_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.etrangers_filles_2eme"
+                  value={formData.formulaire?.etrangers_filles_2eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.etrangers_garcons_2eme || 0) +
+                  (formData.formulaire?.etrangers_filles_2eme || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.etrangers_garcons_3eme"
+                  value={formData.formulaire?.etrangers_garcons_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.etrangers_filles_3eme"
+                  value={formData.formulaire?.etrangers_filles_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.etrangers_garcons_3eme || 0) +
+                  (formData.formulaire?.etrangers_filles_3eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.etrangers_garcons_1ere || 0) +
+                  (formData.formulaire?.etrangers_garcons_2eme || 0) +
+                  (formData.formulaire?.etrangers_garcons_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.etrangers_filles_1ere || 0) +
+                  (formData.formulaire?.etrangers_filles_2eme || 0) +
+                  (formData.formulaire?.etrangers_filles_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.etrangers_garcons_1ere || 0) +
+                  (formData.formulaire?.etrangers_garcons_2eme || 0) +
+                  (formData.formulaire?.etrangers_garcons_3eme || 0) +
+                  (formData.formulaire?.etrangers_filles_1ere || 0) +
+                  (formData.formulaire?.etrangers_filles_2eme || 0) +
+                  (formData.formulaire?.etrangers_filles_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Dont Orphelins"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.orphelins_garcons_1ere"
+                  value={formData.formulaire?.orphelins_garcons_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.orphelins_filles_1ere"
+                  value={formData.formulaire?.orphelins_filles_1ere}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.orphelins_garcons_1ere || 0) +
+                  (formData.formulaire?.orphelins_filles_1ere || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.orphelins_garcons_2eme"
+                  value={formData.formulaire?.orphelins_garcons_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.orphelins_filles_2eme"
+                  value={formData.formulaire?.orphelins_filles_2eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.orphelins_garcons_2eme || 0) +
+                  (formData.formulaire?.orphelins_filles_2eme || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.orphelins_garcons_3eme"
+                  value={formData.formulaire?.orphelins_garcons_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.orphelins_filles_3eme"
+                  value={formData.formulaire?.orphelins_filles_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.orphelins_garcons_3eme || 0) +
+                  (formData.formulaire?.orphelins_filles_3eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.orphelins_garcons_1ere || 0) +
+                  (formData.formulaire?.orphelins_garcons_2eme || 0) +
+                  (formData.formulaire?.orphelins_garcons_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.orphelins_filles_1ere || 0) +
+                  (formData.formulaire?.orphelins_filles_2eme || 0) +
+                  (formData.formulaire?.orphelins_filles_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.orphelins_garcons_1ere || 0) +
+                  (formData.formulaire?.orphelins_garcons_2eme || 0) +
+                  (formData.formulaire?.orphelins_garcons_3eme || 0) +
+                  (formData.formulaire?.orphelins_filles_1ere || 0) +
+                  (formData.formulaire?.orphelins_filles_2eme || 0) +
+                  (formData.formulaire?.orphelins_filles_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Dont réfugiés"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.refugies_garcons_1ere"
+                  value={formData.formulaire?.refugies_garcons_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.refugies_filles_1ere"
+                  value={formData.formulaire?.refugies_filles_1ere}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.refugies_garcons_1ere || 0) +
+                  (formData.formulaire?.refugies_filles_1ere || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.refugies_garcons_2eme"
+                  value={formData.formulaire?.refugies_garcons_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.refugies_filles_2eme"
+                  value={formData.formulaire?.refugies_filles_2eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.refugies_garcons_2eme || 0) +
+                  (formData.formulaire?.refugies_filles_2eme || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.refugies_garcons_3eme"
+                  value={formData.formulaire?.refugies_garcons_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.refugies_filles_3eme"
+                  value={formData.formulaire?.refugies_filles_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.refugies_garcons_3eme || 0) +
+                  (formData.formulaire?.refugies_filles_3eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.refugies_garcons_1ere || 0) +
+                  (formData.formulaire?.refugies_garcons_2eme || 0) +
+                  (formData.formulaire?.refugies_garcons_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.refugies_filles_1ere || 0) +
+                  (formData.formulaire?.refugies_filles_2eme || 0) +
+                  (formData.formulaire?.refugies_filles_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.refugies_garcons_1ere || 0) +
+                  (formData.formulaire?.refugies_garcons_2eme || 0) +
+                  (formData.formulaire?.refugies_garcons_3eme || 0) +
+                  (formData.formulaire?.refugies_filles_1ere || 0) +
+                  (formData.formulaire?.refugies_filles_2eme || 0) +
+                  (formData.formulaire?.refugies_filles_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Dont déplacés internes"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_internes_garcons_1ere"
+                  value={formData.formulaire?.deplaces_internes_garcons_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_internes_filles_1ere"
+                  value={formData.formulaire?.deplaces_internes_filles_1ere}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_internes_garcons_1ere || 0) +
+                  (formData.formulaire?.deplaces_internes_filles_1ere || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_internes_garcons_2eme"
+                  value={formData.formulaire?.deplaces_internes_garcons_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_internes_filles_2eme"
+                  value={formData.formulaire?.deplaces_internes_filles_2eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_internes_garcons_2eme || 0) +
+                  (formData.formulaire?.deplaces_internes_filles_2eme || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_internes_garcons_3eme"
+                  value={formData.formulaire?.deplaces_internes_garcons_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_internes_filles_3eme"
+                  value={formData.formulaire?.deplaces_internes_filles_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_internes_garcons_3eme || 0) +
+                  (formData.formulaire?.deplaces_internes_filles_3eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.deplaces_internes_garcons_1ere || 0) +
+                  (formData.formulaire?.deplaces_internes_garcons_2eme || 0) +
+                  (formData.formulaire?.deplaces_internes_garcons_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_internes_filles_1ere || 0) +
+                  (formData.formulaire?.deplaces_internes_filles_2eme || 0) +
+                  (formData.formulaire?.deplaces_internes_filles_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_internes_garcons_1ere || 0) +
+                  (formData.formulaire?.deplaces_internes_garcons_2eme || 0) +
+                  (formData.formulaire?.deplaces_internes_garcons_3eme || 0) +
+                  (formData.formulaire?.deplaces_internes_filles_1ere || 0) +
+                  (formData.formulaire?.deplaces_internes_filles_2eme || 0) +
+                  (formData.formulaire?.deplaces_internes_filles_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Dont déplacés externes"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_externes_garcons_1ere"
+                  value={formData.formulaire?.deplaces_externes_garcons_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_externes_filles_1ere"
+                  value={formData.formulaire?.deplaces_externes_filles_1ere}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_externes_garcons_1ere || 0) +
+                  (formData.formulaire?.deplaces_externes_filles_1ere || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_externes_garcons_2eme"
+                  value={formData.formulaire?.deplaces_externes_garcons_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_externes_filles_2eme"
+                  value={formData.formulaire?.deplaces_externes_filles_2eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_externes_garcons_2eme || 0) +
+                  (formData.formulaire?.deplaces_externes_filles_2eme || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_externes_garcons_3eme"
+                  value={formData.formulaire?.deplaces_externes_garcons_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.deplaces_externes_filles_3eme"
+                  value={formData.formulaire?.deplaces_externes_filles_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_externes_garcons_3eme || 0) +
+                  (formData.formulaire?.deplaces_externes_filles_3eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.deplaces_externes_garcons_1ere || 0) +
+                  (formData.formulaire?.deplaces_externes_garcons_2eme || 0) +
+                  (formData.formulaire?.deplaces_externes_garcons_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_externes_filles_1ere || 0) +
+                  (formData.formulaire?.deplaces_externes_filles_2eme || 0) +
+                  (formData.formulaire?.deplaces_externes_filles_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.deplaces_externes_garcons_1ere || 0) +
+                  (formData.formulaire?.deplaces_externes_garcons_2eme || 0) +
+                  (formData.formulaire?.deplaces_externes_garcons_3eme || 0) +
+                  (formData.formulaire?.deplaces_externes_filles_1ere || 0) +
+                  (formData.formulaire?.deplaces_externes_filles_2eme || 0) +
+                  (formData.formulaire?.deplaces_externes_filles_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Dont re-intégrants"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.reintegrants_garcons_1ere"
+                  value={formData.formulaire?.reintegrants_garcons_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.reintegrants_filles_1ere"
+                  value={formData.formulaire?.reintegrants_filles_1ere}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.reintegrants_garcons_1ere || 0) +
+                  (formData.formulaire?.reintegrants_filles_1ere || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.reintegrants_garcons_2eme"
+                  value={formData.formulaire?.reintegrants_garcons_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.reintegrants_filles_2eme"
+                  value={formData.formulaire?.reintegrants_filles_2eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.reintegrants_garcons_2eme || 0) +
+                  (formData.formulaire?.reintegrants_filles_2eme || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.reintegrants_garcons_3eme"
+                  value={formData.formulaire?.reintegrants_garcons_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.reintegrants_filles_3eme"
+                  value={formData.formulaire?.reintegrants_filles_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.reintegrants_garcons_3eme || 0) +
+                  (formData.formulaire?.reintegrants_filles_3eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.reintegrants_garcons_1ere || 0) +
+                  (formData.formulaire?.reintegrants_garcons_2eme || 0) +
+                  (formData.formulaire?.reintegrants_garcons_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.reintegrants_filles_1ere || 0) +
+                  (formData.formulaire?.reintegrants_filles_2eme || 0) +
+                  (formData.formulaire?.reintegrants_filles_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.reintegrants_garcons_1ere || 0) +
+                  (formData.formulaire?.reintegrants_garcons_2eme || 0) +
+                  (formData.formulaire?.reintegrants_garcons_3eme || 0) +
+                  (formData.formulaire?.reintegrants_filles_1ere || 0) +
+                  (formData.formulaire?.reintegrants_filles_2eme || 0) +
+                  (formData.formulaire?.reintegrants_filles_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Dont handicaps"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.handicaps_garcons_1ere"
+                  value={formData.formulaire?.handicaps_garcons_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.handicaps_filles_1ere"
+                  value={formData.formulaire?.handicaps_filles_1ere}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.handicaps_garcons_1ere || 0) +
+                  (formData.formulaire?.handicaps_filles_1ere || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.handicaps_garcons_2eme"
+                  value={formData.formulaire?.handicaps_garcons_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.handicaps_filles_2eme"
+                  value={formData.formulaire?.handicaps_filles_2eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.handicaps_garcons_2eme || 0) +
+                  (formData.formulaire?.handicaps_filles_2eme || 0)}
+              </td>
+
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.handicaps_garcons_3eme"
+                  value={formData.formulaire?.handicaps_garcons_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.handicaps_filles_3eme"
+                  value={formData.formulaire?.handicaps_filles_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.handicaps_garcons_3eme || 0) +
+                  (formData.formulaire?.handicaps_filles_3eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.handicaps_garcons_1ere || 0) +
+                  (formData.formulaire?.handicaps_garcons_2eme || 0) +
+                  (formData.formulaire?.handicaps_garcons_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.handicaps_filles_1ere || 0) +
+                  (formData.formulaire?.handicaps_filles_2eme || 0) +
+                  (formData.formulaire?.handicaps_filles_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.handicaps_garcons_1ere || 0) +
+                  (formData.formulaire?.handicaps_garcons_2eme || 0) +
+                  (formData.formulaire?.handicaps_garcons_3eme || 0) +
+                  (formData.formulaire?.handicaps_filles_1ere || 0) +
+                  (formData.formulaire?.handicaps_filles_2eme || 0) +
+                  (formData.formulaire?.handicaps_filles_3eme || 0)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <label>
+          {
+            "Tableau 3 : Repartition du personnel enseignant par qualification, sexe et classe d'affectation"
+          }
+        </label>
+
+        <table className="text-center">
+          <thead>
+            <tr>
+              <th rowSpan={3}>Qualification</th>
+              <th colSpan={7}>{"Classe d'affectation"}</th>
+            </tr>
+            <tr>
+              <th colSpan={2}>{"1ère"}</th>
+              <th colSpan={2}>{"2ème"}</th>
+              <th colSpan={2}>{"3ème"}</th>
+              <th rowSpan={2}>Total</th>
+            </tr>
+            <tr>
+              <th>H</th>
+              <th>F</th>
+              <th>H</th>
+              <th>F</th>
+              <th>H</th>
+              <th>F</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>{"-D4"}</th>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_-d4_hommes_1ere"
+                  value={formData.formulaire?.["enseignants_-d4_hommes_1ere"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_-d4_femmes_1ere"
+                  value={formData.formulaire?.["enseignants_-d4_femmes_1ere"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_-d4_hommes_2eme"
+                  value={formData.formulaire?.["enseignants_-d4_hommes_2eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_-d4_femmes_2eme"
+                  value={formData.formulaire?.["enseignants_-d4_femmes_2eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_-d4_hommes_3eme"
+                  value={formData.formulaire?.["enseignants_-d4_hommes_3eme"]}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_-d4_femmes_3eme"
+                  value={formData.formulaire?.["enseignants_-d4_femmes_3eme"]}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.["enseignants_-d4_hommes_1ere"] || 0) +
+                  (formData.formulaire?.["enseignants_-d4_femmes_1ere"] || 0) +
+                  (formData.formulaire?.["enseignants_-d4_hommes_2eme"] || 0) +
+                  (formData.formulaire?.["enseignants_-d4_femmes_2eme"] || 0) +
+                  (formData.formulaire?.["enseignants_-d4_hommes_3eme"] || 0) +
+                  (formData.formulaire?.["enseignants_-d4_femmes_3eme"] || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"EM"}</th>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_em_hommes_1ere"
+                  value={formData.formulaire?.enseignants_em_hommes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_em_femmes_1ere"
+                  value={formData.formulaire?.enseignants_em_femmes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_em_hommes_2eme"
+                  value={formData.formulaire?.enseignants_em_hommes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_em_femmes_2eme"
+                  value={formData.formulaire?.enseignants_em_femmes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_em_hommes_3eme"
+                  value={formData.formulaire?.enseignants_em_hommes_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_em_femmes_3eme"
+                  value={formData.formulaire?.enseignants_em_femmes_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.enseignants_em_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_em_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_em_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_em_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_em_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_em_femmes_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"D4"}</th>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d4_hommes_1ere"
+                  value={formData.formulaire?.enseignants_d4_hommes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d4_femmes_1ere"
+                  value={formData.formulaire?.enseignants_d4_femmes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d4_hommes_2eme"
+                  value={formData.formulaire?.enseignants_d4_hommes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d4_femmes_2eme"
+                  value={formData.formulaire?.enseignants_d4_femmes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d4_hommes_3eme"
+                  value={formData.formulaire?.enseignants_d4_hommes_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d4_femmes_3eme"
+                  value={formData.formulaire?.enseignants_d4_femmes_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.enseignants_d4_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d4_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d4_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d4_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d4_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d4_femmes_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"P6"}</th>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_p6_hommes_1ere"
+                  value={formData.formulaire?.enseignants_p6_hommes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_p6_femmes_1ere"
+                  value={formData.formulaire?.enseignants_p6_femmes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_p6_hommes_2eme"
+                  value={formData.formulaire?.enseignants_p6_hommes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_p6_femmes_2eme"
+                  value={formData.formulaire?.enseignants_p6_femmes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_p6_hommes_3eme"
+                  value={formData.formulaire?.enseignants_p6_hommes_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_p6_femmes_3eme"
+                  value={formData.formulaire?.enseignants_p6_femmes_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.enseignants_p6_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_p6_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_p6_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_p6_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_p6_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_p6_femmes_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"D6"}</th>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d6_hommes_1ere"
+                  value={formData.formulaire?.enseignants_d6_hommes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d6_femmes_1ere"
+                  value={formData.formulaire?.enseignants_d6_femmes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d6_hommes_2eme"
+                  value={formData.formulaire?.enseignants_d6_hommes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d6_femmes_2eme"
+                  value={formData.formulaire?.enseignants_d6_femmes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d6_hommes_3eme"
+                  value={formData.formulaire?.enseignants_d6_hommes_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_d6_femmes_3eme"
+                  value={formData.formulaire?.enseignants_d6_femmes_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.enseignants_d6_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d6_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d6_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d6_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d6_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d6_femmes_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Autres"}</th>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_autres_hommes_1ere"
+                  value={formData.formulaire?.enseignants_autres_hommes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_autres_femmes_1ere"
+                  value={formData.formulaire?.enseignants_autres_femmes_1ere}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_autres_hommes_2eme"
+                  value={formData.formulaire?.enseignants_autres_hommes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_autres_femmes_2eme"
+                  value={formData.formulaire?.enseignants_autres_femmes_2eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_autres_hommes_3eme"
+                  value={formData.formulaire?.enseignants_autres_hommes_3eme}
+                />
+              </td>
+              <td>
+                <Input2
+                  type="number"
+                  className="text-center"
+                  handleChange={handleChange}
+                  name="formulaire.enseignants_autres_femmes_3eme"
+                  value={formData.formulaire?.enseignants_autres_femmes_3eme}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.enseignants_autres_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_autres_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_autres_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_autres_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_autres_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_autres_femmes_3eme || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th>{"Total"}</th>
+              <td>
+                {(formData.formulaire?.["enseignants_-d4_hommes_1ere"] || 0) +
+                  (formData.formulaire?.enseignants_em_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d4_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_p6_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d6_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_autres_hommes_1ere || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["enseignants_-d4_femmes_1ere"] || 0) +
+                  (formData.formulaire?.enseignants_em_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d4_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_p6_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d6_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_autres_femmes_1ere || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["enseignants_-d4_hommes_2eme"] || 0) +
+                  (formData.formulaire?.enseignants_em_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d4_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_p6_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d6_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_autres_hommes_2eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["enseignants_-d4_femmes_2eme"] || 0) +
+                  (formData.formulaire?.enseignants_em_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d4_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_p6_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d6_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_autres_femmes_2eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["enseignants_-d4_hommes_3eme"] || 0) +
+                  (formData.formulaire?.enseignants_em_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d4_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_p6_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d6_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_autres_hommes_3eme || 0)}
+              </td>
+              <td>
+                {(formData.formulaire?.["enseignants_-d4_femmes_3eme"] || 0) +
+                  (formData.formulaire?.enseignants_em_femmes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d4_femmes_3eme || 0) +
+                  (formData.formulaire?.enseignants_p6_femmes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d6_femmes_3eme || 0) +
+                  (formData.formulaire?.enseignants_autres_femmes_3eme || 0)}
+              </td>
+
+              <td>
+                {(formData.formulaire?.["enseignants_-d4_hommes_1ere"] || 0) +
+                  (formData.formulaire?.enseignants_em_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d4_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_p6_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d6_hommes_1ere || 0) +
+                  (formData.formulaire?.enseignants_autres_hommes_1ere || 0) +
+                  (formData.formulaire?.["enseignants_-d4_femmes_1ere"] || 0) +
+                  (formData.formulaire?.enseignants_em_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d4_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_p6_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_d6_femmes_1ere || 0) +
+                  (formData.formulaire?.enseignants_autres_femmes_1ere || 0) +
+                  (formData.formulaire?.["enseignants_-d4_hommes_2eme"] || 0) +
+                  (formData.formulaire?.enseignants_em_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d4_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_p6_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d6_hommes_2eme || 0) +
+                  (formData.formulaire?.enseignants_autres_hommes_2eme || 0) +
+                  (formData.formulaire?.["enseignants_-d4_femmes_2eme"] || 0) +
+                  (formData.formulaire?.enseignants_em_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d4_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_p6_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_d6_femmes_2eme || 0) +
+                  (formData.formulaire?.enseignants_autres_femmes_2eme || 0) +
+                  (formData.formulaire?.["enseignants_-d4_hommes_3eme"] || 0) +
+                  (formData.formulaire?.enseignants_em_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d4_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_p6_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d6_hommes_3eme || 0) +
+                  (formData.formulaire?.enseignants_autres_hommes_3eme || 0) +
+                  (formData.formulaire?.["enseignants_-d4_femmes_3eme"] || 0) +
+                  (formData.formulaire?.enseignants_em_femmes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d4_femmes_3eme || 0) +
+                  (formData.formulaire?.enseignants_p6_femmes_3eme || 0) +
+                  (formData.formulaire?.enseignants_d6_femmes_3eme || 0) +
+                  (formData.formulaire?.enseignants_autres_femmes_3eme || 0)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ul className="list-disc ml-8">
+          <li>
+            {
+              "Parmi le personnel enseignant de votre établissement, combien sont éligibles à la retraite"
+            }
+          </li>
+        </ul>
+        <label className="ml-24">
+          <Input2
+            label="(65 ans et plus et 35 ans de services)"
+            className="text-center"
+            type="number"
+            handleChange={handleChange}
+            name="formulaire.personnel_eligible_retraite"
+            value={formData.formulaire?.personnel_eligible_retraite}
+          />
+        </label>
       </section>
     </div>,
   ];
@@ -1231,7 +3166,7 @@ const St3Form = () => {
         />
       )}
       <PageContentWrapper
-        className="[box-shadow:0px_0px_4px_gray]"
+        className="[box-shadow:0px_0px_4px_gray] p-8"
         id="pdf-content"
         pageTitle={``}
       >

@@ -7,29 +7,31 @@ const Input2 = ({
   value,
   placeholder,
   disabled,
-  labelShouldwrap,
+  className,
   handleChange,
 }: {
   name?: string;
   type?: string;
   label?: string;
-  value: string | number;
+  value: string | number | undefined;
   placeholder?: string;
   disabled?: boolean;
-  labelShouldwrap?: boolean;
+  className?: string;
   handleChange: (e: any) => void;
 }) => {
   return (
     <div className="flex gap-2 items-center">
-      <label htmlFor={name} className={` ${labelShouldwrap ? "" : "whitespace-nowrap"}`}>
+      <label htmlFor={name} className="whitespace-nowrap">
         {label}
       </label>
       <input
-        className="h-fit bg-white w-full  border-b-[1px] border-[#ccc] focus:outline-none focus:ring-0 text-gray-600"
+        className={`h-fit bg-white w-full  border-b-[1px] border-[#ccc] focus:outline-none focus:ring-0 text-gray-600 ${
+          className || ""
+        }`}
         type={type || "text"}
         id={name}
         name={name}
-        value={value}
+        value={value || ""}
         onChange={handleChange}
         placeholder={placeholder}
         disabled={disabled}

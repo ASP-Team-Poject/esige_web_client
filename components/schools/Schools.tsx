@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
 import { getSchools } from "@/services/SchoolServise";
-import { SchoolType } from "@/util/types";
+import { SchoolRegion, SchoolType, UserType } from "@/util/types";
 import { getFormatedDate } from "@/util/functions";
 
 // For pdf generation
@@ -26,6 +26,8 @@ const Schools = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [currentUser, setCurrentUser] = useState<Partial<UserType>>();
+  const [regions, setRegions] = useState<SchoolRegion[]>();
   const router = useRouter();
 
   const handleGoPreviousPage = () => {
@@ -77,13 +79,35 @@ const Schools = () => {
   };
 
   useEffect(() => {
+    const user = localStorage.getItem(localStorageKeys.CURRENT_USER);
+    if (user) {
+      const currentUser = JSON.parse(user);
+      setCurrentUser(currentUser);
+    }
+
+    const regionInSL = localStorage.getItem(localStorageKeys.REGIONS);
+    if (regionInSL) {
+      const regions: SchoolRegion[] = JSON.parse(regionInSL);
+      setRegions(regions);
+    }
+  }, []);
+
+  useEffect(() => {
     const loadSchools = async () => {
       setIsLoading(true);
+
       try {
-        const data = await getSchools(page, Number.parseInt(size));
-        if (data) {
-          setSchools(data.content);
-          setTotalPages(data.totalPages);
+        if (currentUser && regions) {
+          const data = await getSchools(
+            page,
+            Number.parseInt(size),
+            currentUser,
+            regions
+          );
+          if (data) {
+            setSchools(data.content);
+            setTotalPages(data.totalPages);
+          }
         }
       } catch (error: any) {
         setError(error.message);
@@ -92,7 +116,7 @@ const Schools = () => {
       }
     };
     loadSchools();
-  }, [page, size]);
+  }, [page, size, currentUser, regions]);
 
   useEffect(() => {
     handleDownloadPdf();

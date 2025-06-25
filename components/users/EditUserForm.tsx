@@ -14,7 +14,7 @@ import {
   UserType,
 } from "@/util/types";
 import { getSchoolRegions } from "@/services/SchoolServise";
-import { localStorageKeys, requestMessages } from "@/util/constants";
+import { localStorageKeys, requestMessages, userRoles } from "@/util/constants";
 import { editUser } from "@/services/UserService";
 import { Toast } from "../basic/Toast";
 
@@ -51,7 +51,7 @@ const EditUserForm = () => {
 
   useEffect(() => {
     const loadRegions = async () => {
-      const storedRegions = localStorage.getItem("regions");
+      const storedRegions = localStorage.getItem(localStorageKeys.REGIONS);
       if (storedRegions) {
         const parsedRegions: SchoolRegion[] = JSON.parse(storedRegions);
         setRegions(parsedRegions);
@@ -60,7 +60,10 @@ const EditUserForm = () => {
         if (loadedRegions) {
           setRegions(loadedRegions);
         }
-        localStorage.setItem("regions", JSON.stringify(loadedRegions));
+        localStorage.setItem(
+          localStorageKeys.REGIONS,
+          JSON.stringify(loadedRegions)
+        );
       }
     };
     loadRegions();
@@ -133,6 +136,7 @@ const EditUserForm = () => {
       isDeleted: false,
       active: true,
     };
+    console.log("DATAA ", data);
     setIsLoading(true);
     try {
       const response = await editUser(data);
@@ -191,14 +195,14 @@ const EditUserForm = () => {
         <Select
           label="Role"
           options={[
-            { id: '["ROLE_NATIONAL"]', value: "Superviseur national" },
-            { id: '["ROLE_PROVINCE"]', value: "Superviseur provincial" },
+            { id: userRoles.ROLE_NATIONAL, value: "Superviseur national" },
+            { id: userRoles.ROLE_PROVINCE, value: "Superviseur provincial" },
             {
-              id: '["ROLE_PROVED"]',
+              id: userRoles.ROLE_PROVED,
               value: "Superviseur province educationnelle",
             },
             {
-              id: '["ROLE_SOUSPROVED"]',
+              id: userRoles.ROLE_SOUSPROVED,
               value: "Superviseur sous province educationnelle",
             },
           ]}
@@ -288,7 +292,7 @@ const EditUserForm = () => {
 
       <Button
         isSubmitting={isLoading}
-        className="w-full lg:w-fit lg:self-end lg:px-8"
+        className="w-full bg-primary_color lg:w-fit lg:self-end lg:px-8"
         type="submit"
         title="Enregistrer"
         icon={<Save />}

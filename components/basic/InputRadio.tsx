@@ -9,7 +9,7 @@ const InputRadio = ({
 }: {
   label: string;
   name: string;
-  currentValue: string;
+  currentValue: string | undefined;
   allValues: string[];
   handleChange: (e: any) => void;
 }) => {
@@ -26,7 +26,7 @@ const InputRadio = ({
             className="h-fit bg-white w-full  border-b-[1px] border-[#ccc] focus:outline-none focus:ring-0 text-gray-600"
             type="radio"
             name={name}
-            value={value}
+            value={value || ""}
             checked={currentValue === value}
             onChange={handleChange}
           />

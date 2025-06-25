@@ -75,7 +75,7 @@ const EditSchoolForm = () => {
 
   useEffect(() => {
     const loadRegions = async () => {
-      const storedRegions = localStorage.getItem("regions");
+      const storedRegions = localStorage.getItem(localStorageKeys.REGIONS);
       if (storedRegions) {
         const parsedRegions: SchoolRegion[] = JSON.parse(storedRegions);
         setRegions(parsedRegions);
@@ -83,8 +83,11 @@ const EditSchoolForm = () => {
         const loadedRegions = await getSchoolRegions();
         if (loadedRegions) {
           setRegions(loadedRegions);
+          localStorage.setItem(
+            localStorageKeys.REGIONS,
+            JSON.stringify(loadedRegions)
+          );
         }
-        localStorage.setItem("regions", JSON.stringify(loadedRegions));
       }
     };
     loadRegions();

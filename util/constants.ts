@@ -76,4 +76,13 @@ export const localStorageKeys = {
   CURRENT_SCHOOL_YEAR: "currentSchoolYear",
   USER_ID: "userId",
   CURRENT_SELECTED_USER: "currentSelectedUser",
+  REGIONS: "regions",
+};
+
+export const userRoles = {
+  SUPER_ADMIN: '["SUPER_ADMIN"]',
+  ROLE_NATIONAL: '["ROLE_NATIONAL"]',
+  ROLE_PROVINCE: '["ROLE_PROVINCE"]',
+  ROLE_PROVED: '["ROLE_PROVED"]',
+  ROLE_SOUSPROVED: '["ROLE_SOUSPROVED"]',
 };

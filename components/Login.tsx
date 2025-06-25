@@ -9,11 +9,12 @@ import H1 from "./basic/H1";
 import Input from "./basic/Input";
 import { useRouter } from "next/navigation";
 import Button from "./basic/Button";
-import { LoginCredentials } from "@/util/types";
+import { LoginCredentials, SchoolRegion } from "@/util/types";
 import { login } from "@/services/UserService";
 import { Toast } from "./basic/Toast";
 import Cookies from "js-cookie";
 import { localStorageKeys, requestMessages } from "@/util/constants";
+import { getSchoolRegions } from "@/services/SchoolServise";
 
 const Login = () => {
   const [loginForm, setLoginForm] = useState<LoginCredentials>({
@@ -40,15 +41,28 @@ const Login = () => {
       return;
     }
     setISubmitting(true);
+
+    const loadRegions = async () => {
+      const storedRegions = localStorage.getItem(localStorageKeys.REGIONS);
+      if (!storedRegions) {
+        const loadedRegions = await getSchoolRegions();
+        if (loadedRegions) {
+          localStorage.setItem(
+            localStorageKeys.REGIONS,
+            JSON.stringify(loadedRegions)
+          );
+        }
+      }
+    };
+
     try {
       const currentUser = await login(loginForm);
-
       if (currentUser) {
         setToast({
           message: "Vous êtes connecté avec succès !",
           type: "success",
         });
-
+        await loadRegions();
         localStorage.setItem(
           localStorageKeys.CURRENT_USER,
           JSON.stringify({

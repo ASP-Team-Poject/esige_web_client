@@ -1,5 +1,10 @@
-import { localStorageKeys, requestMessages } from "./constants";
-import { AnnuaireTableType, AnnuaireType, SchoolType } from "./types";
+import { requestMessages, userRoles } from "./constants";
+import {
+  AnnuaireTableType,
+  AnnuaireType,
+  SchoolRegion,
+  UserType,
+} from "./types";
 
 export const getFormatedDate = (
   date: Date,
@@ -530,4 +535,55 @@ export function returnDataOrThrowServerError(response: any) {
     console.log("Server error => ", response);
     throw new Error(requestMessages.SERVER_ERROR);
   }
+}
+
+export function getUserPath(
+  user: Partial<UserType>,
+  regions: SchoolRegion[]
+): string {
+  let userPath = "";
+  if (!user) {
+    return userPath;
+  }
+
+  switch (user.roles) {
+    case userRoles.ROLE_PROVINCE: {
+      let province = "";
+      for (let index = 0; index < regions.length; index++) {
+        if (regions[index].province.id === user.provinceId) {
+          province = regions[index].province.libelle;
+        }
+      }
+      userPath = "province/" + province;
+      break;
+    }
+    case userRoles.ROLE_PROVED: {
+      let proved = "";
+      const proveds = regions.flatMap((region) => region.proveds);
+      for (let index = 0; index < proveds.length; index++) {
+        if (proveds[index].proved.id === user.provedId) {
+          proved = proveds[index].proved.libelle;
+        }
+      }
+      userPath = "proved/" + proved;
+      break;
+    }
+    case userRoles.ROLE_SOUSPROVED: {
+      let sousProved = "";
+      const sousProveds = regions.flatMap((region) =>
+        region.proveds.flatMap((proved) => proved.sousProved)
+      );
+
+      for (let index = 0; index < sousProveds.length; index++) {
+        if (sousProveds[index].id == user.sousProvedId) {
+          sousProved = sousProveds[index].libelle;
+        }
+      }
+      userPath = "sousproved/" + sousProved;
+      break;
+    }
+    default:
+      "";
+  }
+  return userPath;
 }

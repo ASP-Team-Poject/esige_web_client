@@ -133,7 +133,10 @@ const SchoolSTs = () => {
                           {schoolSTs.map((schoolSt, index) => (
                             <tr key={index}>
                               <td>{schoolSt.id}</td>
-                              <td>{schoolSt.nomEtab}</td>
+                              <td>
+                                {schoolSt.formulaire?.nom_etablissement ||
+                                  schoolSt.nomEtab}
+                              </td>
 
                               <td className="text-primary_color font-bold">
                                 <Link

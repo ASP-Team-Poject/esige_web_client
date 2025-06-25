@@ -2,6 +2,7 @@
 
 import { requestMessages } from "@/util/constants";
 import {
+  getUserPath,
   returnDataOrThrowServerError,
   throwRequestError,
 } from "@/util/functions";
@@ -10,6 +11,7 @@ import {
   SchoolStType,
   SchoolType,
   SchoolYearType,
+  UserType,
 } from "@/util/types";
 
 const API_BASE_URL = "http://157.230.112.193:8081/api";
@@ -32,17 +34,27 @@ type SchoolStsResponse = {
 
 export async function getSchools(
   page: number = 0,
-  size: number = 10
+  size: number = 10,
+  user: Partial<UserType>,
+  regions: SchoolRegion[],
+  schoolYearId?: number
 ): Promise<SchoolsResponse | undefined> {
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/etablissements?page=${page}&size=${size}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    /*  const userPath = getUserPath(user, regions);
+    console.log("USER REQUEST 2", { userPath });
+    let url = `${API_BASE_URL}/etablissements/${userPath}?page=${page}&size=${size}`;
+ */
+    let url = `${API_BASE_URL}/etablissements?page=${page}&size=${size}`;
+
+    if (schoolYearId) {
+      url = url + "&anneeId=" + schoolYearId;
+    }
+    console.log("REQUEST ", url);
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return returnDataOrThrowServerError(response);
   } catch (error: any) {
     console.log("Get Schools error => ", error);

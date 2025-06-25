@@ -63,7 +63,7 @@ export async function login({
 export async function editUser(user: Partial<UserType>) {
   const OPERATION = user.id ? "UPDATE" : "CREATION";
   try {
-    const URL = `${API_BASE_URL}/users${user.id ? "/" + user.id : ""}`;
+    const URL = `${API_BASE_URL}${user.id ? "/" + user.id : ""}`;
     const METHOD = user.id ? "PUT" : "POST";
 
     let response = await fetch(URL, {
