@@ -59,17 +59,21 @@ export async function getSchools(
 export async function getSTs(
   anneeId: string,
   page: number = 0,
-  size: number = 10
+  size: number = 10,
+  search: string,
+  user: Partial<UserType>,
+  regions: SchoolRegion[]
 ): Promise<SchoolStsResponse | undefined> {
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/form?anneeId=${anneeId}&page=${page}&size=${size}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const userPath = getUserPath(user, regions);
+
+    let url = `${API_BASE_URL}/form/${userPath}?anneeId=${anneeId}&page=${page}&size=${size}&search=${search}`;
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return returnDataOrThrowServerError(response);
   } catch (error: any) {
     console.log("Get Schools STs error => ", error);

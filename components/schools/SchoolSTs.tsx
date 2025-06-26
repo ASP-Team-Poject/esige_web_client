@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import PageContentWrapper from "../layout/PageContentWrapper";
 import Link from "next/link";
 import { getSTs } from "@/services/SchoolServise";
-import { SchoolStType } from "@/util/types";
+import { SchoolRegion, SchoolStType, UserType } from "@/util/types";
 import { getFormatedDate } from "@/util/functions";
 import Loader from "../basic/Loader";
 
@@ -22,13 +22,16 @@ const SchoolSTs = () => {
   const [schoolSTs, setSchoolSTs] = useState<SchoolStType[]>([]);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
-
+  const [search, setSearch] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [totalPages, setTotalPages] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
   const router = useRouter();
   const { yearId }: { yearId: string } = useParams();
   const [error, setError] = useState<string>("");
+  const [currentUser, setCurrentUser] = useState<Partial<UserType>>();
+  const [regions, setRegions] = useState<SchoolRegion[]>();
 
   const handleGoPreviousPage = () => {
     const newPage = page === 0 ? 0 : page - 1;
@@ -81,13 +84,36 @@ const SchoolSTs = () => {
   };
 
   useEffect(() => {
+    const user = localStorage.getItem(localStorageKeys.CURRENT_USER);
+    if (user) {
+      const currentUser = JSON.parse(user);
+      setCurrentUser(currentUser);
+    }
+
+    const regionInSL = localStorage.getItem(localStorageKeys.REGIONS);
+    if (regionInSL) {
+      const regions: SchoolRegion[] = JSON.parse(regionInSL);
+      setRegions(regions);
+    }
+  }, []);
+
+  useEffect(() => {
     const loadSchoolSTs = async () => {
       setIsLoading(true);
       try {
-        const data = await getSTs(yearId, page, Number.parseInt(size));
-        if (data) {
-          setSchoolSTs(data.content);
-          setTotalPages(data.totalPages);
+        if (currentUser && regions) {
+          const data = await getSTs(
+            yearId,
+            page,
+            Number.parseInt(size),
+            debouncedSearch,
+            currentUser,
+            regions
+          );
+          if (data) {
+            setSchoolSTs(data.content);
+            setTotalPages(data.totalPages);
+          }
         }
       } catch (error: any) {
         setError(error.message);
@@ -96,7 +122,7 @@ const SchoolSTs = () => {
       }
     };
     loadSchoolSTs();
-  }, [page, size]);
+  }, [page, size, debouncedSearch, currentUser, regions]);
 
   useEffect(() => {
     handleDownloadPdf();
@@ -105,7 +131,16 @@ const SchoolSTs = () => {
   return (
     <PageContentWrapper pageTitle="Liste des Identifications" id="pdf-content">
       <div className="flex flex-col p-4 gap-4 rounded-lg shadow-xl">
-        {isGeneratingPdf ? "" : <TableHeader size={size} setSize={setSize} />}
+        {isGeneratingPdf ? (
+          ""
+        ) : (
+          <TableHeader
+            size={size}
+            setSize={setSize}
+            search={search}
+            setSearch={setSearch}
+          />
+        )}
 
         <div className="w-full flex justify-center">
           {isLoading ? (
