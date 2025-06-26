@@ -35,21 +35,15 @@ type SchoolStsResponse = {
 export async function getSchools(
   page: number = 0,
   size: number = 10,
+  search: string,
   user: Partial<UserType>,
-  regions: SchoolRegion[],
-  schoolYearId?: number
+  regions: SchoolRegion[]
 ): Promise<SchoolsResponse | undefined> {
   try {
-    /*  const userPath = getUserPath(user, regions);
-    console.log("USER REQUEST 2", { userPath });
-    let url = `${API_BASE_URL}/etablissements/${userPath}?page=${page}&size=${size}`;
- */
-    let url = `${API_BASE_URL}/etablissements?page=${page}&size=${size}`;
+    const userPath = getUserPath(user, regions);
 
-    if (schoolYearId) {
-      url = url + "&anneeId=" + schoolYearId;
-    }
-    console.log("REQUEST ", url);
+    let url = `${API_BASE_URL}/etablissements/${userPath}?page=${page}&size=${size}&search=${search}`;
+
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",

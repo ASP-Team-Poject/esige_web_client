@@ -22,6 +22,8 @@ const Schools = () => {
   const [schools, setSchools] = useState<SchoolType[]>([]);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
+  const [search, setSearch] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [totalPages, setTotalPages] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
@@ -101,6 +103,7 @@ const Schools = () => {
           const data = await getSchools(
             page,
             Number.parseInt(size),
+            debouncedSearch,
             currentUser,
             regions
           );
@@ -116,7 +119,17 @@ const Schools = () => {
       }
     };
     loadSchools();
-  }, [page, size, currentUser, regions]);
+  }, [page, size, debouncedSearch, currentUser, regions]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 2000);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
   useEffect(() => {
     handleDownloadPdf();
@@ -125,7 +138,16 @@ const Schools = () => {
   return (
     <PageContentWrapper pageTitle="Liste des Établissements" id="pdf-content">
       <div className="flex flex-col p-4 gap-4 rounded-lg shadow-xl">
-        {isGeneratingPdf ? "" : <TableHeader size={size} setSize={setSize} />}
+        {isGeneratingPdf ? (
+          ""
+        ) : (
+          <TableHeader
+            size={size}
+            setSize={setSize}
+            search={search}
+            setSearch={setSearch}
+          />
+        )}
         <div className=" w-full flex justify-center">
           {isLoading ? (
             <Loader colorClass="text-primary_color" size={50} />

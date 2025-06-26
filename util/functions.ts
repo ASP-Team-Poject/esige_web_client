@@ -548,38 +548,38 @@ export function getUserPath(
 
   switch (user.roles) {
     case userRoles.ROLE_PROVINCE: {
-      let province = "";
+      let provinceId = "";
       for (let index = 0; index < regions.length; index++) {
         if (regions[index].province.id === user.provinceId) {
-          province = regions[index].province.libelle;
+          provinceId = regions[index].province.id + "";
         }
       }
-      userPath = "province/" + province;
+      userPath = "province/" + provinceId;
       break;
     }
     case userRoles.ROLE_PROVED: {
-      let proved = "";
+      let provedId = "";
       const proveds = regions.flatMap((region) => region.proveds);
       for (let index = 0; index < proveds.length; index++) {
         if (proveds[index].proved.id === user.provedId) {
-          proved = proveds[index].proved.libelle;
+          provedId = proveds[index].proved.id + "";
         }
       }
-      userPath = "proved/" + proved;
+      userPath = "proved/" + provedId;
       break;
     }
     case userRoles.ROLE_SOUSPROVED: {
-      let sousProved = "";
+      let sousProvedId = "";
       const sousProveds = regions.flatMap((region) =>
         region.proveds.flatMap((proved) => proved.sousProved)
       );
 
       for (let index = 0; index < sousProveds.length; index++) {
         if (sousProveds[index].id == user.sousProvedId) {
-          sousProved = sousProveds[index].libelle;
+          sousProvedId = sousProveds[index].id + "";
         }
       }
-      userPath = "sousproved/" + sousProved;
+      userPath = "sousproved/" + sousProvedId;
       break;
     }
     default:

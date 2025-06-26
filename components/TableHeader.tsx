@@ -4,10 +4,14 @@ import Select from "./basic/Select";
 
 const TableHeader = ({
   size,
+  search,
   setSize,
+  setSearch,
 }: {
   size: string;
   setSize: (value: string) => void;
+  search: string;
+  setSearch: (value: string) => void;
 }) => {
   return (
     <div className="flex justify-between items-center w-full">
@@ -32,10 +36,8 @@ const TableHeader = ({
       <label className="flex justify-center items-center gap-2">
         Recherche{" "}
         <Input
-          value=""
-          handleChange={(value: string) => {
-            console.log(value);
-          }}
+          value={search}
+          handleChange={(value: string) => setSearch(value)}
           type="text"
           placeholder="recherche"
         />

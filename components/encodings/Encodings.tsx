@@ -24,6 +24,8 @@ const EncodingSchools = () => {
   const [schools, setSchools] = useState<SchoolType[]>([]);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<string>("10");
+  const [search, setSearch] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [totalPages, setTotalPages] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -70,11 +72,13 @@ const EncodingSchools = () => {
   useEffect(() => {
     const loadSchools = async () => {
       setIsLoading(true);
+
       try {
         if (currentUser && regions) {
           const data = await getSchools(
             page,
             Number.parseInt(size),
+            debouncedSearch,
             currentUser,
             regions
           );
@@ -90,7 +94,17 @@ const EncodingSchools = () => {
       }
     };
     loadSchools();
-  }, [page, size, schoolYear]);
+  }, [page, size, debouncedSearch, currentUser, regions]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 2000);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
   useEffect(() => {
     const savedSchoolYear = localStorage.getItem(
@@ -108,7 +122,12 @@ const EncodingSchools = () => {
       id="pdf-content"
     >
       <div className="flex flex-col p-4 gap-4 rounded-lg shadow-xl">
-        <TableHeader size={size} setSize={setSize} />
+        <TableHeader
+          size={size}
+          setSize={setSize}
+          search={search}
+          setSearch={setSearch}
+        />
         <div className=" w-full flex justify-center">
           {isLoading ? (
             <Loader colorClass="text-primary_color" size={50} />
