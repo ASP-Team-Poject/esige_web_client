@@ -1,7 +1,9 @@
 import { requestMessages, userRoles } from "./constants";
+import { mainRoutes, supervisorRoutes } from "./routes";
 import {
   AnnuaireTableType,
   AnnuaireType,
+  MenuRoute,
   SchoolRegion,
   UserType,
 } from "./types";
@@ -541,49 +543,52 @@ export function getUserPath(
   user: Partial<UserType>,
   regions: SchoolRegion[]
 ): string {
-  let userPath = "";
   if (!user) {
-    return userPath;
+    return "";
   }
 
-  switch (user.roles) {
-    case userRoles.ROLE_PROVINCE: {
-      let provinceId = "";
-      for (let index = 0; index < regions.length; index++) {
-        if (regions[index].province.id === user.provinceId) {
-          provinceId = regions[index].province.id + "";
-        }
+  if (user.roles?.includes("PROVINCE")) {
+    let provinceId = "";
+    for (let index = 0; index < regions.length; index++) {
+      if (regions[index].province.id === user.provinceId) {
+        provinceId = regions[index].province.id + "";
       }
-      userPath = "province/" + provinceId;
-      break;
     }
-    case userRoles.ROLE_PROVED: {
-      let provedId = "";
-      const proveds = regions.flatMap((region) => region.proveds);
-      for (let index = 0; index < proveds.length; index++) {
-        if (proveds[index].proved.id === user.provedId) {
-          provedId = proveds[index].proved.id + "";
-        }
-      }
-      userPath = "proved/" + provedId;
-      break;
-    }
-    case userRoles.ROLE_SOUSPROVED: {
-      let sousProvedId = "";
-      const sousProveds = regions.flatMap((region) =>
-        region.proveds.flatMap((proved) => proved.sousProved)
-      );
+    return "province/" + provinceId;
+  } else if (user.roles?.includes("SOUSPROVED")) {
+    let sousProvedId = "";
+    const sousProveds = regions.flatMap((region) =>
+      region.proveds.flatMap((proved) => proved.sousProved)
+    );
 
-      for (let index = 0; index < sousProveds.length; index++) {
-        if (sousProveds[index].id == user.sousProvedId) {
-          sousProvedId = sousProveds[index].id + "";
-        }
+    for (let index = 0; index < sousProveds.length; index++) {
+      if (sousProveds[index].id == user.sousProvedId) {
+        sousProvedId = sousProveds[index].id + "";
       }
-      userPath = "sousproved/" + sousProvedId;
-      break;
     }
-    default:
-      "";
+
+    return "sousproved/" + sousProvedId;
+  } else if (user.roles?.includes("PROVED")) {
+    let provedId = "";
+    const proveds = regions.flatMap((region) => region.proveds);
+    for (let index = 0; index < proveds.length; index++) {
+      if (proveds[index].proved.id === user.provedId) {
+        provedId = proveds[index].proved.id + "";
+      }
+    }
+
+    return "proved/" + provedId;
+  } else {
+    return "";
   }
-  return userPath;
+}
+
+export function getUserNavbarMenu(currentUser: UserType): MenuRoute[] {
+  return currentUser.roles.includes("ENCODEUR")
+    ? mainRoutes
+    : [
+        ...mainRoutes.slice(0, mainRoutes.length - 1),
+        ...supervisorRoutes,
+        mainRoutes[mainRoutes.length - 1],
+      ];
 }

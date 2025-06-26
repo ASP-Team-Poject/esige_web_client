@@ -43,7 +43,7 @@ export async function getSchools(
     const userPath = getUserPath(user, regions);
 
     let url = `${API_BASE_URL}/etablissements/${userPath}?page=${page}&size=${size}&search=${search}`;
-
+    console.log("url => ", url);
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",

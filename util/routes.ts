@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { MenuRoute } from "./types";
 
+// Nav bar menu routes
 export const mainRoutes: MenuRoute[] = [
   {
     name: "Tableau de Bord",
@@ -23,15 +24,6 @@ export const mainRoutes: MenuRoute[] = [
     icon: File,
   },
   {
-    name: "Établissements",
-    path: "#",
-    icon: School,
-    sub_routes: [
-      { name: "Liste", path: "/schools", icon: List },
-      { name: "Creer un Nouveau", path: "/schools/new", icon: Plus },
-    ],
-  },
-  {
     name: "Établissements Identifiés",
     path: "/identifications",
     icon: List,
@@ -42,6 +34,23 @@ export const mainRoutes: MenuRoute[] = [
     icon: Database,
   },
   {
+    name: "Mon Profil",
+    path: "/profile",
+    icon: User,
+  },
+];
+
+export const supervisorRoutes: MenuRoute[] = [
+  {
+    name: "Établissements",
+    path: "#",
+    icon: School,
+    sub_routes: [
+      { name: "Liste", path: "/schools", icon: List },
+      { name: "Creer un Nouveau", path: "/schools/new", icon: Plus },
+    ],
+  },
+  {
     name: "Utilisateurs",
     path: "#",
     icon: Users,
@@ -50,13 +59,9 @@ export const mainRoutes: MenuRoute[] = [
       { name: "Creer un Nouveau", path: "/users/new", icon: Plus },
     ],
   },
-  {
-    name: "Mon Profil",
-    path: "/profile",
-    icon: User,
-  },
 ];
 
+// User zone menu routes
 export const userRoutes: MenuRoute[] = [
   {
     name: "Profil",

@@ -1,17 +1,29 @@
 "use client";
 
-import { mainRoutes } from "@/util/routes";
 import { usePathname, useRouter } from "next/navigation";
-import { MenuRoute } from "@/util/types";
+import { MenuRoute, UserType } from "@/util/types";
 import ESigeLogo from "../basic/ESigeLogo";
 import DropdownMenu from "../basic/DropdownMenu";
+import { useEffect, useState } from "react";
+import { localStorageKeys } from "@/util/constants";
+import { getUserNavbarMenu } from "@/util/functions";
 
 const Navbar = ({ isMenuOpen }: any) => {
+  const [menuRoutes, setMenuRoutes] = useState<MenuRoute[]>([]);
   const router = useRouter();
   const currentPath = usePathname();
   const routeTo = (path: string) => {
     router.push(path);
   };
+
+  useEffect(() => {
+    const user = localStorage.getItem(localStorageKeys.CURRENT_USER);
+    if (user) {
+      const currentUser: UserType = JSON.parse(user);
+      const userMenuRoutes = getUserNavbarMenu(currentUser);
+      setMenuRoutes(userMenuRoutes);
+    }
+  }, []);
 
   return (
     <>
@@ -25,7 +37,7 @@ const Navbar = ({ isMenuOpen }: any) => {
           <div className="flex justify-center items-center">
             <ESigeLogo className="w-20 h-20" />
           </div>
-          {mainRoutes.map((route: MenuRoute, index) =>
+          {menuRoutes.map((route: MenuRoute, index) =>
             route.sub_routes ? (
               <DropdownMenu key={index} route={route} routeTo={routeTo} />
             ) : (
