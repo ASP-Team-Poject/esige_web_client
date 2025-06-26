@@ -33,7 +33,7 @@ body {
 
 .red-border {
   border: solid 2px red;
-  color: #5c9ad4
+  color: #5c9ad4;
 }
 
 table tr:nth-of-type(even) {
@@ -45,3 +45,57 @@ td {
   border: solid 1px #ccc;
   padding: 8px;
 }
+
+/* BIGINING: Politique de Confidentialite(PC) Style */
+
+.bodyPC {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #222;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.containerPC {
+  max-width: 900px;
+  margin: 40px auto;
+
+  background-color: #fff;
+  padding: 40px;
+  padding-left: 80px;
+  padding-right: 80px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.h1PC {
+  text-align: center;
+  color: #1a237e;
+  font-size: 2.2em;
+  margin-bottom: 20px;
+  border-bottom: solid 2px #1a237e;
+  width: fit-content;
+}
+
+.h2PC {
+  color: #3949ab;
+  margin-top: 30px;
+  font-size: 1.4em;
+}
+
+.pPC {
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.ulPC {
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+
+.liPC {
+  margin-bottom: 8px;
+}
+
+/* END: Politique de Confidentialite Style */
