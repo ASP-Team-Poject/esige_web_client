@@ -125,6 +125,16 @@ const SchoolSTs = () => {
   }, [page, size, debouncedSearch, currentUser, regions]);
 
   useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 2000);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
+
+  useEffect(() => {
     handleDownloadPdf();
   }, [isGeneratingPdf]);
 
