@@ -1,10 +1,11 @@
 "use server";
 
 import {
+  getUserPath,
   returnDataOrThrowServerError,
   throwRequestError,
 } from "@/util/functions";
-import { LoginCredentials, UserType } from "@/util/types";
+import { LoginCredentials, SchoolRegion, UserType } from "@/util/types";
 
 const API_BASE_URL = "http://157.230.112.193:8081/api/users";
 
@@ -18,11 +19,17 @@ type UsersResponse = {
 
 export async function getUsers(
   page: number = 0,
-  size: number = 10
+  size: number = 10,
+  search: string,
+  user: Partial<UserType>,
+  regions: SchoolRegion[]
 ): Promise<UsersResponse | undefined> {
-  console.log("REQUEST ", { page, size });
   try {
-    const response = await fetch(`${API_BASE_URL}?page=${page}&size=${size}`, {
+    const userPath = getUserPath(user, regions);
+
+    let url = `${API_BASE_URL}/${userPath}?&page=${page}&size=${size}&search=${search}`;
+
+    const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
       },
