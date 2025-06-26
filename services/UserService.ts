@@ -27,8 +27,10 @@ export async function getUsers(
   try {
     const userPath = getUserPath(user, regions);
 
-    let url = `${API_BASE_URL}/${userPath}?&page=${page}&size=${size}&search=${search}`;
+    // let url = `${API_BASE_URL}/${userPath}?&page=${page}&size=${size}&search=${search}`; // uncomment when handled in backend
 
+    let url = `${API_BASE_URL}/${userPath}?&page=${page}&size=${size}`;
+    console.log("url => ", url);
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
