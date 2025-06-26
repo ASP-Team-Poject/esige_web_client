@@ -15,6 +15,7 @@ import { Toast } from "./basic/Toast";
 import Cookies from "js-cookie";
 import { localStorageKeys, requestMessages } from "@/util/constants";
 import { getSchoolRegions } from "@/services/SchoolServise";
+import Link from "next/link";
 
 const Login = () => {
   const [loginForm, setLoginForm] = useState<LoginCredentials>({
@@ -155,7 +156,7 @@ const Login = () => {
 
         <Button
           isSubmitting={isSubmitting}
-          className="w-full bg-primary_color"
+          className="w-full bg-primary_color mb-2"
           type="submit"
           title="Connectez - vous"
           icon={<LogIn />}
@@ -163,23 +164,15 @@ const Login = () => {
 
         <div className="w-full flex flex-col gap-4 justify-center items-center">
           <div className="w-[80%] relative border-b-[1px] border-[#ccc] flex justify-center">
-            <label className="w-fit absolute -top-3 bg-white text-gray-500 text-sm">
-              {"Ou connectez-vous avec"}
+            <label className="w-fit absolute -top-3 bg-white text-gray-500 text-sm hover:text-primary_color">
+              <Link
+                className="mx-4"
+                href={"/politique_de_confidentialite"}
+                target="_blank"
+              >
+                {"Politique de Confidentialité"}
+              </Link>
             </label>
-          </div>
-          <div className="flex gap-4 justify-center items-center">
-            <Image
-              src={globalImages.facebook}
-              height={25}
-              width={25}
-              alt="facebook"
-            />
-            <Image
-              src={globalImages.google}
-              height={25}
-              width={25}
-              alt="google"
-            />
           </div>
         </div>
       </form>
