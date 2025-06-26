@@ -28,6 +28,23 @@ const INIT_FORM = {
   provedId: 0,
   provinceId: 0,
 };
+
+const USER_ROLES = {
+  NATIONAL: { id: userRoles.ROLE_NATIONAL, value: "Superviseur national" },
+  PROVINCE: { id: userRoles.ROLE_PROVINCE, value: "Superviseur provincial" },
+  PROVED: {
+    id: userRoles.ROLE_PROVED,
+    value: "Superviseur province educationnelle",
+  },
+  SOUSPROVED: {
+    id: userRoles.ROLE_SOUSPROVED,
+    value: "Superviseur sous province educationnelle",
+  },
+  ENCODEUR: {
+    id: userRoles.ROLE_ENCODEUR,
+    value: "Encodeur",
+  },
+};
 const EditUserForm = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -43,6 +60,7 @@ const EditUserForm = () => {
   const [selectedSousProved, setSelectedSousProved] = useState<string | null>(
     null
   );
+  const [roles, setRoles] = useState<{ id: string; value: string }[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [toast, setToast] = useState<{
     message: string;
@@ -66,6 +84,37 @@ const EditUserForm = () => {
         );
       }
     };
+    const user = localStorage.getItem(localStorageKeys.CURRENT_USER);
+    if (user) {
+      const currentUser: UserType = JSON.parse(user);
+      if (currentUser.roles.includes("ADMIN")) {
+        setRoles([
+          USER_ROLES.ENCODEUR,
+          USER_ROLES.SOUSPROVED,
+          USER_ROLES.PROVED,
+          USER_ROLES.PROVINCE,
+          USER_ROLES.NATIONAL,
+        ]);
+      } else if (currentUser.roles.includes("NATIONAL")) {
+        setRoles([
+          USER_ROLES.ENCODEUR,
+          USER_ROLES.SOUSPROVED,
+          USER_ROLES.PROVED,
+          USER_ROLES.PROVINCE,
+        ]);
+      } else if (currentUser.roles.includes("PROVINCE")) {
+        setRoles([
+          USER_ROLES.ENCODEUR,
+          USER_ROLES.SOUSPROVED,
+          USER_ROLES.PROVED,
+        ]);
+      } else if (currentUser.roles.includes("PROVED")) {
+        setRoles([USER_ROLES.ENCODEUR, USER_ROLES.SOUSPROVED]);
+      } else {
+        setRoles([USER_ROLES.ENCODEUR]);
+      }
+    }
+
     loadRegions();
 
     if (pathname.endsWith("update")) {
@@ -194,18 +243,7 @@ const EditUserForm = () => {
 
         <Select
           label="Role"
-          options={[
-            { id: userRoles.ROLE_NATIONAL, value: "Superviseur national" },
-            { id: userRoles.ROLE_PROVINCE, value: "Superviseur provincial" },
-            {
-              id: userRoles.ROLE_PROVED,
-              value: "Superviseur province educationnelle",
-            },
-            {
-              id: userRoles.ROLE_SOUSPROVED,
-              value: "Superviseur sous province educationnelle",
-            },
-          ]}
+          options={roles}
           currentOptionId={userForm.roles || ""}
           handleOnChange={(e: any) =>
             setUserForm({ ...userForm, roles: e.target.value })
