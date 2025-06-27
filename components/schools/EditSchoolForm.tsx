@@ -216,6 +216,42 @@ const EditSchoolForm = () => {
           required
         />
         <Input
+          value={schoolForm.codeAdmin || ""}
+          handleChange={(value: string) =>
+            setSchoolForm({ ...schoolForm, codeAdmin: value })
+          }
+          label="Code admin"
+          type="text"
+          placeholder="Code admin"
+        />
+        <Input
+          value={schoolForm.codeCentreReg || ""}
+          handleChange={(value: string) =>
+            setSchoolForm({ ...schoolForm, codeCentreReg: value })
+          }
+          label="Code centre regroupement"
+          type="text"
+          placeholder="Code centre regroupement"
+        />
+        <Input
+          value={schoolForm.nomCentreReg || ""}
+          handleChange={(value: string) =>
+            setSchoolForm({ ...schoolForm, nomCentreReg: value })
+          }
+          label="Nom du centre regroupement"
+          type="text"
+          placeholder="Nom du centre regroupement"
+        />
+        <Input
+          value={schoolForm.typeEnseignement || ""}
+          handleChange={(value: string) =>
+            setSchoolForm({ ...schoolForm, typeEnseignement: value })
+          }
+          label="Type enseignement"
+          type="text"
+          placeholder="Type enseignement"
+        />
+        <Input
           value={schoolForm.arreteMinisteriel || ""}
           handleChange={(value: string) =>
             setSchoolForm({ ...schoolForm, arreteMinisteriel: value })

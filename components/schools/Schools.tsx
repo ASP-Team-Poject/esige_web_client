@@ -164,6 +164,7 @@ const Schools = () => {
                           <tr className="bg-[rgb(248,248,248)]">
                             <th>Id</th>
                             <th>{"Nom de l'Établissements"}</th>
+                            <th>{"Code admin"}</th>
                             <th>Province</th>
                             <th>Proved</th>
                             <th>Sous Proved</th>
@@ -184,6 +185,7 @@ const Schools = () => {
                                   {school.libelle}
                                 </Link>
                               </td>
+                              <td>{school.codeAdmin}</td>
                               <td>{school.province}</td>
                               <td>{school.proved}</td>
                               <td>{school.sousproved}</td>
