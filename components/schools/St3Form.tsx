@@ -323,21 +323,31 @@ const St3Form = () => {
   }>({ schoolName: "", yearLabel: "" });
 
   const handleChange = (e: any) => {
-    const { name, value, type } = e.target;
+    const { name, value, type, checked } = e.target;
     const keys = name.split(".");
 
     setFormData((prevState: any) => {
       if (keys.length === 1) {
         return {
           ...prevState,
-          [name]: type === "number" ? parseInt(value) : value,
+          [name]:
+            type === "number"
+              ? parseInt(value)
+              : type === "checkbox"
+              ? checked
+              : value,
         };
       } else {
         return {
           ...prevState,
           [keys[0]]: {
             ...prevState[keys[0]],
-            [keys[1]]: type === "number" ? parseInt(value) : value,
+            [keys[1]]:
+              type === "number"
+                ? parseInt(value)
+                : type === "checkbox"
+                ? checked
+                : value,
           },
         };
       }
@@ -3148,6 +3158,432 @@ const St3Form = () => {
             value={formData.formulaire?.personnel_eligible_retraite}
           />
         </label>
+      </section>
+    </div>,
+
+    // Page 4
+    <div key={4} className="flex flex-col gap-4">
+      <section className="flex flex-col gap-2">
+        <label>
+          {
+            "3. Prise en compte des thèmes transversaux dans le programme d'éducation"
+          }
+        </label>
+        <label>{"3.1 Thèmes transversaux"}</label>
+
+        <table className="text-center">
+          <thead>
+            <tr>
+              <th rowSpan={2}>{"Thèmes"}</th>
+              <th>{"Le thème est-il enseigné par l'établissement ?"}</th>
+              <th colSpan={3}>{"Si << oui >> indiquez sous quelle forme"}</th>
+            </tr>
+            <tr>
+              <th>{"Oui/Non"}</th>
+              <th>Dans le programme officiel</th>
+              <th>{"En tant que discipline à part"}</th>
+              <th>{"Lors des activités parascolaires"}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th className="whitespace-nowrap text-left">{"Le VIH/Sida"}</th>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.vih_sida_enseigne"
+                    checked={formData.formulaire?.vih_sida_enseigne}
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.vih_sida_programme"
+                    checked={formData.formulaire?.vih_sida_programme}
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.vih_sida_discipline"
+                    checked={formData.formulaire?.vih_sida_discipline}
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.vih_sida_active_parascolaire"
+                    checked={formData.formulaire?.vih_sida_active_parascolaire}
+                  />
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <th className="whitespace-nowrap text-left">
+                {"La santé sexuelle et reproductive"}
+              </th>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.sante_reproductive_enseigne"
+                    checked={formData.formulaire?.sante_reproductive_enseigne}
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.sante_reproductive_programme"
+                    checked={formData.formulaire?.sante_reproductive_programme}
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.sante_reproductive_discipline"
+                    checked={formData.formulaire?.sante_reproductive_discipline}
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.sante_reproductive_parascolaire"
+                    checked={
+                      formData.formulaire?.sante_reproductive_parascolaire
+                    }
+                  />
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <th className=" text-left">
+                {"La sensibilisation contre les abus et violences"}
+              </th>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.sensibilisation_abus_enseigne"
+                    checked={formData.formulaire?.sensibilisation_abus_enseigne}
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.sensibilisation_abus_programme"
+                    checked={
+                      formData.formulaire?.sensibilisation_abus_programme
+                    }
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.sensibilisation_abus_discipline"
+                    checked={
+                      formData.formulaire?.sensibilisation_abus_discipline
+                    }
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.sensibilisation_abus_parascolaire"
+                    checked={
+                      formData.formulaire?.sensibilisation_abus_parascolaire
+                    }
+                  />
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <th className="whitespace-nowrap text-left">
+                {"L'éducation environnementale"}
+              </th>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.education_environnementale_enseigne"
+                    checked={
+                      formData.formulaire?.education_environnementale_enseigne
+                    }
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.education_environnementale_programme"
+                    checked={
+                      formData.formulaire?.education_environnementale_programme
+                    }
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.education_environnementale_discipline"
+                    checked={
+                      formData.formulaire?.education_environnementale_discipline
+                    }
+                  />
+                </span>
+              </td>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.education_environnementale_parascolaire"
+                    checked={
+                      formData.formulaire
+                        ?.education_environnementale_parascolaire
+                    }
+                  />
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <label>
+          {
+            "3.2 L'établissement a t'il établi et communiqué des règlements et directives à l'attention du"
+          }
+          <br />
+          {"personnel et des éleves"}
+        </label>
+
+        <table className="text-center">
+          <thead>
+            <tr>
+              <th rowSpan={2}>{"Relatifs"}</th>
+              <th>{"Oui/Non"}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th className="whitespace-nowrap text-left">
+                {"à la securité physique"}
+              </th>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.reglement_securite_physique"
+                    checked={formData.formulaire?.reglement_securite_physique}
+                  />
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <th className="whitespace-nowrap text-left">
+                {"à la stigmatisation et la discrimination"}
+              </th>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.reglement_discrimination"
+                    checked={formData.formulaire?.reglement_discrimination}
+                  />
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <th className="whitespace-nowrap text-left">
+                {"aux harcèlements et abus sexuels"}
+              </th>
+              <td>
+                <span className="flex justify-center">
+                  <Input2
+                    className="text-center h-4 w-4"
+                    type="checkbox"
+                    handleChange={handleChange}
+                    name="formulaire.reglement_harcelement"
+                    checked={formData.formulaire?.reglement_harcelement}
+                  />
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <label>
+          {
+            "3.3 Existe-il au sein de votre établissement, une cellule d'orientation qui intègre dans sa mission,"
+          }
+          <br />
+          <Input2
+            label=" les questions concernant l'Education à la Vie Familiale (EVF) : Oui/Non"
+            className="text-center h-4 w-4"
+            type="checkbox"
+            handleChange={handleChange}
+            name="formulaire.cellule_orientation_evf"
+            checked={formData.formulaire?.cellule_orientation_evf}
+          />
+        </label>
+
+        <label>
+          {
+            "3.4 Votre établissemeny dispose-t-il d'enseignants formés sur le programme national d'education"
+          }
+          <br />
+          <Input2
+            label="à la Vie Familiale (EVF) : Oui/Non"
+            className="text-center h-4 w-4"
+            type="checkbox"
+            handleChange={handleChange}
+            name="formulaire.enseignants_evf_formes"
+            checked={formData.formulaire?.enseignants_evf_formes}
+          />
+        </label>
+
+        <Input2
+          label="3.5 Si << oui >> Indiquez le nombre d'enseignant-e-s formé-e-s : "
+          className="text-center"
+          type="number"
+          handleChange={handleChange}
+          name="formulaire.nb_enseignants_evf"
+          value={formData.formulaire?.nb_enseignants_evf}
+        />
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <label>
+          {"3.6 Parmi les enseignants formé-e-s, combien dispensent ce cours :"}
+        </label>
+
+        <table className="text-center">
+          <thead>
+            <tr>
+              <th rowSpan={2}>{"ENSEIGNANTS"}</th>
+              <th>H</th>
+              <th>F</th>
+              <th>H + F</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th className="whitespace-nowrap text-left">{"Formés"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_enseignants_forme_h"
+                  value={formData.formulaire?.nb_enseignants_forme_h}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_enseignants_forme_f"
+                  value={formData.formulaire?.nb_enseignants_forme_f}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.nb_enseignants_forme_h || 0) +
+                  (formData.formulaire?.nb_enseignants_forme_f || 0)}
+              </td>
+            </tr>
+
+            <tr>
+              <th className="whitespace-nowrap text-left">{"Formés"}</th>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_enseignants_evf_dispense_h"
+                  value={formData.formulaire?.nb_enseignants_evf_dispense_h}
+                />
+              </td>
+              <td>
+                <Input2
+                  className="text-center"
+                  type="number"
+                  handleChange={handleChange}
+                  name="formulaire.nb_enseignants_evf_dispense_f"
+                  value={formData.formulaire?.nb_enseignants_evf_dispense_f}
+                />
+              </td>
+              <td>
+                {(formData.formulaire?.nb_enseignants_evf_dispense_h || 0) +
+                  (formData.formulaire?.nb_enseignants_evf_dispense_f || 0)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </section>
     </div>,
   ];

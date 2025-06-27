@@ -7,15 +7,17 @@ const Input2 = ({
   value,
   placeholder,
   disabled,
+  checked,
   className,
   handleChange,
 }: {
   name?: string;
   type?: string;
   label?: string;
-  value: string | number | undefined;
+  value?: string | number;
   placeholder?: string;
   disabled?: boolean;
+  checked?: boolean;
   className?: string;
   handleChange: (e: any) => void;
 }) => {
@@ -35,6 +37,7 @@ const Input2 = ({
         onChange={handleChange}
         placeholder={placeholder}
         disabled={disabled}
+        checked={checked}
         min={0}
       />
     </div>
