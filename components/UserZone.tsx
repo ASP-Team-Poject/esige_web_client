@@ -41,7 +41,14 @@ const UserZone = () => {
           <User color="gray" />
         </div>
         {currentUser ? (
-          <span>{currentUser.displayName}</span>
+          <label className="flex flex-col items-center ">
+            <span>{currentUser.displayName}</span>
+            <span className="text-xs text-gray-500">
+              {currentUser.roles
+                .slice(2, currentUser.roles.length - 2)
+                .toLocaleLowerCase()}
+            </span>
+          </label>
         ) : (
           <Loader colorClass="text-primary_color" />
         )}
