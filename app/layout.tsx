@@ -3,7 +3,7 @@ import "./globals.css";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Tableau de bord | E-Sige Rdc",
+  title: "E-Sige Rdc",
   description: "E-Sige Rdc, DIGE",
 };
 
